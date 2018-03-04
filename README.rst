@@ -42,7 +42,7 @@ approach is to define S phase cells as those with G1 and G2M scores below 0.5.
 
 Example
 ----
-import pypairs
+`import pypairs
 from pathlib import Path
 import pandas
 
@@ -77,4 +77,4 @@ prediction = pypairs.cyclone(
   verboose=True, processes=5
 )
 
-print(prediction)
+print(prediction)`
