@@ -42,39 +42,42 @@ approach is to define S phase cells as those with G1 and G2M scores below 0.5.
 
 Example
 ----
-import pypairs
-from pathlib import Path
-import pandas
 
-gencounts_training = pandas.read_csv(Path("./path/to/expression/matrix.csv"))
-gencounts_training.set_index("Unnamed: 0", inplace=True)
+::
 
-# Index or labels
-is_G1 = [0,1,2,3]
-is_S = ["Sample4","Sample5","Sample6"]
-is_G2M = [
-  gencounts_training.columns.get_loc(c)
-  for c in gencounts_training.columns 
-  if "G2M" in c
-]
+  import pypairs
+  from pathlib import Path
+  import pandas
 
-annotation = {
-  "G1": list(is_G1),
-  "S": list(is_S),
-  "G2M": list(is_G2M)
-}
+  gencounts_training = pandas.read_csv(Path("./path/to/expression/matrix.csv"))
+  gencounts_training.set_index("Unnamed: 0", inplace=True)
 
-marker_pairs = pypairs.sandbag(
-  gencounts_training, phases=annotation,
-  fraction=0.65, processes=10, verboose=True
-)
+  # Index or labels
+  is_G1 = [0,1,2,3]
+  is_S = ["Sample4","Sample5","Sample6"]
+  is_G2M = [
+    gencounts_training.columns.get_loc(c)
+    for c in gencounts_training.columns 
+    if "G2M" in c
+  ]
 
-gencounts_test = pandas.read_csv(Path("./path/to/expression/matrix.csv"))
-gencounts_test.set_index("Unnamed: 0", inplace=True)
+  annotation = {
+    "G1": list(is_G1),
+    "S": list(is_S),
+    "G2M": list(is_G2M)
+  }
 
-prediction = pypairs.cyclone(
-  gencounts_test, marker_pairs=marker_pairs,
-  verboose=True, processes=5
-)
+  marker_pairs = pypairs.sandbag(
+    gencounts_training, phases=annotation,
+    fraction=0.65, processes=10, verboose=True
+  )
 
-print(prediction)
+  gencounts_test = pandas.read_csv(Path("./path/to/expression/matrix.csv"))
+  gencounts_test.set_index("Unnamed: 0", inplace=True)
+
+  prediction = pypairs.cyclone(
+    gencounts_test, marker_pairs=marker_pairs,
+    verboose=True, processes=5
+  )
+
+  print(prediction)
