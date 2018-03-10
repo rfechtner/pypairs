@@ -138,7 +138,7 @@ def __set_matrix(x, phases=None, subset_genes=None, subset_samples=None, rm_zero
 
 
 def sandbag(x, phases, fraction=0.5, processes=1, subset_genes=None, subset_samples=None, weighted=False,
-            triplets=False, verbose=False,):
+            triplets=False, verbose=False):
     """ Calculates the pairs of genes serving as marker pairs for each phase, based on a matrix of gene counts and
     an annotation of known phases.
 
@@ -256,27 +256,31 @@ def cyclone(x, marker_pairs, subset_genes=None, iterations=1000, min_iter=100, m
 
     gene_name_idx = {g: i for i, g in enumerate(params["gene_names"])}
 
+    weights = defaultdict(list)
     # Generate used list
     for phase, pairs in marker_pairs.items():
         u = []
 
         for pair in pairs:
             try:
-                if triplets:
-                    if weighted:
-                        idx_pair = (gene_name_idx[pair[0]], gene_name_idx[pair[1]], gene_name_idx[pair[2]],  pair[3])
-                    else:
+                if weighted:
+                    if len(pair) == 4:
                         idx_pair = (gene_name_idx[pair[0]], gene_name_idx[pair[1]], gene_name_idx[pair[2]])
-                else:
-                    if weighted:
-                        idx_pair = (gene_name_idx[pair[0]], gene_name_idx[pair[1]], 0, pair[2])
+                        u.extend([idx_pair[0], idx_pair[1], idx_pair[2]])
                     else:
-                        idx_pair = (gene_name_idx[pair[0]], gene_name_idx[pair[1]], 0)
-                marker_pairs_idx[phase].append(idx_pair)
-                if triplets:
-                    u.extend([idx_pair[0], idx_pair[1], idx_pair[2]])
+                        idx_pair = (gene_name_idx[pair[0]], gene_name_idx[pair[1]], -1)
+                        u.extend([idx_pair[0], idx_pair[1]])
+                    weights[phase].append(pair[-1])
                 else:
-                    u.extend([idx_pair[0], idx_pair[1]])
+                    if len(pair) == 3:
+                        idx_pair = (gene_name_idx[pair[0]], gene_name_idx[pair[1]], gene_name_idx[pair[2]])
+                        u.extend([idx_pair[0], idx_pair[1], idx_pair[2]])
+                    else:
+                        idx_pair = (gene_name_idx[pair[0]], gene_name_idx[pair[1]], -1)
+                        u.extend([idx_pair[0], idx_pair[1]])
+                    weights[phase].append(1)
+
+                marker_pairs_idx[phase].append(idx_pair)
             except KeyError:
                 removed = removed + 1
 
@@ -301,11 +305,6 @@ def cyclone(x, marker_pairs, subset_genes=None, iterations=1000, min_iter=100, m
     if processes == 0:
         processes = cpu_count() - 1
 
-    if weighted:
-        weights = {phase: [pair[3] for pair in pairs] for phase, pairs in marker_pairs_idx.items()}
-    else:
-        weights = {phase: [1] * len(pairs) for phase, pairs in marker_pairs_idx.items()}
-
     # Iterate over phases
     scores = {phase: __get_phase_scores(params["x"], iterations, min_iter, min_pairs,
                                         pairs, used[phase], used_idx[phase], processes, weights[phase], triplets
@@ -314,6 +313,7 @@ def cyclone(x, marker_pairs, subset_genes=None, iterations=1000, min_iter=100, m
 
     scores_df = DataFrame(scores)
     normalized_df = scores_df.div(scores_df.sum(axis=1), axis=0)
+    normalized_df.columns = ["G1_norm", "G2M_norm", "S_norm"]
 
     prediction = {}
 
@@ -326,17 +326,20 @@ def cyclone(x, marker_pairs, subset_genes=None, iterations=1000, min_iter=100, m
         else:
             prediction[params["sample_names"][index]] = "S"
 
+    prediction_normalized = {}
+
     for index, score in normalized_df.iterrows():
 
-        if score["G1"] >= score["G2M"] and score["G1"] >= score["S"]:
-            prediction[params["sample_names"][index]] = "G1"
-        elif score["G2M"] > score["G1"] and score["G2M"] >= score["S"]:
-            prediction[params["sample_names"][index]] = "G2M"
+        if score["G1_norm"] >= score["G2M_norm"] and score["G1_norm"] >= score["S_norm"]:
+            prediction_normalized[params["sample_names"][index]] = "G1"
+        elif score["G2M_norm"] > score["G1_norm"] and score["G2M_norm"] >= score["S_norm"]:
+            prediction_normalized[params["sample_names"][index]] = "G2M"
         else:
-            prediction[params["sample_names"][index]] = "S"
+            prediction_normalized[params["sample_names"][index]] = "S"
 
     output = {
         "prediction": prediction,
+        "prediction_normalized": prediction_normalized,
         "scores": scores_df,
         "normalized": normalized_df
     }
@@ -625,7 +628,7 @@ def to_named(m, names):
     raise ValueError("Only homogeneous Index, Name or Boolean arrays valid")
 
 
-def identify_triplets(marker_pairs, weighted=False):
+def identify_triplets(marker_pairs, weighted=False, fraction=0):
 
     triplets = defaultdict(list)
 
@@ -646,11 +649,13 @@ def identify_triplets(marker_pairs, weighted=False):
             g2sint = g2s.intersection
             for g2 in g2s:
                 for g3 in g2sint(pairs_map[g2]):
-                    if weighted:
-                        weight = weight_map[(g1, g2)] * weight_map[(g2, g3)]
-                        found.append((g1, g2, g3, weight))
-                    else:
-                        found.append((g1, g2, g3))
+                    if g3 in pairs_map[g1]:
+                        if weighted:
+                            weight = weight_map[(g1, g2)] * weight_map[(g2, g3)] * weight_map[(g1, g3)]
+                            if weight > fraction:
+                                found.append((g1, g2, g3, weight))
+                        else:
+                            found.append((g1, g2, g3))
 
         triplets[phase] = found
 
