@@ -3,7 +3,7 @@
 
 # Maschine learning methods for predicting cell-cycle phase from scRNA-Seq data
 
-## By Ron Fechtner 
+## By Ron Fechtner
 ### Ludwig-Maximilians-Universität München / Technische Universität München
 
 
@@ -11,7 +11,7 @@ This is the supplementary for the Bachelor's Thesis on Maschine learning methods
 
 Here you will find the a digital copy of the thesis, the codes, data, images, restul tables and juypter notebooks. Most of the chapters have a associated jupyter notebook file within the notebook folder that shows how the results were generated. This Readme is an example of such an notebook. All code can be directly executed or modified. For further information please see: http://jupyter.readthedocs.io/en/latest/index.html
 
-If you don't want to install juypter notebook on your local machine you can visit http://nbviewer.jupyter.org/github/rfechtner/pypairs/tree/master/notebooks/ for a online view (read only).
+If you don't want to install juypter notebook on your local machine you can visit http://nbviewer.jupyter.org/github/rfechtner/pypairs/tree/master/supplementary/notebooks/ for a online view (read only).
 
 The general structure of this folder is:
 
@@ -31,21 +31,21 @@ for root, dirs, files in os.walk("./"):
             print('{}{}'.format(subindent, f))
 ```
 
-    
+
     /
         Readme.ipynb
         Readme.md
-    
-    
+
+
     code/
         helper.py
         pypairs.py
         __init__.py
-    
+
         __pycache__/
             helper.cpython-36.pyc
             pypairs.cpython-36.pyc
-    
+
     data/
         biomart_human-genes.txt
         biomart_mouse-human-orthologs.txt
@@ -68,9 +68,9 @@ for root, dirs, files in os.walk("./"):
         mouse_pretrained-pairs.json
         Non_norm.PolyA_NamedByAlex_human.csv
         regev_lab_cell_cycle_genes.txt
-    
+
     images/
-    
+
         application/
             ebv_circle.pdf
             ebv_circle.png
@@ -83,11 +83,11 @@ for root, dirs, files in os.walk("./"):
             prediction_e3-ee5.png
             prediction_e5-e7.pdf
             prediction_e5-e7.png
-    
+
         differences/
             sandbag-speed.pdf
             sandbag-speed.png
-    
+
         evaluation/
             E-MTAB-3929.sdrf.txt
             hESC-scatter.pdf
@@ -116,7 +116,7 @@ for root, dirs, files in os.walk("./"):
             oscope-phase-distribution.pdf
             oscope-phase-distribution.png
             prediction-mESC-on-hESC.png
-    
+
         extension/
             networkx.pdf
             networkx.png
@@ -127,45 +127,45 @@ for root, dirs, files in os.walk("./"):
             rf_bulk.pdf
             rf_bulk.png
             triplets.pdf
-    
+
         general/
             logo1.jpg
             logo2.jpg
             logos_combined.PNG
-    
+
     notebooks/
-    
-    
+
+
         2. Python reimplementation/
             2.3 Differences in code - Python.ipynb
             2.3 Differences in code - R.ipynb
-    
-    
+
+
         3. Evaluation/
             3.2 Mouse pairs on human dataset.ipynb
             3.3 Internal cross validation.ipynb
             3.4.1.1 Bulk - GSE53481.ipynb
             3.4.1.2 Bulk - GSE71456.ipynb
             3.4.2 Single cell - EMATB6142.ipynb
-    
-    
+
+
         4. Application/
             4.1 EBV.ipynb
             4.2 E-MTAB-3929.ipynb
-    
-    
+
+
         5. Extension/
             5.1 Random forest on pairs.ipynb
             5.2 Pairs network.ipynb
             5.2.1 Weighted Pairs.ipynb
             5.2.2. Weighted Triplets.ipynb
-    
-    
+
+
 
 ### The PyPairs implementation is also available via pip:
 ```shell
 $ pip install pypairs
-``` 
+```
 
 ### And Github:
 https://github.com/rfechtner/pypairs
