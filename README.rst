@@ -43,7 +43,7 @@ approach is to define S phase cells as those with G1 and G2M scores below 0.5.
 Example
 ----
 
-::
+.. code:: python
 
   import pypairs
   from pathlib import Path
