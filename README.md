@@ -23,6 +23,12 @@ with:
 python3 -m pip install pypairs
 ```
 
+Alternatively, pypairs can be installed using [Conda](https://conda.io/docs/) (most easily obtained via the [Miniconda Python distribution](https://conda.io/miniconda.html)):
+
+```
+conda install -c bioconda pypairs
+```
+
 ### Minimal example
 
 Assuming you have two scRNA count files (csv, columns = samples, rows = genes) and one annotation file (csv, no header, 
