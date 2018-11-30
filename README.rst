@@ -24,6 +24,10 @@ Build to be fully compatible with `Scanpy <https://scanpy.readthedocs.io/en/stab
 Getting Started
 ---------------
 
+Note: Version 3 still under development.
+========================================
+
+
 Installation
 ~~~~~~~~~~~~
 
