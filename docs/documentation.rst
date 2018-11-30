@@ -1,7 +1,7 @@
 .. automodule:: pypairs
 
 Documentation
-=============
+-------------
 
 To use PyPairs import the package as follows::
 
@@ -11,7 +11,7 @@ To use PyPairs import the package as follows::
 .. _Methods:
 
 Sandbag
--------
+~~~~~~~
 
 This function implements the classification step of the pair-based prediction method described by
 Scialdone et al. (2015) [Scialdone15]_.
@@ -26,7 +26,7 @@ data is greater than the second in G1 phase but less than the second in all othe
    pairs.sandbag
 
 Cyclone
--------
+~~~~~~~
 
 For each cell, :func:`~pairs.cyclone` calculates the proportion of all marker pairs where the expression of the first gene is
 greater than the second in the new data (pairs with the same expression are ignored). A high
@@ -48,7 +48,7 @@ for assigning cells into specific groups.
 .. _data:
 
 Datasets
---------
+~~~~~~~~
 
 .. autosummary::
    :toctree: .
@@ -58,16 +58,16 @@ Datasets
 
 
 Plotting
---------
+~~~~~~~~
 
 TBD
 
 Utilities
----------
+~~~~~~~~~
 
 TBD
 
 Quality Assesment
------------------
+~~~~~~~~~~~~~~~~~
 
 TBD
