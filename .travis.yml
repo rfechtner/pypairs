@@ -1,20 +1,20 @@
 language: python
 python:
-  - '3.5'
-  - '3.6'
-  - '3.7-dev'
+- '3.5'
+- '3.6'
+- 3.7-dev
 cache: pip
 install:
-  - pip install docutils
-  - pip install Sphinx sphinx-autodoc-typehints sphinx-rtd-theme
-  - pip install -e .
+- pip install docutils
+- pip install Sphinx sphinx-autodoc-typehints sphinx-rtd-theme
+- pip install -e .
 script:
-  - pytest
-  - rst2html.py --halt=2 README.rst >/dev/null
+- pytest
+- rst2html.py --halt=2 README.rst >/dev/null
 deploy:
   provider: pypi
   user: rfechtner
   password:
-    secure: jpz8uKbJFX995DQSAOKCZDn+S20GBma+b53+TwlSuSz5kNp2xKd45DbGziB/VIf13EUVpy93ec3JcnYPP8QUZdG+fNRbUqU+oMyjlaeq5X/oklF6FY+HuUULNnm+M3CSYe+4Zl28PoWvN0JF8ej2Qg5+BLiRyS4IKVlFbOvnmropMYrDkXYacr8vowPB6voa84aXySwCxa6Zzd8B67EkdQG5E26ZkyaDB3F5Ek7CnkUVJHJ/8Js8YDLrx94bBU7rfajizXfe8jRQZnu2GRfC/Sx1IJfgiQGkr2Ns6+ga/bkB0eLosEaHKVHC26drRffs8r1pXmZxvF8bAQfABHdpF+Jn8h2omeY9g7lzVUwf90Cf3ok86EhQ1KNjLeKmd/nf+s6iBrP/31KPhg4P+2pGg8nWLIKf8LI2y9l2syp8GPs/WnzthvIMo7O+ZmFghUpjBvdmGBLQ5bPF3S1YwvOyyTEtkvsKd9xHNmG72v4pvbU1WuwJHLuPvkpXJ46yyFKm78vODUytBovlUQdAwMYZEA2Kv8Lma/bk+Zzo2Th5UfrVk6O1vgrr3iurgt6bDvP9jXPTPSZlofM1w6brSfXUIXNOX0LDo/LqnuCbwQkWKVKbDXtQr7deBu7v/EumzgnbOzd7c5s+TyADj2r0aOgvtZD0WByWrdNqvrwOBqjvgDY=
+    secure: cGzhPkZ2KtdSUwgHqrcNZM56aryYHQH7Yh9tvy5jlqSPvRb8V+WzXCKtUdN1MxbK3HvSYUUPqE4NcD0iea/socAJc4r4grFu/zGirdSXBayNkkRe1gTGHyytk2Gn7tIzT/piZQGFlj9p/6tc2O2YgL/I8DqkQodZxRbUa89JaGGkFkATLBEpFpcK1lfYpc7tZrXTSy2ET5Jil1A4Z1cLXxs8788hcpLRGVxOvu3+jGUYKQU1l8FBuGyBJxmszb/pL3GOxYWqSRY89UaLGZNfsJWg/KSpCyHizki39Wq5DHkg2usdi9so8NYCxMSjECGDe8rvQxGMkyEThtwP1tzQDqWkUFBYoC7oxPaFSUGMCWTrV7Wzmovy+j6bMw+QvL8szDqZtIwIiEbv9sYrUlbkQlYrFtF3lBLx0ErZ4HZ+U3HpV56Ucl81KFIfuZLL8gktr3ZxEjv74fu/BW2gkeGolf7bxUKgNVGUh6ZVIpsIS+SwPZC9ksd41HbKAqizKRlgndTmxC3YbZNW5p+lGoQba/jVGT/q1rdqYObNJHg/33NdoVYo60K5ACY3z4/05L3sc3JyP3P+ugJWpkSlJ/qoMIMSV2comTc14OP38uHFzb3ErNkZ0FiZVYRJ9cUc3LTJirBWWkH8Hdd+al0IstX6CdUkGUhKIuACjowhgdu9yOk=
   on:
     tags: true
