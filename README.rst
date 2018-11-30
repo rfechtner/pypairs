@@ -19,7 +19,7 @@ A supervided maschine learning algorithm aiming to classify single cells based o
 Initially created to predict cell cycle phase from scRNA-Seq data, this algorithm can be used for various applications.
 
 Build to be fully compatible with `Scanpy <https://scanpy.readthedocs.io/en/stable/>`_. For more details see the
-`full documentation <https://pypairs-dev.readthedocs.io/en/latest/>`_.
+`full documentation <https://pypairs.readthedocs.io/en/latest/>`_.
 
 Getting Started
 ---------------
