@@ -47,7 +47,7 @@ Minimal Example
 Assuming you have two scRNA count files (csv, columns = samples, rows = genes) and one annotation file (csv, no header,
 two rows: "gene, class") a minimal example would look like this
 
-.. python::
+.. code:: python
 
     from pypairs import pairs, datasets
 
