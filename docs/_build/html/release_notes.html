@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Release notes &mdash; PyPairs 3.0.0+21.ga72ee64 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> PyPairs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0.0+21.ga72ee64
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyPairs</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Release notes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/rfechtner/pypairs/blob/master/docs/release_notes.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Please only use <a class="reference internal" href="documentation.html#module-pypairs" title="pypairs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pypairs</span></code></a> &gt;= 3.0.0.</p>
+</div>
+<div class="section" id="release-notes">
+<h1>Release notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="version-3-0-0-tbd">
+<h2>Version 3.0.0, <span class="small">TBD</span><a class="headerlink" href="#version-3-0-0-tbd" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Complete restructuring of the package. Now fully compatiple with <code class="xref py py-mod docutils literal notranslate"><span class="pre">scanpy</span></code> .</li>
+<li><dl class="first docutils">
+<dt>Added:</dt>
+<dd><ul class="first last">
+<li>This documentation</li>
+<li>Default (oscope) dataset &amp; marker pairs <a class="reference internal" href="reference.html#leng15" id="id1">[Leng15]</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Changed:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><a class="reference internal" href="pypairs.pairs.sandbag.html#pypairs.pairs.sandbag" title="pypairs.pairs.sandbag"><code class="xref py py-func docutils literal notranslate"><span class="pre">sandbag()</span></code></a> and <a class="reference internal" href="pypairs.pairs.cyclone.html#pypairs.pairs.cyclone" title="pypairs.pairs.cyclone"><code class="xref py py-func docutils literal notranslate"><span class="pre">cyclone()</span></code></a> now accept <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.13+13.ge227ae6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>,</dt>
+<dd><a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></dd>
+</dl>
+</li>
+<li>Multiprocessing now completely handled by <code class="xref py py-mod docutils literal notranslate"><span class="pre">numba</span></code> .</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="version-2-0-1-2-0-6-nov-22-2018">
+<h2>Version 2.0.1 - 2.0.6, <span class="small">Nov 22, 2018</span><a class="headerlink" href="#version-2-0-1-2-0-6-nov-22-2018" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Minor bug fixes and improvements.</li>
+</ul>
+</div>
+<div class="section" id="version-2-0-0-aug-14-2018">
+<h2>Version 2.0.0, <span class="small">Aug 14, 2018</span><a class="headerlink" href="#version-2-0-0-aug-14-2018" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Major restructuring of the package</li>
+<li>Improved parallel processing</li>
+<li><dl class="first docutils">
+<dt>New features:</dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="pypairs.pairs.sandbag.html#pypairs.pairs.sandbag" title="pypairs.pairs.sandbag"><code class="xref py py-func docutils literal notranslate"><span class="pre">sandbag()</span></code></a> and <a class="reference internal" href="pypairs.pairs.cyclone.html#pypairs.pairs.cyclone" title="pypairs.pairs.cyclone"><code class="xref py py-func docutils literal notranslate"><span class="pre">cyclone()</span></code></a> can now deal with any number of classes to predict</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="version-1-0-1-1-0-3-jul-29-2018">
+<h2>Version 1.0.1 - 1.0.3, <span class="small">Jul 29, 2018</span><a class="headerlink" href="#version-1-0-1-1-0-3-jul-29-2018" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Bug fixes and improvements. (Mostly bugs though)</li>
+<li>Added multi-core processing</li>
+</ul>
+</div>
+<div class="section" id="version-1-0-0-mar-4-2018">
+<h2>Version 1.0.0, <span class="small">Mar 4, 2018</span><a class="headerlink" href="#version-1-0-0-mar-4-2018" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Speed and performance improvements.</li>
+</ul>
+</div>
+<div class="section" id="version-0-1-feb-22-2018">
+<h2>Version 0.1, <span class="small">Feb 22, 2018</span><a class="headerlink" href="#version-0-1-feb-22-2018" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Simple python reimplementation of the <span class="smallcaps">Pairs</span> algorithm.</li>
+<li>Included sandbag() and cyclone() algorithms</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, R. Fechtner, A. Scialdone
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'3.0.0+21.ga72ee64',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

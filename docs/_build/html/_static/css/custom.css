@@ -1,0 +1,19 @@
+.rst-content dl:not(.docutils) dl dt a.reference>code {
+    text-decoration: underline;
+}
+ /* No narrow parameter lists for plot functions with images */
+.rst-content .docutils.field-list {
+    clear: right;
+}
+
+.small {
+    font-size: 40%;
+}
+
+.smaller {
+    font-size: 60%;
+}
+
+.smallcaps {
+    font-variant: small-caps;
+}

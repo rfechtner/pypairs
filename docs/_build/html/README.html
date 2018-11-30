@@ -1,0 +1,241 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>PyPairs - A python scRNA-Seq classifier &mdash; PyPairs 3.0.0+21.ga72ee64 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> PyPairs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0.0+21.ga72ee64
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyPairs</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>PyPairs - A python scRNA-Seq classifier</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/rfechtner/pypairs/blob/master/docs/README.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p><a class="reference external" href="https://pypi.org/project/pypairs"><img alt="PyPI" src="https://img.shields.io/pypi/v/pypairs.svg" /></a> <a class="reference external" href="https://pypairs.readthedocs.io"><img alt="Docs" src="https://readthedocs.org/projects/pypairs/badge/?version=latest" /></a> <a class="reference external" href="https://travis-ci.org/rfechtner/pypairs"><img alt="Build Status" src="https://travis-ci.org/refechtner/pypairs.svg?branch=master" /></a> <a class="reference external" href="http://bioconda.github.io/recipes/pypairs/README.html"><img alt="bioconda" src="https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square" /></a></p>
+<div class="section" id="pypairs-a-python-scrna-seq-classifier">
+<h1>PyPairs - A python scRNA-Seq classifier<a class="headerlink" href="#pypairs-a-python-scrna-seq-classifier" title="Permalink to this headline">¶</a></h1>
+<p>This is a python-reimplementation of the <span class="smallcaps">Pairs</span> algorithm as described by A. Scialdone et. al. (2015).
+Original Paper available under: &lt;<a class="reference external" href="https://doi.org/10.1016/j.ymeth.2015.06.021">https://doi.org/10.1016/j.ymeth.2015.06.021</a>&gt;</p>
+<p>A supervided maschine learning algorithm aiming to classify single cells based on their transcriptomic signal.
+Initially created to predict cell cycle phase from scRNA-Seq data, this algorithm can be used for various applications.</p>
+<p>Build to be fully compatible with <a class="reference external" href="https://scanpy.readthedocs.io/en/stable/">Scanpy</a> <a class="reference internal" href="reference.html#wolf18" id="id1">[Wolf18]</a>.</p>
+<p>Code available on <a class="reference external" href="https://github.com/rfechter/pypairs_dev">GitHub</a>.</p>
+<div class="section" id="core-dependencies">
+<h2>Core Dependencies<a class="headerlink" href="#core-dependencies" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://www.numpy.org/">Numpy</a></li>
+<li><a class="reference external" href="https://numba.pydata.org/">Numba</a></li>
+<li><a class="reference external" href="https://pandas.pydata.org/">Pandas</a></li>
+<li><a class="reference external" href="https://github.com/theislab/anndata">AnnData</a></li>
+</ul>
+</div>
+<div class="section" id="authors">
+<h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>Antonio Scialdone</strong> - <em>original algorithm</em></li>
+<li><strong>Ron Fechtner</strong> - <em>implementation and extension in Python</em></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, R. Fechtner, A. Scialdone
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'3.0.0+21.ga72ee64',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

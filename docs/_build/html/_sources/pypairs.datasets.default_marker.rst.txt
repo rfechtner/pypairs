@@ -1,0 +1,10 @@
+:github_url: https://github.com/rfechtner/pypairs/tree/master/pypairs\datasets\__init__.py#L69-L77
+
+
+
+pypairs.datasets.default\_marker
+================================
+
+.. currentmodule:: pypairs.datasets
+
+.. autofunction:: default_marker

@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Documentation &mdash; PyPairs 3.0.0+21.ga72ee64 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pypairs.pairs.sandbag" href="pypairs.pairs.sandbag.html" />
+    <link rel="prev" title="Getting Started" href="gettingstarted.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> PyPairs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0.0+21.ga72ee64
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sandbag">Sandbag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cyclone">Cyclone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datasets">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quality-assesment">Quality Assesment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyPairs</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Documentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/rfechtner/pypairs/blob/master/docs/documentation.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-pypairs"></span><div class="section" id="documentation">
+<h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
+<p>To use PyPairs import the package as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pypairs</span> <span class="k">import</span> <span class="n">pairs</span>
+</pre></div>
+</div>
+<div class="section" id="sandbag">
+<span id="methods"></span><h2>Sandbag<a class="headerlink" href="#sandbag" title="Permalink to this headline">¶</a></h2>
+<p>This function implements the classification step of the pair-based prediction method described by
+Scialdone et al. (2015) <a class="reference internal" href="reference.html#scialdone15" id="id1">[Scialdone15]</a>.</p>
+<p>To illustrate, consider classification of cells into G1 phase.
+Pairs of marker genes are identified with <a class="reference internal" href="pypairs.pairs.sandbag.html#pypairs.pairs.sandbag" title="pypairs.pairs.sandbag"><code class="xref py py-func docutils literal notranslate"><span class="pre">sandbag()</span></code></a>, where the expression of the first gene in the training
+data is greater than the second in G1 phase but less than the second in all other phases.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="pypairs.pairs.sandbag.html#pypairs.pairs.sandbag" title="pypairs.pairs.sandbag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pairs.sandbag</span></code></a>(data[,&nbsp;annotation,&nbsp;…])</td>
+<td>Calculate ‘marker pairs’ from a trainings set.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="cyclone">
+<h2>Cyclone<a class="headerlink" href="#cyclone" title="Permalink to this headline">¶</a></h2>
+<p>For each cell, <a class="reference internal" href="pypairs.pairs.cyclone.html#pypairs.pairs.cyclone" title="pypairs.pairs.cyclone"><code class="xref py py-func docutils literal notranslate"><span class="pre">cyclone()</span></code></a> calculates the proportion of all marker pairs where the expression of the first gene is
+greater than the second in the new data (pairs with the same expression are ignored). A high
+proportion suggests that the cell is likely to belong to this category, as the expression ranking in the
+new data is consistent with that in the training data. Proportions are not directly comparable between phases
+due to the use of different sets of gene pairs for each phase. Instead, proportions are converted into scores
+that account for the size and precision of the proportion estimate. The same process is repeated for
+all phases, using the corresponding set of marker pairs in pairs.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="pypairs.pairs.cyclone.html#pypairs.pairs.cyclone" title="pypairs.pairs.cyclone"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pairs.cyclone</span></code></a>(data[,&nbsp;marker_pairs,&nbsp;…])</td>
+<td>Score samples for each category based on marker pairs.</td>
+</tr>
+</tbody>
+</table>
+<p>While this method is described for cell cycle phase classification, any biological groupings can be
+used here. However, for non-cell cycle phase groupings users should manually apply their own score thresholds
+for assigning cells into specific groups.</p>
+</div>
+<div class="section" id="datasets">
+<span id="data"></span><h2>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="pypairs.datasets.leng15.html#pypairs.datasets.leng15" title="pypairs.datasets.leng15"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.leng15</span></code></a>([mode,&nbsp;gene_sub])</td>
+<td>Single cell RNA-seq data of human hESCs to evaluate Oscope <a class="reference internal" href="reference.html#leng15" id="id2">[Leng15]</a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="pypairs.datasets.default_cc_marker.html#pypairs.datasets.default_cc_marker" title="pypairs.datasets.default_cc_marker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.default_cc_marker</span></code></a>([dataset])</td>
+<td>Cell cycle marker pairs derived from <a class="reference internal" href="reference.html#leng15" id="id3">[Leng15]</a> with the default <a class="reference internal" href="pypairs.pairs.sandbag.html#pypairs.pairs.sandbag" title="pypairs.pairs.sandbag"><code class="xref py py-func docutils literal notranslate"><span class="pre">sandbag()</span></code></a> settings.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="plotting">
+<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h2>
+<p>TBD</p>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>TBD</p>
+</div>
+<div class="section" id="quality-assesment">
+<h2>Quality Assesment<a class="headerlink" href="#quality-assesment" title="Permalink to this headline">¶</a></h2>
+<p>TBD</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pypairs.pairs.sandbag.html" class="btn btn-neutral float-right" title="pypairs.pairs.sandbag" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gettingstarted.html" class="btn btn-neutral" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, R. Fechtner, A. Scialdone
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'3.0.0+21.ga72ee64',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
