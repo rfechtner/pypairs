@@ -4,7 +4,7 @@
     :target: https://pypi.org/project/pypairs
 .. |Docs| image:: https://readthedocs.org/projects/pypairs/badge/?version=latest
    :target: https://pypairs.readthedocs.io
-.. |Build Status| image:: https://travis-ci.org/refechtner/pypairs.svg?branch=master
+.. |Build Status| image:: https://travis-ci.org/rfechtner/pypairs.svg?branch=master
    :target: https://travis-ci.org/rfechtner/pypairs
 .. |bioconda| image:: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square
    :target: http://bioconda.github.io/recipes/pypairs/README.html
