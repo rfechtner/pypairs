@@ -25,7 +25,7 @@ Getting Started
 ---------------
 
 Note: Version 3 still under development.
-========================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Installation
