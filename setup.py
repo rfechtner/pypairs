@@ -22,8 +22,7 @@ setup(
     python_requires='>=3.5',
     install_requires=requires,
     extras_require=dict(
-        plotting=['matplotlib plotly'],
-        scanpy=['scanpy'],
-        build=['sphinx sphinx_autodoc_typehints']
+        plotting=['matplotlib', 'plotly'],
+        scanpy=['scanpy']
     )
 )
