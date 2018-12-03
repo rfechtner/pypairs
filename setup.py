@@ -2,6 +2,8 @@ from setuptools import setup
 from io import open
 import versioneer
 
+# TODO: Make import of plotting and building libraries optional
+
 with open('requirements.txt', encoding='utf-8') as requirements:
     requires = [l.strip() for l in requirements]
 

@@ -12,6 +12,7 @@ from pypairs import utils
 from pypairs import settings
 from pypairs import log as logg
 
+# TODO: Add optional filter not highly variable genes
 
 def sandbag(
         data: Union[AnnData, DataFrame, np.ndarray, Iterable[Iterable[float]]],
@@ -76,28 +77,9 @@ def sandbag(
     """
     logg.info('identifying marker pairs with sandbag', r=True)
 
-    raw_data, gene_names, sample_names = utils.parse_data(data, gene_names, sample_names)
-
-    if isinstance(data, AnnData):
-        if annotation:
-            category_names, categories = utils.parse_annotation(annotation, sample_names)
-        else:
-            if 'category' in data.obs_keys():
-                category_names = np.unique(data.obs['category'])
-
-                categories = np.ndarray(shape=(len(category_names), len(sample_names)), dtype=bool)
-
-                logg.hint("passed {} categories: {}".format(len(category_names), str(category_names)))
-                for i, name in enumerate(category_names):
-                    categories[i] = np.isin(data.obs['category'], name)
-                    logg.hint("\t{}: {}".format(name, len(categories[i])))
-            else:
-                raise ValueError("Provide categories as data.var['category'] or in ``annotation``")
-    else:
-        if annotation:
-            category_names, categories = utils.parse_annotation(annotation, sample_names)
-        else:
-            raise ValueError("Provide categories in ``annotation``")
+    raw_data, gene_names, sample_names, category_names, categories = utils.parse_data_and_annotation(
+        data, annotation, gene_names, sample_names
+    )
 
     # Check that categories dont overlapp. TBD if needed
     """

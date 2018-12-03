@@ -10,6 +10,8 @@ from pypairs import datasets
 from pypairs import settings
 from pypairs import log as logg
 
+# TODO: Prediction function for custom thresholds (e.g. S > 0.5 for cell cycle)
+
 def cyclone(
     data: Union[AnnData, DataFrame, np.ndarray, Iterable[Iterable[float]]],
     marker_pairs: Mapping[str, Iterable[Tuple[str, str]]] = None,

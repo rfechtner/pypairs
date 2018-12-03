@@ -14,6 +14,7 @@ import os
 from pypairs import settings
 from pypairs import log as logg
 
+# TODO: Add evaluate_prediction to docs
 
 def parallel_njit(
         func: Callable[[], Any],
@@ -64,10 +65,43 @@ def is_64bit_arch():
     return sys.maxsize > 2**32
 
 
+def parse_data_and_annotation(
+        data: Union[AnnData, DataFrame, np.ndarray, Iterable[Iterable[float]]],
+        annotation: Optional[Mapping[str, Iterable[Union[str, int, bool]]]] = None,
+        gene_names: Optional[Iterable[str]] = None,
+        sample_names: Optional[Iterable[str]] = None
+) -> Tuple[np.ndarray, list, list, np.ndarray, np.ndarray]:
+    raw_data, gene_names, sample_names = parse_data(data, gene_names, sample_names)
+
+    if isinstance(data, AnnData):
+        if annotation:
+            category_names, categories = parse_annotation(annotation, sample_names)
+        else:
+            if 'category' in data.obs_keys():
+                category_names = np.unique(data.obs['category'])
+
+                categories = np.ndarray(shape=(len(category_names), len(sample_names)), dtype=bool)
+
+                logg.hint("passed {} categories: {}".format(len(category_names), str(category_names)))
+                for i, name in enumerate(category_names):
+                    categories[i] = np.isin(data.obs['category'], name)
+                    logg.hint("\t{}: {}".format(name, len(categories[i])))
+            else:
+                raise ValueError("Provide categories as data.var['category'] or in ``annotation``")
+    else:
+        if annotation:
+            category_names, categories = parse_annotation(annotation, sample_names)
+        else:
+            raise ValueError("Provide categories in ``annotation``")
+
+    return raw_data, gene_names, sample_names, category_names, categories
+
+
+
 def parse_annotation(
         annotation: Mapping[str, Iterable[Union[str, int, bool]]],
         sample_names: Iterable[str]
-) -> Tuple[Iterable[str], Iterable[Iterable[bool]]]:
+) -> Tuple[np.ndarray, np.ndarray]:
     """ Translates a dictionary annotation {'category': [sample1, sample2, ...], ..} into a list of boolean masks.
     Accepts index, names and boolean.
 
@@ -99,7 +133,7 @@ def parse_data(
         data: Union[AnnData, DataFrame, np.ndarray],
         gene_names: Optional[Iterable[str]] = None,
         sample_names: Optional[Iterable[str]] = None
-) -> Tuple[np.ndarray, Iterable[str], Iterable[str]]:
+) -> Tuple[np.ndarray, list, list]:
     """Reduces :class:`~anndata.AnnData` and :class:`~pandas.DataFrame` to a :class:`~numpy.dnarray` and extracts
     `gene_names` and `sample_names` from index and column names.
 
@@ -193,20 +227,55 @@ def read_dict_from_json(fin):
     return json.load(open(fin, 'r'))
 
 
-def evaluate_prediction(prediction, reference):
+def evaluate_prediction(
+        prediction: DataFrame,
+        reference: Iterable[str]
+) -> DataFrame:
+    """Calculates F1 Score, Recall and Precision of a :func:`~pypairs.cyclone` prediction.
+
+    Parameters
+    ----------
+
+    prediction
+        :class:`~pandas.DataFrame` output from :func:`~pypairs.cyclone`.
+    reference
+        List of actual classes
+
+    Returns
+    -------
+
+        A :class:`~pandas.DataFrame` with columns "f1", "recall", "precision" and "average"
+        for all categories and a overall average containing the respective score.
+
+    """
     ref = np.array(reference)
     pred = np.array(prediction['prediction'])
 
-    labels = np.unique(list(ref) + list(pred))
+    labels_cats = np.unique(list(ref) + list(pred))
 
-    f1 = f1_score(ref, pred, average=None, labels=labels)
-    recall = recall_score(ref, pred, average=None, labels=labels)
-    precision = precision_score(ref, pred, average=None, labels=labels)
+    f1 = np.append(
+        f1_score(ref, pred, average=None, labels=labels_cats),
+        f1_score(ref, pred, average='macro', labels=labels_cats)
+    )
+    recall = np.append(
+        recall_score(ref, pred, average=None, labels=labels_cats),
+        recall_score(ref, pred, average='macro', labels=labels_cats)
+    )
+    precision = np.append(
+        precision_score(ref, pred, average=None, labels=labels_cats),
+        precision_score(ref, pred, average='macro', labels=labels_cats)
+    )
+
+    labels = np.append(labels_cats, "average")
 
     df = DataFrame(columns=labels, index=["f1", "recall", "precision"])
 
     df.loc["f1"] = f1
     df.loc["recall"] = recall
     df.loc["precision"] = precision
+
+    average = np.average(df.values, axis=0)
+
+    df.loc["average"] = average
 
     return df.T

@@ -8,3 +8,5 @@ h5py>=2.8.0
 sklearn
 sphinx
 sphinx_autodoc_typehints
+matplotlib
+plotly
