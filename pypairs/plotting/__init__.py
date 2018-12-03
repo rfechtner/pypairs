@@ -15,11 +15,31 @@ import plotly.plotly as py
 import os
 
 # TODO: For cell cycle prediction default plot
-# TODO: Add docstrings for plotting functions
-# TODO: Add plotting functions to docs
 
 
-def plot_evaluation(label: str, evaluation: DataFrame, show=True, save=True, overwrite=False):
+def plot_evaluation(
+        evaluation: DataFrame,
+        label: Optional[str] = "",
+        show: Optional[bool] = True,
+        save: Optional[bool] = True,
+        overwrite: Optional[bool] = False
+):
+    """Plots the prediction quality (see :func:`~pypairs.utils.evaluate_prediction`).
+
+    Parameters
+    ----------
+    evaluation
+        Output from :func:`~pypairs.utils.evaluate_prediction`
+    label
+        Used in title and filename (if save = True)
+    show
+        Show the produced plot? (Default: True)
+        If run from iPython plotly is used
+    save
+        Save plot to file in settings.figdir folder.
+    overwrite
+        If file already exists, overwrite?
+    """
     category_names = list(evaluation.index)
     plt.plot(
         category_names, evaluation.loc[:,"f1"], "ro",
@@ -67,6 +87,31 @@ def show_curve_for_pair(
         save: Optional[bool] = True,
         overwrite: Optional[bool] = True
 ):
+    """Illustrate change in average gene expression across categories.
+
+    Parameters
+    ----------
+
+    data
+        The (annotated) data matrix of shape ``n_obs`` * ``n_vars``.
+        Rows correspond to cells and columns to genes.
+    pair
+        A tuple or list of two genes names / a marker pair
+    annotation
+        Mapping from category to genes if ``data`` is not :class:`~anndata.AnnData`.
+        List of genes can be index, names or logical mask.
+    gene_names
+        Names for genes, must be same length as ``n_vars``.
+    sample_names
+        Names for samples, must be same length as ``n_obs``.
+    show
+        Show the produced plot? (Default: True)
+        If run from iPython plotly is used
+    save
+        Save plot to file in settings.figdir folder.
+    overwrite
+        If file already exists, overwrite?
+    """
     raw_data, gene_names, sample_names, category_names, categories = utils.parse_data_and_annotation(
         data, annotation, gene_names, sample_names
     )

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Documentation &mdash; PyPairs 3.0.0+21.ga72ee64 documentation</title>
+  <title>Documentation &mdash; PyPairs 0.1+45.gb57a5f2 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                3.0.0+21.ga72ee64
+                0.1+45.gb57a5f2
               </div>
             
           
@@ -89,9 +89,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#sandbag">Sandbag</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cyclone">Cyclone</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#datasets">Datasets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#plotting">Plotting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#utilities">Utilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#quality-assesment">Quality Assesment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting">Plotting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">References</a></li>
@@ -164,7 +163,7 @@
   <span class="target" id="module-pypairs"></span><div class="section" id="documentation">
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
 <p>To use PyPairs import the package as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pypairs</span> <span class="k">import</span> <span class="n">pairs</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pypairs</span> <span class="k">import</span> <span class="n">pairs</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">plotting</span>
 </pre></div>
 </div>
 <div class="section" id="sandbag">
@@ -201,7 +200,7 @@ all phases, using the corresponding set of marker pairs in pairs.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="pypairs.pairs.cyclone.html#pypairs.pairs.cyclone" title="pypairs.pairs.cyclone"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pairs.cyclone</span></code></a>(data[,&nbsp;marker_pairs,&nbsp;…])</td>
+<tr class="row-odd"><td><a class="reference internal" href="pypairs.pairs.cyclone.html#pypairs.pairs.cyclone" title="pypairs.pairs.cyclone"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pairs.cyclone</span></code></a>(data,&nbsp;marker_pairs[,&nbsp;…])</td>
 <td>Score samples for each category based on marker pairs.</td>
 </tr>
 </tbody>
@@ -227,17 +226,36 @@ for assigning cells into specific groups.</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="plotting">
-<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h2>
-<p>TBD</p>
-</div>
-<div class="section" id="utilities">
-<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
-<p>TBD</p>
-</div>
 <div class="section" id="quality-assesment">
 <h2>Quality Assesment<a class="headerlink" href="#quality-assesment" title="Permalink to this headline">¶</a></h2>
-<p>TBD</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="pypairs.utils.evaluate_prediction.html#pypairs.utils.evaluate_prediction" title="pypairs.utils.evaluate_prediction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.evaluate_prediction</span></code></a>(prediction,&nbsp;reference)</td>
+<td>Calculates F1 Score, Recall and Precision of a <code class="xref py py-func docutils literal notranslate"><span class="pre">cyclone()</span></code> prediction.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="plotting">
+<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="pypairs.plotting.plot_evaluation.html#pypairs.plotting.plot_evaluation" title="pypairs.plotting.plot_evaluation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotting.plot_evaluation</span></code></a>(evaluation[,&nbsp;…])</td>
+<td>Plots the prediction quality (see <a class="reference internal" href="pypairs.utils.evaluate_prediction.html#pypairs.utils.evaluate_prediction" title="pypairs.utils.evaluate_prediction"><code class="xref py py-func docutils literal notranslate"><span class="pre">evaluate_prediction()</span></code></a>).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="pypairs.plotting.show_curve_for_pair.html#pypairs.plotting.show_curve_for_pair" title="pypairs.plotting.show_curve_for_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotting.show_curve_for_pair</span></code></a>(data,&nbsp;pair[,&nbsp;…])</td>
+<td>Illustrate change in average gene expression across categories.</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -285,7 +303,7 @@ for assigning cells into specific groups.</p>
       <script type="text/javascript">
           var DOCUMENTATION_OPTIONS = {
               URL_ROOT:'./',
-              VERSION:'3.0.0+21.ga72ee64',
+              VERSION:'0.1+45.gb57a5f2',
               LANGUAGE:'None',
               COLLAPSE_INDEX:false,
               FILE_SUFFIX:'.html',

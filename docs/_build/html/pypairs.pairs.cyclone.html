@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypairs.pairs.cyclone &mdash; PyPairs 3.0.0+21.ga72ee64 documentation</title>
+  <title>pypairs.pairs.cyclone &mdash; PyPairs 0.1+45.gb57a5f2 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                3.0.0+21.ga72ee64
+                0.1+45.gb57a5f2
               </div>
             
           
@@ -89,9 +89,8 @@
 <li class="toctree-l2"><a class="reference internal" href="documentation.html#sandbag">Sandbag</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="documentation.html#cyclone">Cyclone</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html#datasets">Datasets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="documentation.html#plotting">Plotting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="documentation.html#utilities">Utilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html#quality-assesment">Quality Assesment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation.html#plotting">Plotting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">References</a></li>
@@ -170,12 +169,12 @@
 <h1>pypairs.pairs.cyclone<a class="headerlink" href="#pypairs-pairs-cyclone" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pypairs.pairs.cyclone">
-<code class="descclassname">pypairs.pairs.</code><code class="descname">cyclone</code><span class="sig-paren">(</span><em>data</em>, <em>marker_pairs=None</em>, <em>gene_names=None</em>, <em>sample_names=None</em>, <em>iterations=1000</em>, <em>min_iter=100</em>, <em>min_pairs=50</em><span class="sig-paren">)</span><a class="headerlink" href="#pypairs.pairs.cyclone" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pypairs.pairs.</code><code class="descname">cyclone</code><span class="sig-paren">(</span><em>data</em>, <em>marker_pairs</em>, <em>gene_names=None</em>, <em>sample_names=None</em>, <em>iterations=1000</em>, <em>min_iter=100</em>, <em>min_pairs=50</em><span class="sig-paren">)</span><a class="headerlink" href="#pypairs.pairs.cyclone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score samples for each category based on marker pairs.</p>
-<p><code class="docutils literal notranslate"><span class="pre">data</span></code> can be of type <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.13+13.ge227ae6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>, <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> and should
+<p><code class="docutils literal notranslate"><span class="pre">data</span></code> can be of type <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.13+17.ga8e2ae2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>, <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> and should
 contain the raw or normalized gene counts of shape <code class="docutils literal notranslate"><span class="pre">n_obs</span></code> * <code class="docutils literal notranslate"><span class="pre">n_vars</span></code>. Rows correspond to cells and columns to
 genes.</p>
-<p>If a <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.13+13.ge227ae6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a> object is passed, the category scores and the final prediction will be added to `
+<p>If a <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.13+17.ga8e2ae2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a> object is passed, the category scores and the final prediction will be added to `
 <code class="docutils literal notranslate"><span class="pre">`data.obs</span></code> with key ‘pypairs_{category}_score” and “pypairs_prediction”.</p>
 <p><code class="docutils literal notranslate"><span class="pre">marker_pairs</span></code> must be a mapping from category to list of 2-tuple Genes: <cite>{‘category’: [(Gene_1,Gene_2), …],
 …}</cite>. If no <code class="docutils literal notranslate"><span class="pre">marker_pairs</span></code> are passed the default are used from <code class="xref py py-func docutils literal notranslate"><span class="pre">default_marker()</span></code> based
@@ -189,7 +188,7 @@ on <a class="reference internal" href="reference.html#leng15" id="id1">[Leng15]<
 <dd><p class="first last">The (annotated) data matrix of shape <code class="docutils literal notranslate"><span class="pre">n_obs</span></code> * <code class="docutils literal notranslate"><span class="pre">n_vars</span></code>.
 Rows correspond to cells and columns to genes.</p>
 </dd>
-<dt><strong>marker_pairs</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]]]</dt>
+<dt><strong>marker_pairs</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]]</dt>
 <dd><p class="first last">A dict mapping from str to a list of 2-tuple, where the key is the category and the list contains the marker
 pairs: {‘Category_1’: [(Gene_1, Gene_2), …], …}. If not provided default marker pairs are used []</p>
 </dd>
@@ -226,8 +225,10 @@ pairs: {‘Category_1’: [(Gene_1, Gene_2), …], …}. If not provided default
 <p class="rubric">Examples</p>
 <p>To predict the cell cycle phase of the unsorted cell from the <a class="reference internal" href="reference.html#leng15" id="id2">[Leng15]</a>  dataset run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pypairs</span> <span class="k">import</span> <span class="n">pairs</span><span class="p">,</span> <span class="n">datasets</span>
+
 <span class="n">adata</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">leng15</span><span class="p">(</span><span class="s1">&#39;unsorted&#39;</span><span class="p">)</span>
-<span class="n">scores</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">scores</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">marker_pairs</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">default_cc_marker</span><span class="p">()</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">cyclone</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">marker_pairs</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -279,7 +280,7 @@ pairs: {‘Category_1’: [(Gene_1, Gene_2), …], …}. If not provided default
       <script type="text/javascript">
           var DOCUMENTATION_OPTIONS = {
               URL_ROOT:'./',
-              VERSION:'3.0.0+21.ga72ee64',
+              VERSION:'0.1+45.gb57a5f2',
               LANGUAGE:'None',
               COLLAPSE_INDEX:false,
               FILE_SUFFIX:'.html',

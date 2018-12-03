@@ -5,7 +5,7 @@ Documentation
 
 To use PyPairs import the package as follows::
 
-   from pypairs import pairs
+   from pypairs import pairs, datasets, utils, plotting
 
 
 .. _Methods:
@@ -56,18 +56,19 @@ Datasets
    datasets.leng15
    datasets.default_cc_marker
 
+Quality Assesment
+~~~~~~~~~~~~~~~~~
+
+.. autosummary::
+   :toctree: .
+
+   utils.evaluate_prediction
 
 Plotting
 ~~~~~~~~
 
-TBD
+.. autosummary::
+   :toctree: .
 
-Utilities
-~~~~~~~~~
-
-TBD
-
-Quality Assesment
-~~~~~~~~~~~~~~~~~
-
-TBD
+   plotting.plot_evaluation
+   plotting.show_curve_for_pair

@@ -14,7 +14,7 @@ from pypairs import log as logg
 
 def cyclone(
     data: Union[AnnData, DataFrame, np.ndarray, Iterable[Iterable[float]]],
-    marker_pairs: Mapping[str, Iterable[Tuple[str, str]]] = None,
+    marker_pairs: Mapping[str, Iterable[Tuple[str, str]]],
     gene_names: Optional[Iterable[str]] = None,
     sample_names: Optional[Iterable[str]] = None,
     iterations: Optional[int] = 1000,
@@ -66,8 +66,10 @@ def cyclone(
         To predict the cell cycle phase of the unsorted cell from the [Leng15]_  dataset run::
 
             from pypairs import pairs, datasets
+
             adata = datasets.leng15('unsorted')
-            scores = pairs.scores(adata)
+            marker_pairs = datasets.default_cc_marker()
+            scores = pairs.cyclone(adata, marker_pairs)
             print(scores)
 
     """

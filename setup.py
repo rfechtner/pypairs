@@ -2,8 +2,6 @@ from setuptools import setup
 from io import open
 import versioneer
 
-# TODO: Make import of plotting and building libraries optional
-
 with open('requirements.txt', encoding='utf-8') as requirements:
     requires = [l.strip() for l in requirements]
 
@@ -24,6 +22,8 @@ setup(
     python_requires='>=3.5',
     install_requires=requires,
     extras_require=dict(
-        scanpy=['scanpy']
+        plotting=['matplotlib plotly'],
+        scanpy=['scanpy'],
+        build=['sphinx sphinx_autodoc_typehints']
     )
 )

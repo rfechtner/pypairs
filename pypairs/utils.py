@@ -14,7 +14,6 @@ import os
 from pypairs import settings
 from pypairs import log as logg
 
-# TODO: Add evaluate_prediction to docs
 
 def parallel_njit(
         func: Callable[[], Any],
@@ -246,6 +245,24 @@ def evaluate_prediction(
 
         A :class:`~pandas.DataFrame` with columns "f1", "recall", "precision" and "average"
         for all categories and a overall average containing the respective score.
+
+    Example
+    -------
+
+        To get the prediction quality for the example usecase of :func:`~pypairs.cyclone` run::
+
+            from pypairs import pairs, datasets, utils, plotting
+            import numpy as np
+
+            adata = datasets.leng15('sorted')
+            marker_pairs = datasets.default_cc_marker()
+            scores = pairs.cyclone(adata, marker_pairs)
+
+            ref_labels = list(np.repeat("G2M", 76)) + list(np.repeat("S", 80)) + list(np.repeat("G1", 91))
+
+            prediction_quality = utils.evaluate_prediction(scores, ref_labels)
+
+            print(prediction_quality)
 
     """
     ref = np.array(reference)

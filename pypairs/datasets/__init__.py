@@ -7,7 +7,6 @@ from typing import Optional, Iterable, Tuple, Mapping
 
 from pypairs import utils
 
-# TODO: DOCSTRING for default_marker()
 
 def leng15(
         mode: Optional[str] = 'all',
@@ -84,8 +83,12 @@ def default_cc_marker(
 
     Parameters
     ----------
-        dataset
-            placeholder. only options currently 'leng15'. Everything else with raise a :class:`~NotImplementedError`
+    dataset
+        placeholder. only options currently 'leng15'. Everything else with raise a :class:`~NotImplementedError`
+
+    Returns
+    -------
+        Mapping from category `['G1','G2M','S']` to list of gene "marker pairs" `[('Gene1', 'Gene2'), ..]`.
 
     """
     if dataset == 'leng15':

@@ -69,7 +69,7 @@ intersphinx_mapping = dict(
     pandas=('http://pandas.pydata.org/pandas-docs/stable/', None),
     anndata=('https://anndata.readthedocs.io/en/latest/', None),
     scanpy=('https://scanpy.readthedocs.io/en/stable/', None),
-    numba=('http://numba.pydata.org/numba-doc/latest/index.html', None)
+    numba=('https://numba.pydata.org/numba-doc/latest/', None)
 )
 
 # Add any paths that contain templates here, relative to this directory.
