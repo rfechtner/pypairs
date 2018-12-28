@@ -1,6 +1,6 @@
 |PyPI| |Docs| |Build Status| |bioconda|
 
-.. |PyPI| image:: https://img.shields.io/pypi/v/scanpy.svg
+.. |PyPI| image:: https://img.shields.io/pypi/v/pypairs.svg
     :target: https://pypi.org/project/pypairs
 .. |Docs| image:: https://readthedocs.org/projects/pypairs/badge/?version=latest
    :target: https://pypairs.readthedocs.io
