@@ -14,6 +14,6 @@ deploy:
   provider: pypi
   user: rfechtner
   password:
-    secure: 
+    secure: UPxi4gsS90yyGZ7EBzbPewyx7MH+0GhglflCPYxMaYzifmZEay0LBgM/yZO2nd8PTc+5IEQYBmK+XhGsysJpb4ndtQ49yB+F+8mPkjy/EuKgkOt8/Pt5FiCUrS4vC8KezdwkuJU6qMwXIbAn4ipjCGilqIJXHqgEKRo6Ni7nkLiEO8LvbwTYBxl0Qz0VudmDat0YJpjVjtGSsJ3ClsHFTfldyJbJGak5CzeIqvscGvfZNbsdCePc46rg334eqaHPMhKeDyAOu8KKSuCWgl08LgDv90CrsqEunPVlibMVOzcRE8/AtrPJcLQK2k/+FIdbG9C2BEykvDT4l1OADu0uXts2Rjo3gnyupV1GcFNJW0kgBTApUus708k6cDs6vxdx+By7h6MXaUSzNEBS2pUiW7cfJQI3W6D8Hmq2k8+igfvt70l/cEN5Alhi2/+NQ3S+DcK3+8C5UGpf72jJBXOFh8aHYyQqjgD9mEpXAsdWk64tBREY3B7wYJA3/ieyisy6hRUkYHQrLX3LhnYB5D3okiDfbqR5rhRNCDmj87xZ79KCb+90L/EhbvMphnXVK2Of4bhXIgOH2XLDdfhpruQ58R6GLLzHFOGys+Lq2QXQR+XwHFgisF+zcoIw+dXjTfbfMbIyKUMmnRcY7Wft9qmXXMiFWJ02UZ5dYJXm6h6xPLk=
   on:
     tags: true
