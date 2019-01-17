@@ -12,6 +12,7 @@ script:
 - rst2html.py --halt=2 README.rst >/dev/null
 deploy:
   provider: pypi
+  twine_version: 1.12.1
   user: rfechtner
   password:
     secure: kdogbAxPrAyYCvyIGYgJdeaFvaMveIbmlvLIrS/P0N+h2BqSoCcyuiREipdn5ipdTaKSqAINQSINbQzGdAVf9xP3jidmhtNp9VLMLdMud4f9gcPHx8lLYKSTJXCmUnXyeKqhXOzscwAE+Wz3CD4Ro1R/IC/1+HB5wVAUc16sPpfKYvw3DRKw8/MKiZnza3D0wPy3+6aI5lOG2cuRtSiu+BtIIpFebawG9WwjLPPm5YWu8Q9QIA0WQvbk88JeHdEt6MlOHCfoN4QxLpvbmExYWhYrBokieZHzIr1s8SP4/WplqHO03eCD85b+3HRWCHFF1fn4mq+LP1DIcicAi+W1oGDY9pqIlYUVSuRqH+g+4AMratdnhMvVEXXpS68Fj9HzVSyoUjVM/9rkPGtoCeFNeUkol8N2Sb/pM4AVUl713xCC9RopwBAU7aNRVi4dZt9fL7Fj55bt9RZhlHXMJCEF5bk3610kwPJDzzZMO7iYwXRRZEyYrVzCZXJxYsilW7e9jSym2+ZvORJPuVwH1kLDZE5Pk3HCDaut3GOwvR51HgJ2aOyooddBxLI1nTRUfGld+mnhRypSMSgjdBU2alkVOl8TvgRiD7Z3TRHDeA/9Czm7bCGAHzW+u2/9ihidIDHrCRCeqLx4SmejZPgqeCwt2trvwQAfBh9S19alj4vkclc=
