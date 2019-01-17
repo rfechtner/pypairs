@@ -296,3 +296,26 @@ def evaluate_prediction(
     df.loc["average"] = average
 
     return df.T
+
+
+def filter_unexpressed_genes(data, gene_names):
+    mask = np.invert(np.all(data == 0, axis=0))
+    x = data[:, mask]
+    gene_names = np.array(gene_names)[mask]
+
+    return x, list(gene_names)
+
+
+def filter_matrix(data, gene_names, sample_names, categories, filter_genes, filter_samples):
+    if filter_genes:
+        gene_mask = to_boolean_mask(filter_genes, gene_names)
+        gene_names = list(np.array(gene_names)[gene_mask])
+        data = data[:, gene_mask]
+
+    if filter_samples:
+        sample_mask = to_boolean_mask(filter_samples, sample_names)
+        sample_names = list(np.array(sample_names)[sample_mask])
+        data = data[sample_mask, :]
+        categories = categories[:, sample_mask]
+
+    return data, gene_names, sample_names, categories

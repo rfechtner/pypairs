@@ -19,6 +19,8 @@ def sandbag(
         annotation: Optional[Mapping[str, Iterable[Union[str, int, bool]]]] = None,
         gene_names: Optional[Iterable[str]] = None,
         sample_names: Optional[Iterable[str]] = None,
+        filter_genes: Optional[Iterable[Union[str, int, bool]]] = None,
+        filter_samples: Optional[Iterable[Union[str, int, bool]]] = None,
         fraction: float = 0.65
 ) -> Mapping[str, Iterable[Tuple[str, str]]]:
     """
@@ -89,6 +91,10 @@ def sandbag(
             if overlapp.sum() > 0:
                 raise ValueError("A observation can not be in multiple categories")
     """
+
+    raw_data, gene_names, sample_names, categories = utils.filter_matrix(
+        raw_data, gene_names, sample_names, categories, filter_genes, filter_samples
+    )
 
     logg.hint('sandbag running with fraction of {}'.format(fraction))
 

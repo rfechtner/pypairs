@@ -5,4 +5,4 @@ pandas>=0.23.4
 psutil
 colorama
 h5py>=2.8.0
-sklearn
+scikit-learn
