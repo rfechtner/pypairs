@@ -20,6 +20,7 @@ deploy:
       secure: f7KmjmeMlTB904EE4sd9m96KCzCUfpEmGWl8n/53of29TUrXpv92T77X1vWfzFcdAadn/FPMrQsUzqXURgTgdpsT2Zk7DFScSDewdJ0JqQwOW73ucTwFtShzsX0GFcWT4xnR6Nvz5VM1A527//mLDR/CnyCwdDRT2bLidduUZOVtytwmSst/08tH1dK/iwqB74Ks2YIPGoi0/D3JzCKKkPGQnqnr+V4Q36hBHXUIUivEMQnvCBqS63+fdfMFOlwgMUWQrxIy/BFboWmlPqgymx4j2N3C8MLjt7cEBBt5rTZXnENstjWO1CZSVvlkpv57CUuxl4AuC2Es/wtat+qkFSZOnNDU+8UNWBWrJoFtJWZWUx+Rs0S4I+e8KjDJSWwy4cqZV9tEPJdXxW5SXOzzLLbveDqJxtVEk8vqRj3CiaTic3VCjxid2sDUPIJkdNDDu1Jm1C1/wn2vOtJMze5xyuwXIzL6ySNVwdne1rTSCy/OXxH5YPoZhDmFfs2iwGq+x+txJkQMvQfvCj8K7Yrg3+ipDTRlHJUHnfrpktTUNfyry46ajDxsBa3Jl+nyuYsczFIDEC/r9boP5F893kbDMwsTHzbugn60b/2vbdC7a6RleZyqySZ8vr+ly12nP5uzqRGmK2v9qi++PIzKEVwS+aYYwnkHJqIMVh8VMCQCp3M=
     on:
       branch: master
+      tags: true
       prerelease: true
       condition: $TRAVIS_PYTHON_VERSION = "3.6"
   # production pypi
