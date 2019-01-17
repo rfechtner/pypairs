@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypairs.pairs.sandbag &mdash; PyPairs 0.1+45.gb57a5f2 documentation</title>
+  <title>pypairs.pairs.sandbag &mdash; PyPairs 0+untagged.50.g0ba305b documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.1+45.gb57a5f2
+                0+untagged.50.g0ba305b
               </div>
             
           
@@ -169,12 +169,12 @@
 <h1>pypairs.pairs.sandbag<a class="headerlink" href="#pypairs-pairs-sandbag" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pypairs.pairs.sandbag">
-<code class="descclassname">pypairs.pairs.</code><code class="descname">sandbag</code><span class="sig-paren">(</span><em>data</em>, <em>annotation=None</em>, <em>gene_names=None</em>, <em>sample_names=None</em>, <em>fraction=0.65</em><span class="sig-paren">)</span><a class="headerlink" href="#pypairs.pairs.sandbag" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pypairs.pairs.</code><code class="descname">sandbag</code><span class="sig-paren">(</span><em>data</em>, <em>annotation=None</em>, <em>gene_names=None</em>, <em>sample_names=None</em>, <em>filter_genes=None</em>, <em>filter_samples=None</em>, <em>fraction=0.65</em><span class="sig-paren">)</span><a class="headerlink" href="#pypairs.pairs.sandbag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate ‘marker pairs’ from a trainings set.</p>
-<p><code class="docutils literal notranslate"><span class="pre">data</span></code> can be of type <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.13+17.ga8e2ae2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>, <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> and should
+<p><code class="docutils literal notranslate"><span class="pre">data</span></code> can be of type <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.17+10.gf0b576d)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>, <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> and should
 contain the raw or normalized gene counts of shape <code class="docutils literal notranslate"><span class="pre">n_obs</span></code> * <code class="docutils literal notranslate"><span class="pre">n_vars</span></code>. Rows correspond to cells and columns to
 genes.</p>
-<p>If a <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.13+17.ga8e2ae2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a> object is passed, the category for each sample should be in in
+<p>If a <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.17+10.gf0b576d)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a> object is passed, the category for each sample should be in in
 <code class="docutils literal notranslate"><span class="pre">data.vars['category']</span></code>, gene names in <code class="docutils literal notranslate"><span class="pre">data.var_names</span></code> and sample names in <code class="docutils literal notranslate"><span class="pre">data.obs_names</span></code>.
 If not this information must be passed via <code class="docutils literal notranslate"><span class="pre">annotation</span></code>, <code class="docutils literal notranslate"><span class="pre">gene_names</span></code> and <code class="docutils literal notranslate"><span class="pre">sample_names</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">annotation</span></code> must be in form of <cite>{‘category1’: [‘sample_1’,’sample_2’,…], …}</cite>.
@@ -193,7 +193,7 @@ in one category to <cite>g1 &lt; g2</cite> in all other categories, for at least
 Rows correspond to cells and columns to genes.</p>
 </dd>
 <dt><strong>annotation</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>]]]]</dt>
-<dd><p class="first last">Mapping from category to genes if <code class="docutils literal notranslate"><span class="pre">data</span></code> is not <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.13+17.ga8e2ae2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>.
+<dd><p class="first last">Mapping from category to genes if <code class="docutils literal notranslate"><span class="pre">data</span></code> is not <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.17+10.gf0b576d)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>.
 List of genes can be index, names or logical mask.</p>
 </dd>
 <dt><strong>gene_names</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]</dt>
@@ -271,21 +271,10 @@ than the default (0.65) based on the bundled <code class="docutils literal notra
 
     
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'0.1+45.gb57a5f2',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
   

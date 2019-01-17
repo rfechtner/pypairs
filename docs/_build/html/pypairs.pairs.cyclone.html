@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypairs.pairs.cyclone &mdash; PyPairs 0.1+45.gb57a5f2 documentation</title>
+  <title>pypairs.pairs.cyclone &mdash; PyPairs 0+untagged.50.g0ba305b documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.1+45.gb57a5f2
+                0+untagged.50.g0ba305b
               </div>
             
           
@@ -171,10 +171,10 @@
 <dt id="pypairs.pairs.cyclone">
 <code class="descclassname">pypairs.pairs.</code><code class="descname">cyclone</code><span class="sig-paren">(</span><em>data</em>, <em>marker_pairs</em>, <em>gene_names=None</em>, <em>sample_names=None</em>, <em>iterations=1000</em>, <em>min_iter=100</em>, <em>min_pairs=50</em><span class="sig-paren">)</span><a class="headerlink" href="#pypairs.pairs.cyclone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score samples for each category based on marker pairs.</p>
-<p><code class="docutils literal notranslate"><span class="pre">data</span></code> can be of type <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.13+17.ga8e2ae2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>, <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> and should
+<p><code class="docutils literal notranslate"><span class="pre">data</span></code> can be of type <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.17+10.gf0b576d)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>, <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> and should
 contain the raw or normalized gene counts of shape <code class="docutils literal notranslate"><span class="pre">n_obs</span></code> * <code class="docutils literal notranslate"><span class="pre">n_vars</span></code>. Rows correspond to cells and columns to
 genes.</p>
-<p>If a <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.13+17.ga8e2ae2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a> object is passed, the category scores and the final prediction will be added to `
+<p>If a <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.17+10.gf0b576d)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a> object is passed, the category scores and the final prediction will be added to `
 <code class="docutils literal notranslate"><span class="pre">`data.obs</span></code> with key ‘pypairs_{category}_score” and “pypairs_prediction”.</p>
 <p><code class="docutils literal notranslate"><span class="pre">marker_pairs</span></code> must be a mapping from category to list of 2-tuple Genes: <cite>{‘category’: [(Gene_1,Gene_2), …],
 …}</cite>. If no <code class="docutils literal notranslate"><span class="pre">marker_pairs</span></code> are passed the default are used from <code class="xref py py-func docutils literal notranslate"><span class="pre">default_marker()</span></code> based
@@ -277,21 +277,10 @@ pairs: {‘Category_1’: [(Gene_1, Gene_2), …], …}. If not provided default
 
     
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'0.1+45.gb57a5f2',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
   
