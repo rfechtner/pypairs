@@ -11,7 +11,7 @@ script:
 - pytest
 - rst2html.py --halt=2 README.rst >/dev/null
 before_deploy:
-  - export PRERELEASE=`curl https://api.github.com/repos/rfechtner/pypairs/releases | python -c "import sys, json; print(str(json.load(sys.stdin)[0]['prerelease']))"`
+- export PRERELEASE=`curl https://api.github.com/repos/rfechtner/pypairs/releases | python -c "import sys, json; print(str(json.load(sys.stdin)[0]['prerelease']))"`
 deploy:
   # test pypi
   - provider: pypi
@@ -23,8 +23,7 @@ deploy:
     on:
       branch: master
       tags: true
-      prerelease: true
-      condition: $TRAVIS_PYTHON_VERSION = "3.6" AND $PRERELEASE = "True"
+      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $PRERELEASE = "True"
   # production pypi
   - provider: pypi
     twine_version: 1.12.1
@@ -34,5 +33,4 @@ deploy:
     on:
       branch: master
       tags: true
-      prerelease: false
-      condition: $TRAVIS_PYTHON_VERSION = "3.6" AND $PRERELEASE = "False"
+      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $PRERELEASE = "False"
