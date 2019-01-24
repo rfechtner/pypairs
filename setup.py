@@ -1,4 +1,5 @@
 from setuptools import setup
+from setuptools import find_packages
 from io import open
 import versioneer
 
@@ -14,7 +15,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     description='A python scRNA-Seq classifier',
     long_description=readme,
-    packages=['pypairs'],
+    packages=find_packages(),
     url='https://github.com/rfechtner/pypairs',
     license='BSD',
     author='Ron Fechtner',
