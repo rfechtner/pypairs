@@ -1,5 +1,5 @@
-include versioneer.py
-include pypairs/_version.py
+include *.py
 include requirements.txt 
 include README.rst 
 include LICENSE
+recursive-include pypairs *.json *.gz *.py
