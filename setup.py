@@ -19,6 +19,9 @@ setup(
     description='A python scRNA-Seq classifier',
     long_description=readme,
     packages=find_packages(),
+    package_data = {
+        '': ['*.json', '*.gz'],
+    },
     url='https://github.com/rfechtner/pypairs',
     license='BSD',
     author='Ron Fechtner',
