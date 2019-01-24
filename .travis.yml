@@ -21,7 +21,7 @@ deploy:
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_PYTHON_VERSION = "3.6"
+      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_TAG =~ /beta/
   # production pypi
   - provider: pypi
     twine_version: 1.12.1
@@ -31,4 +31,4 @@ deploy:
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_TAG !~ /beta/
+      condition: $TRAVIS_PYTHON_VERSION = "3.6" && (! $TRAVIS_TAG =~ /beta/)
