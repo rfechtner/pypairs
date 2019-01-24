@@ -10,6 +10,7 @@ install:
 script:
 - pytest
 - rst2html.py --halt=2 README.rst >/dev/null
+- echo $TRAVIS_TAG
 deploy:
   # test pypi
   - provider: pypi
@@ -21,7 +22,7 @@ deploy:
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_TAG =~ /beta/
+      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_TAG =~ /b/
   # production pypi
   - provider: pypi
     twine_version: 1.12.1
@@ -31,4 +32,4 @@ deploy:
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_PYTHON_VERSION = "3.6" && (! $TRAVIS_TAG =~ /beta/)
+      condition: $TRAVIS_PYTHON_VERSION = "3.6" && (! $TRAVIS_TAG =~ /b/)
