@@ -13,6 +13,6 @@ def test_cyclone():
 
     scores = pairs.cyclone(training_data, datasets.default_cc_marker(), iterations=1000, min_iter=10, min_pairs=1)
 
-    test_quality = utils.evaluate_prediction(prediction=scores, reference=ref_prediction)
+    test_quality = utils.evaluate_prediction(prediction=scores['max_class'], reference=ref_prediction)
 
     assert np.allclose(np.array(test_quality.values, dtype=float), np.ones(shape=(4, 4)), atol=0.1)
