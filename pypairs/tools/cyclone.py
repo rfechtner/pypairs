@@ -83,7 +83,7 @@ def cyclone(
     marker_pairs, used = filter_marker_pairs(marker_pairs, gene_names)
 
     if settings.n_jobs > 1:
-        logg.hint('multiprocessing not available for cyclone')
+        logg.hint('multiprocessing not yet available for cyclone')
     else:
         logg.hint('staring processing with 1 thread')
 
@@ -203,9 +203,9 @@ def filter_marker_pairs(marker_pairs, gene_names):
 
                 new_pairs_idx.append([new_idx[g1_idx], new_idx[g2_idx]])
             except KeyError:
-                logg.error("Genepair ({}, {}) not present in dataset, don't know why though".format(pair[0], pair[1]))
+                logg.hint("genepair ({}, {}) not present in dataset".format(pair[0], pair[1]))
 
         marker_pairs_idx[cat] = np.array(new_pairs_idx)
 
-    logg.hint("Translated marker pairs, {} removed".format(removed))
+    logg.hint("translated marker pairs, {} removed".format(removed))
     return marker_pairs_idx, used_masks
