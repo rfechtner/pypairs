@@ -106,6 +106,9 @@ def sandbag(
     # Dynamic jitting of function check_pairs based on platform compability for multiprocessing via numba
     check_pairs_decorated = utils.parallel_njit(check_pairs)
 
+    # BUG: I have to pass a copy to get rid of all references to the pre_filtered raw_data object, otherwise numba will
+    # fail with a lowering error
+    raw_data = raw_data.copy()
     pairs = check_pairs_decorated(raw_data, categories, thresholds, len(gene_names))
 
     # Convert to easier to read dict and return
@@ -119,20 +122,6 @@ def sandbag(
             category_names[cat]
         ].append((gene_names[g1], gene_names[g2]))
 
-    """
-    for i, pair in enumerate(pairs):
-        try:
-            marker_pairs_dict[category_names[mapping[i]]].append(
-                (gene_names[pair[0]], gene_names[pair[1]])
-            )
-        except:
-
-            try:
-                m = mapping[i]
-            except:
-                m = "N/A"
-            print("failed for i.e.: i = {} for mapping = {} pair ({},{}). With {} gene_names and {} category_names and {} mappings".format(i, m, pair[0], pair[1], len(gene_names), len(category_names), len(mapping)))
-    """
     logg.info('finished', time=True)
 
     if settings.verbosity > 2:
@@ -156,7 +145,6 @@ def check_pairs(
         thresholds: Iterable[int],
         n_genes: int
 ) -> Iterable[int]:
-    #Tuple[Iterable[Tuple[int, int]], Iterable[int]]:
     """Loops over all 2-tuple combinations of genes and checks if they fullfil the 'marker pair' criteria
 
     We return marker pairs as dict mapping category to list of 2-tuple: {'C': [(A,B), ...], ...}
@@ -187,8 +175,6 @@ def check_pairs(
 
     # Will hold the tuples with the pairs
     pairs = []
-    # Will hold the categories for the respective tuple. pairs[i] is in category mapping[i]
-    #mapping = []
 
     # Iterate over all possible gene combinations
     for g1 in range(0, n_genes):
@@ -199,6 +185,7 @@ def check_pairs(
             x2 = raw_data[:, g2]
 
             # Subtract all gene counts of gene 2 from gene counts of gene 1
+
             diff = np.subtract(x1, x2)
 
             # Counter for phases in which gene 1 > gene 2
