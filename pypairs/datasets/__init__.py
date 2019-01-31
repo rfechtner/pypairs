@@ -5,7 +5,8 @@ import anndata
 import pandas as pd
 from typing import Optional, Iterable, Tuple, Mapping
 
-from pypairs import utils
+from pypairs import utils, settings
+from pypairs import log as logg
 
 
 def leng15(
@@ -100,5 +101,32 @@ def default_cc_marker(
 
         return utils.read_dict_from_json(filename)
     else:
-        raise NotImplementedError("Dataset not yet available")
+        raise NotImplementedError("dataset not yet available")
         # Maybe more to come...
+
+def export_marker(
+        marker: Mapping[str, Iterable[Tuple[str,str]]],
+        path: str
+):
+    utils.write_dict_to_json(marker, path)
+    logg.hint("marker pairs written to: " + str(path))
+
+def load_marker(
+        path: str
+):
+
+        marker = utils.read_dict_from_json(path)
+
+        if settings.verbosity > 2:
+            count_total = 0
+            count_str = []
+            for m, p in marker.items():
+                c = len(p)
+                count_total += c
+                count_str.append("\t{}: {}".format(m, c))
+
+            logg.hint("loaded {} marker pairs".format(count_total))
+            for s in count_str:
+                logg.hint(s)
+
+        return marker
