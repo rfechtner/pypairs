@@ -10,7 +10,8 @@ from pypairs import utils
 
 def leng15(
         mode: Optional[str] = 'all',
-        gene_sub: Optional[Iterable[int]] = None
+        gene_sub: Optional[Iterable[int]] = None,
+        sample_sub: Optional[Iterable[int]] = None,
 ) -> Iterable[Iterable[float]]:
     """Single cell RNA-seq data of human hESCs to evaluate Oscope [Leng15]_
 
@@ -57,6 +58,9 @@ def leng15(
 
     if gene_sub:
         x = x.iloc[gene_sub, :]
+
+    if sample_sub:
+        x = x.iloc[:, sample_sub]
 
     x = x.transpose()
 
