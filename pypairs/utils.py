@@ -170,7 +170,7 @@ def parse_data(
         else:
             raise ValueError("data can only be of type AnnData, DataFrame or ndarray")
 
-    logg.hint("passed data of shape {} x {} (genes x samples)".format(*raw_data.shape))
+    logg.hint("passed data of shape {} x {} (samples x genes)".format(*raw_data.shape))
     return raw_data, gene_names, sample_names
 
 def to_boolean_mask(
@@ -307,15 +307,28 @@ def filter_unexpressed_genes(data, gene_names):
 
 
 def filter_matrix(data, gene_names, sample_names, categories, filter_genes, filter_samples):
-    if filter_genes:
+
+    dim_befor_filter = data.shape
+    filtered = False
+
+    if filter_genes is not None:
         gene_mask = to_boolean_mask(filter_genes, gene_names)
         gene_names = list(np.array(gene_names)[gene_mask])
-        data = data[:, gene_mask]
+        data = np.copy(data[:, gene_mask])
+        filtered = True
 
-    if filter_samples:
+    if filter_samples is not None:
         sample_mask = to_boolean_mask(filter_samples, sample_names)
         sample_names = list(np.array(sample_names)[sample_mask])
-        data = data[sample_mask, :]
+        data = np.copy(data[sample_mask, :])
         categories = categories[:, sample_mask]
+        filtered = True
 
-    return data, gene_names, sample_names, categories
+    if filtered:
+        logg.hint("filtered out {} samples and {} genes based on passed subsets".format(
+            dim_befor_filter[0] - data.shape[0],
+            dim_befor_filter[1] - data.shape[1]
+        ))
+        logg.hint("new data is of shape {} x {}".format(*data.shape))
+
+    return np.copy(data), gene_names, sample_names, categories
