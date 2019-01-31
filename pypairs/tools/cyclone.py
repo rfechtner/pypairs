@@ -93,15 +93,22 @@ def cyclone(
 
     scores_df = DataFrame(scores, columns=marker_pairs.keys())
     scores_df.index = sample_names
-    scores_df['prediction'] = scores_df.idxmax(axis=1)
+    scores_df['max_class'] = scores_df.idxmax(axis=1)
+
+    if len(marker_pairs.items()) == 3 and all(elem in marker_pairs.keys() for elem in ["G1", "S", "G2M"]):
+        scores_df['cc_prediction'] = ["S" if x < 0.5 else scores_df['max_class'][i] for i, x in
+                                                 enumerate(scores_df.loc[:, ["G1", "G2M"]].max(axis=1).values)]
 
     logg.info("finished", time=True)
 
     if isinstance(data, AnnData):
-        logg.hint('adding scores with key "pypairs_{category}_score" to `data.obs`"')
-        logg.hint('adding prediction with key "pypairs_prediction" to `data.obs`"')
+        logg.hint('adding scores with key "pypairs_{category}" to `data.obs`"')
+        logg.hint('adding max_class with key "pypairs_max_class" to `data.obs`"')
+        if len(marker_pairs.items()) == 3 and all(elem in marker_pairs.keys() for elem in ["G1", "S", "G2M"]):
+            logg.hint('adding cc_prediction with key "pypairs_cc_prediction" to `data.obs`"')
+
         for name, values in scores_df.iteritems():
-            key_name = 'pypairs_{}_score'.format(name)
+            key_name = 'pypairs_{}'.format(name)
             data.obs[key_name] = values
 
     logg.info('finished', time=True)
