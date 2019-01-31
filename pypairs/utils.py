@@ -227,8 +227,8 @@ def read_dict_from_json(fin):
 
 
 def evaluate_prediction(
-        prediction: DataFrame,
-        reference: Iterable[str]
+        prediction: Iterable[str],
+        reference: Iterable[str],
 ) -> DataFrame:
     """Calculates F1 Score, Recall and Precision of a :func:`~pypairs.cyclone` prediction.
 
@@ -236,7 +236,7 @@ def evaluate_prediction(
     ----------
 
     prediction
-        :class:`~pandas.DataFrame` output from :func:`~pypairs.cyclone`.
+        List of predicted classes.
     reference
         List of actual classes
 
@@ -266,7 +266,7 @@ def evaluate_prediction(
 
     """
     ref = np.array(reference)
-    pred = np.array(prediction['prediction'])
+    pred = np.array(prediction)
 
     labels_cats = np.unique(list(ref) + list(pred))
 
