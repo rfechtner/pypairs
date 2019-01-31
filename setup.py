@@ -1,4 +1,8 @@
-from setuptools import setup
+import sys
+if sys.version_info < (3,):
+    sys.exit('scanpy requires Python >= 3.5')
+
+from setuptools import setup, find_packages
 from io import open
 import versioneer
 
@@ -14,7 +18,10 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     description='A python scRNA-Seq classifier',
     long_description=readme,
-    packages=['pypairs'],
+    packages=find_packages(),
+    package_data = {
+        '': ['*.json', '*.gz'],
+    },
     url='https://github.com/rfechtner/pypairs',
     license='BSD',
     author='Ron Fechtner',
@@ -24,5 +31,22 @@ setup(
     extras_require=dict(
         plotting=['matplotlib', 'plotly'],
         scanpy=['scanpy']
-    )
+    ),
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Framework :: Jupyter',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'Natural Language :: English',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Topic :: Scientific/Engineering :: Bio-Informatics',
+        'Topic :: Scientific/Engineering :: Visualization',
+    ]
 )
