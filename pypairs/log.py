@@ -128,7 +128,7 @@ def _write_log(*msg, end='\n'):
         One or more arguments to be formatted as string. Same behavior as print
         function.
     """
-    from settings import logfile
+    from pypairs.settings import logfile
     if logfile == '':
         print(*msg, end=end)
     else:
