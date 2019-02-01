@@ -11,7 +11,7 @@
 Release notes
 -------------
 
-Version 3.0.1 - 3.0.8, :small:`Feb 1, 2019`
+Version 3.0.1 - 3.0.9, :small:`Feb 1, 2019`
 """""""""""""""""""""""""""
 
 - Various bug fixes
