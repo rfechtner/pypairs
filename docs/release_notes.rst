@@ -11,7 +11,12 @@
 Release notes
 -------------
 
-Version 3.0.0, :small:`TBD`
+Version 3.0.1 - 3.0.8, :small:`Feb 1, 2019`
+"""""""""""""""""""""""""""
+
+- Various bug fixes
+
+Version 3.0.0, :small:`Jan 18, 2019 - Jan 31, 2019`
 """""""""""""""""""""""""""
 
 - Complete restructuring of the package. Now fully compatiple with :mod:`scanpy` .
