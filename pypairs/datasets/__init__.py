@@ -53,7 +53,7 @@ def leng15(
         x.set_index("Unnamed: 0", inplace=True)
 
         try:
-            utils.save_pandas(settings.cachedir + filename_cached)
+            utils.save_pandas(x, settings.cachedir + filename_cached)
         except IOError as e:
             logg.warn("could not write to {}.\n Please verify that the path exists and is writable." +
                       "Or change `cachedir` via `pypairs.settings.cachedir`".format(settings.cachedir))
