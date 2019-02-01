@@ -1,6 +1,4 @@
-import os
-import gzip
-import io
+import os, gzip, io
 import anndata
 import pandas as pd
 from typing import Optional, Iterable, Tuple, Mapping
@@ -10,9 +8,9 @@ from pypairs import log as logg
 
 
 def leng15(
-        mode: Optional[str] = 'all',
-        gene_sub: Optional[Iterable[int]] = None,
-        sample_sub: Optional[Iterable[int]] = None,
+    mode: Optional[str] = 'all',
+    gene_sub: Optional[Iterable[int]] = None,
+    sample_sub: Optional[Iterable[int]] = None,
 ) -> Iterable[Iterable[float]]:
     """Single cell RNA-seq data of human hESCs to evaluate Oscope [Leng15]_
 
@@ -41,12 +39,24 @@ def leng15(
     adata : :class:`~anndata.AnnData`
         Annotated data matrix containing the normalized gene counts
     """
-    filename = os.path.join(os.path.dirname(__file__), 'GSE64016_H1andFUCCI_normalized_EC.csv.gz')
 
-    with gzip.open(filename, 'r') as fin:
-        x = pd.read_csv(io.TextIOWrapper(fin, newline=""))
+    filename_cached = "GSE64016_H1andFUCCI_normalized_EC.pkl"
 
-    x.set_index("Unnamed: 0", inplace=True)
+    if os.path.isfile(settings.cachedir + filename_cached):
+        x = utils.load_pandas(filename_cached)
+    else:
+        filename = os.path.join(os.path.dirname(__file__), 'GSE64016_H1andFUCCI_normalized_EC.csv.gz')
+
+        with gzip.open(filename, 'r') as fin:
+            x = pd.read_csv(io.TextIOWrapper(fin, newline=""))
+
+        x.set_index("Unnamed: 0", inplace=True)
+
+        try:
+            utils.save_pandas(settings.cachedir + filename_cached)
+        except IOError as e:
+            logg.warn("could not write to {}.\n Please verify that the path exists and is writable." +
+                      "Or change `cachedir` via `pypairs.settings.cachedir`".format(settings.cachedir))
 
     if mode == 'sorted':
         x.drop(list(x.filter(regex='H1_')), axis=1, inplace=True)
@@ -80,7 +90,7 @@ def leng15(
 
 
 def default_cc_marker(
-        dataset: Optional[str] = 'leng15'
+    dataset: Optional[str] = 'leng15'
 ) -> Mapping[str, Iterable[Tuple[str,str]]]:
     """Cell cycle marker pairs derived from [Leng15]_ with the default :func:`~pypairs.pairs.sandbag` settings.
 
@@ -103,30 +113,3 @@ def default_cc_marker(
     else:
         raise NotImplementedError("dataset not yet available")
         # Maybe more to come...
-
-def export_marker(
-        marker: Mapping[str, Iterable[Tuple[str,str]]],
-        path: str
-):
-    utils.write_dict_to_json(marker, path)
-    logg.hint("marker pairs written to: " + str(path))
-
-def load_marker(
-        path: str
-):
-
-        marker = utils.read_dict_from_json(path)
-
-        if settings.verbosity > 2:
-            count_total = 0
-            count_str = []
-            for m, p in marker.items():
-                c = len(p)
-                count_total += c
-                count_str.append("\t{}: {}".format(m, c))
-
-            logg.hint("loaded {} marker pairs".format(count_total))
-            for s in count_str:
-                logg.hint(s)
-
-        return marker

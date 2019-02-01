@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypairs.pairs.cyclone &mdash; PyPairs 0+untagged.50.g0ba305b documentation</title>
+  <title>pypairs.pairs.cyclone &mdash; PyPairs v3.0.8+0.g6700f7b documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0+untagged.50.g0ba305b
+                v3.0.8+0.g6700f7b
               </div>
             
           
@@ -90,7 +90,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="documentation.html#cyclone">Cyclone</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html#datasets">Datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html#quality-assesment">Quality Assesment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="documentation.html#plotting">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation.html#utils">Utils</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">References</a></li>
@@ -171,26 +171,40 @@
 <dt id="pypairs.pairs.cyclone">
 <code class="descclassname">pypairs.pairs.</code><code class="descname">cyclone</code><span class="sig-paren">(</span><em>data</em>, <em>marker_pairs</em>, <em>gene_names=None</em>, <em>sample_names=None</em>, <em>iterations=1000</em>, <em>min_iter=100</em>, <em>min_pairs=50</em><span class="sig-paren">)</span><a class="headerlink" href="#pypairs.pairs.cyclone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score samples for each category based on marker pairs.</p>
-<p><code class="docutils literal notranslate"><span class="pre">data</span></code> can be of type <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.17+10.gf0b576d)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>, <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> and should
+<p><code class="docutils literal notranslate"><span class="pre">data</span></code> can be of type <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.18+1.ged6ee96)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a>, <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> and should
 contain the raw or normalized gene counts of shape <code class="docutils literal notranslate"><span class="pre">n_obs</span></code> * <code class="docutils literal notranslate"><span class="pre">n_vars</span></code>. Rows correspond to cells and columns to
 genes.</p>
-<p>If a <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.17+10.gf0b576d)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a> object is passed, the category scores and the final prediction will be added to `
-<code class="docutils literal notranslate"><span class="pre">`data.obs</span></code> with key ‘pypairs_{category}_score” and “pypairs_prediction”.</p>
-<p><code class="docutils literal notranslate"><span class="pre">marker_pairs</span></code> must be a mapping from category to list of 2-tuple Genes: <cite>{‘category’: [(Gene_1,Gene_2), …],
-…}</cite>. If no <code class="docutils literal notranslate"><span class="pre">marker_pairs</span></code> are passed the default are used from <code class="xref py py-func docutils literal notranslate"><span class="pre">default_marker()</span></code> based
-on <a class="reference internal" href="reference.html#leng15" id="id1">[Leng15]</a> (marker pairs for cell cycle prediction).</p>
+<blockquote>
+<div><ul class="simple">
+<li>If a <a class="reference external" href="https://anndata.readthedocs.io/en/latest/anndata.AnnData.html#anndata.AnnData" title="(in anndata v0.6.18+1.ged6ee96)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code></a> object is passed, the category scores and the final prediction will be added
+to <code class="docutils literal notranslate"><span class="pre">data.obs</span></code> with key <code class="docutils literal notranslate"><span class="pre">pypairs_{category}_score</span></code> and <code class="docutils literal notranslate"><span class="pre">pypairs_max_class</span></code>.<ul>
+<li>If marker pairs contain only the cell cycle categories G1, S and G2M an additional column
+<code class="docutils literal notranslate"><span class="pre">pypairs_cc_prediction</span></code> will be added. Where category S is assigned to samples where G1 and G2M score
+are below 0.5, as described in <a class="reference internal" href="reference.html#scialdone15" id="id1">[Scialdone15]</a>.</li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">marker_pairs</span></code>, i.e. output from <code class="xref py py-func docutils literal notranslate"><span class="pre">sandbag()</span></code>, must be a mapping from category to list of
+2-tuple Genes: <cite>{‘category’: [(Gene_1,Gene_2), …], …}</cite>.</p>
+<blockquote>
+<div><ul class="simple">
+<li>If no <code class="docutils literal notranslate"><span class="pre">marker_pairs</span></code> are passed the default are used from <code class="xref py py-func docutils literal notranslate"><span class="pre">default_marker()</span></code>
+based on <a class="reference internal" href="reference.html#leng15" id="id2">[Leng15]</a> (marker pairs for cell cycle prediction).</li>
+</ul>
+</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>data</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]]]</dt>
+<dt><strong>data</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">AnnData</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]]]</dt>
 <dd><p class="first last">The (annotated) data matrix of shape <code class="docutils literal notranslate"><span class="pre">n_obs</span></code> * <code class="docutils literal notranslate"><span class="pre">n_vars</span></code>.
 Rows correspond to cells and columns to genes.</p>
 </dd>
 <dt><strong>marker_pairs</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]]</dt>
 <dd><p class="first last">A dict mapping from str to a list of 2-tuple, where the key is the category and the list contains the marker
-pairs: {‘Category_1’: [(Gene_1, Gene_2), …], …}. If not provided default marker pairs are used []</p>
+pairs: {‘Category_1’: [(Gene_1, Gene_2), …], …}. If not provided default marker pairs are used</p>
 </dd>
 <dt><strong>gene_names</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]</dt>
 <dd><p class="first last">Names for genes, must be same length as <code class="docutils literal notranslate"><span class="pre">n_vars</span></code>.</p>
@@ -199,13 +213,13 @@ pairs: {‘Category_1’: [(Gene_1, Gene_2), …], …}. If not provided default
 <dd><p class="first last">Names for samples, must be same length as <code class="docutils literal notranslate"><span class="pre">n_obs</span></code>.</p>
 </dd>
 <dt><strong>iterations</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</dt>
-<dd><p class="first last">An integer specifying the number of iterations for random sampling to obtain a cycle score.</p>
+<dd><p class="first last">An integer specifying the number of iterations for random sampling to obtain a cycle score. Default: 1000</p>
 </dd>
 <dt><strong>min_iter</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</dt>
-<dd><p class="first last">An integer specifying the minimum number of iterations for score estimation.</p>
+<dd><p class="first last">An integer specifying the minimum number of iterations for score estimation. Default: 100</p>
 </dd>
 <dt><strong>min_pairs</strong> : <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</dt>
-<dd><p class="first last">An integer specifying the minimum number of pairs for cycle estimation.</p>
+<dd><p class="first last">An integer specifying the minimum number of pairs for cycle estimation. Default: 50</p>
 </dd>
 </dl>
 </td>
@@ -214,8 +228,13 @@ pairs: {‘Category_1’: [(Gene_1, Gene_2), …], …}. If not provided default
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li>A <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> with samples as index and categories as columns with scores for each category for each</li>
-<li><em>sample and a additional column with the name of the max scoring category for each sample</em></li>
+<li>A <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> with samples as index and categories as columns with scores for each category for each</li>
+<li><em>sample and a additional column with the name of the max scoring category for each sample.</em> –<ul>
+<li>If marker pairs contain only the cell cycle categories G1, S and G2M an additional column
+<code class="docutils literal notranslate"><span class="pre">pypairs_cc_prediction</span></code> will be added. Where category S is assigned to samples where G1 and G2M score are
+below 0.5, as described in <a class="reference internal" href="reference.html#scialdone15" id="id3">[Scialdone15]</a>.</li>
+</ul>
+</li>
 </ul>
 </p>
 </td>
@@ -223,8 +242,8 @@ pairs: {‘Category_1’: [(Gene_1, Gene_2), …], …}. If not provided default
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<p>To predict the cell cycle phase of the unsorted cell from the <a class="reference internal" href="reference.html#leng15" id="id2">[Leng15]</a>  dataset run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pypairs</span> <span class="k">import</span> <span class="n">pairs</span><span class="p">,</span> <span class="n">datasets</span>
+<p>To predict the cell cycle phase of the unsorted cell from the <a class="reference internal" href="reference.html#leng15" id="id4">[Leng15]</a>  dataset run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pypairs</span> <span class="kn">import</span> <span class="nn">pairs</span><span class="o">,</span> <span class="nn">datasets</span>
 
 <span class="n">adata</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">leng15</span><span class="p">(</span><span class="s1">&#39;unsorted&#39;</span><span class="p">)</span>
 <span class="n">marker_pairs</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">default_cc_marker</span><span class="p">()</span>
@@ -281,6 +300,7 @@ pairs: {‘Category_1’: [(Gene_1, Gene_2), …], …}. If not provided default
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
 
   

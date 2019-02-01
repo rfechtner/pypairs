@@ -191,7 +191,7 @@ def print_versions():
     """Versions that might influence the numerical results.
     Matplotlib and Seaborn are excluded from this.
     """
-    _print_versions_dependencies(['scanpy'] + _DEPENDENCIES_NUMERICS)
+    _print_versions_dependencies(['pypairs'] + _DEPENDENCIES_NUMERICS)
 
 
 def print_versions_dependencies_numerics():

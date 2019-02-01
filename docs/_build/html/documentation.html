@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Documentation &mdash; PyPairs 0+untagged.50.g0ba305b documentation</title>
+  <title>Documentation &mdash; PyPairs v3.0.8+0.g6700f7b documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0+untagged.50.g0ba305b
+                v3.0.8+0.g6700f7b
               </div>
             
           
@@ -90,7 +90,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#cyclone">Cyclone</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#datasets">Datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#quality-assesment">Quality Assesment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#plotting">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utils">Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#settings">Settings</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">References</a></li>
@@ -162,8 +163,8 @@
             
   <span class="target" id="module-pypairs"></span><div class="section" id="documentation">
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
-<p>To use PyPairs import the package as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pypairs</span> <span class="k">import</span> <span class="n">pairs</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">plotting</span>
+<p>To use PyPairs import the package as i.e. follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pypairs</span> <span class="k">as</span> <span class="nn">pp</span>
 </pre></div>
 </div>
 <div class="section" id="sandbag">
@@ -180,7 +181,7 @@ data is greater than the second in G1 phase but less than the second in all othe
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="pypairs.pairs.sandbag.html#pypairs.pairs.sandbag" title="pypairs.pairs.sandbag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pairs.sandbag</span></code></a>(data[,&nbsp;annotation,&nbsp;…])</td>
-<td>Calculate ‘marker pairs’ from a trainings set.</td>
+<td>Calculate ‘marker pairs’ from a genecount matrix.</td>
 </tr>
 </tbody>
 </table>
@@ -217,7 +218,7 @@ for assigning cells into specific groups.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="pypairs.datasets.leng15.html#pypairs.datasets.leng15" title="pypairs.datasets.leng15"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.leng15</span></code></a>([mode,&nbsp;gene_sub])</td>
+<tr class="row-odd"><td><a class="reference internal" href="pypairs.datasets.leng15.html#pypairs.datasets.leng15" title="pypairs.datasets.leng15"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.leng15</span></code></a>([mode,&nbsp;gene_sub,&nbsp;sample_sub])</td>
 <td>Single cell RNA-seq data of human hESCs to evaluate Oscope <a class="reference internal" href="reference.html#leng15" id="id2">[Leng15]</a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="pypairs.datasets.default_cc_marker.html#pypairs.datasets.default_cc_marker" title="pypairs.datasets.default_cc_marker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.default_cc_marker</span></code></a>([dataset])</td>
@@ -240,19 +241,62 @@ for assigning cells into specific groups.</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="plotting">
-<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="utils">
+<h2>Utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotting.plot_evaluation</span></code></td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="pypairs.utils.export_marker.html#pypairs.utils.export_marker" title="pypairs.utils.export_marker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.export_marker</span></code></a>(marker,&nbsp;fname[,&nbsp;defaultpath])</td>
+<td>Export marker pairs to json-File.</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotting.show_curve_for_pair</span></code></td>
-<td></td>
+<tr class="row-even"><td><a class="reference internal" href="pypairs.utils.load_marker.html#pypairs.utils.load_marker" title="pypairs.utils.load_marker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.load_marker</span></code></a>(fname[,&nbsp;defaultpath])</td>
+<td>Export marker pairs to json-File.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="settings">
+<span id="id4"></span><h2>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h2>
+<p>The default directories for saving figures and caching files.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-class docutils literal notranslate"><span class="pre">settings.figdir</span></code></td>
+<td>Directory for saving figures (default: <code class="docutils literal notranslate"><span class="pre">'./figures/'</span></code>).</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-class docutils literal notranslate"><span class="pre">settings.cachedir</span></code></td>
+<td>Directory for cache files (default: <code class="docutils literal notranslate"><span class="pre">'./cache/'</span></code>).</td>
+</tr>
+</tbody>
+</table>
+<p>The verbosity of logging output, where verbosity levels have the following
+meaning: 0=’error’, 1=’warning’, 2=’info’, 3=’hint’</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="57%" />
+<col width="43%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-class docutils literal notranslate"><span class="pre">settings.verbosity</span></code></td>
+<td>Verbosity level (default: 1).</td>
+</tr>
+</tbody>
+</table>
+<p>Print versions of packages that might influence numerical results.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="pypairs.log.print_versions.html#pypairs.log.print_versions" title="pypairs.log.print_versions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log.print_versions</span></code></a>()</td>
+<td>Versions that might influence the numerical results.</td>
 </tr>
 </tbody>
 </table>
@@ -304,6 +348,7 @@ for assigning cells into specific groups.</p>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
 
   

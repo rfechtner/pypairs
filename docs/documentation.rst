@@ -3,9 +3,9 @@
 Documentation
 -------------
 
-To use PyPairs import the package as follows::
+To use PyPairs import the package as i.e. follows::
 
-   from pypairs import pairs, datasets, utils, plotting
+   import pypairs as pp
 
 
 .. _Methods:
@@ -64,11 +64,38 @@ Quality Assesment
 
    utils.evaluate_prediction
 
-Plotting
-~~~~~~~~
+Utils
+~~~~~
 
 .. autosummary::
    :toctree: .
 
-   plotting.plot_evaluation
-   plotting.show_curve_for_pair
+   utils.export_marker
+   utils.load_marker
+
+
+.. _settings:
+
+Settings
+~~~~~~~~
+
+The default directories for saving figures and caching files.
+
+==============================================  ===================================
+:class:`settings.figdir`                        Directory for saving figures (default: ``'./figures/'``).
+:class:`settings.cachedir`                      Directory for cache files (default: ``'./cache/'``).
+==============================================  ===================================
+
+The verbosity of logging output, where verbosity levels have the following
+meaning: 0='error', 1='warning', 2='info', 3='hint'
+
+==============================================  ===================================
+:class:`settings.verbosity`                     Verbosity level (default: 1).
+==============================================  ===================================
+
+Print versions of packages that might influence numerical results.
+
+.. autosummary::
+   :toctree: .
+
+   log.print_versions

@@ -10,7 +10,6 @@ from pypairs import datasets
 from pypairs import settings
 from pypairs import log as logg
 
-# TODO: Prediction function for custom thresholds (e.g. S > 0.5 for cell cycle)
 
 def cyclone(
     data: Union[AnnData, DataFrame, np.ndarray, Iterable[Iterable[float]]],
@@ -27,12 +26,22 @@ def cyclone(
     contain the raw or normalized gene counts of shape ``n_obs`` * ``n_vars``. Rows correspond to cells and columns to
     genes.
 
-    If a :class:`~anndata.AnnData` object is passed, the category scores and the final prediction will be added to `
-    ```data.obs`` with key 'pypairs_{category}_score" and "pypairs_prediction".
+        *
+            If a :class:`~anndata.AnnData` object is passed, the category scores and the final prediction will be added
+            to ``data.obs`` with key ``pypairs_{category}_score`` and ``pypairs_max_class``.
 
-    ``marker_pairs`` must be a mapping from category to list of 2-tuple Genes: `{'category': [(Gene_1,Gene_2), ...],
-    ...}`. If no ``marker_pairs`` are passed the default are used from :func:`~pypairs.datasets.default_marker()` based
-    on [Leng15]_ (marker pairs for cell cycle prediction).
+            *
+                If marker pairs contain only the cell cycle categories G1, S and G2M an additional column
+                ``pypairs_cc_prediction`` will be added. Where category S is assigned to samples where G1 and G2M score
+                are below 0.5, as described in [Scialdone15]_.
+
+
+    ``marker_pairs``, i.e. output from :func:`~pypairs.tools.sandbag()`, must be a mapping from category to list of
+    2-tuple Genes: `{'category': [(Gene_1,Gene_2), ...], ...}`.
+
+        *
+            If no ``marker_pairs`` are passed the default are used from :func:`~pypairs.datasets.default_marker()`
+            based on [Leng15]_ (marker pairs for cell cycle prediction).
 
     Parameters
     ----------
@@ -42,30 +51,35 @@ def cyclone(
         Rows correspond to cells and columns to genes.
     marker_pairs
         A dict mapping from str to a list of 2-tuple, where the key is the category and the list contains the marker
-        pairs: {'Category_1': [(Gene_1, Gene_2), ...], ...}. If not provided default marker pairs are used []
+        pairs: {'Category_1': [(Gene_1, Gene_2), ...], ...}. If not provided default marker pairs are used
     gene_names
         Names for genes, must be same length as ``n_vars``.
     sample_names
         Names for samples, must be same length as ``n_obs``.
     iterations
-        An integer specifying the number of iterations for random sampling to obtain a cycle score.
+        An integer specifying the number of iterations for random sampling to obtain a cycle score. Default: 1000
     min_iter
-        An integer specifying the minimum number of iterations for score estimation.
+        An integer specifying the minimum number of iterations for score estimation. Default: 100
     min_pairs
-        An integer specifying the minimum number of pairs for cycle estimation.
+        An integer specifying the minimum number of pairs for cycle estimation. Default: 50
 
     Returns
     -------
 
     A :class:`~pandas.DataFrame` with samples as index and categories as columns with scores for each category for each
-    sample and a additional column with the name of the max scoring category for each sample
+    sample and a additional column with the name of the max scoring category for each sample.
+
+        *
+            If marker pairs contain only the cell cycle categories G1, S and G2M an additional column
+            ``pypairs_cc_prediction`` will be added. Where category S is assigned to samples where G1 and G2M score are
+            below 0.5, as described in [Scialdone15]_.
 
 
     Examples
     --------
         To predict the cell cycle phase of the unsorted cell from the [Leng15]_  dataset run::
 
-            from pypairs import pairs, datasets
+            import pypairs import pairs, datasets
 
             adata = datasets.leng15('unsorted')
             marker_pairs = datasets.default_cc_marker()
@@ -87,7 +101,6 @@ def cyclone(
     else:
         logg.hint('staring processing with 1 thread')
 
-
     scores = {cat: get_phase_scores(raw_data, cat, iterations, min_iter, min_pairs, pairs, used[cat]) for
               cat, pairs in marker_pairs.items()}
 
@@ -96,8 +109,10 @@ def cyclone(
     scores_df['max_class'] = scores_df.idxmax(axis=1)
 
     if len(marker_pairs.items()) == 3 and all(elem in marker_pairs.keys() for elem in ["G1", "S", "G2M"]):
-        scores_df['cc_prediction'] = ["S" if x < 0.5 else scores_df['max_class'][i] for i, x in
-                                                 enumerate(scores_df.loc[:, ["G1", "G2M"]].max(axis=1).values)]
+        scores_df['cc_prediction'] = [
+            "S" if x < 0.5 else scores_df['max_class'][i] for i, x in
+            enumerate(scores_df.loc[:, ["G1", "G2M"]].max(axis=1).values)
+        ]
 
     logg.info("finished", time=True)
 
@@ -172,7 +187,6 @@ def get_phase_scores(matrix, cat, iterations, min_iter, min_pairs, pairs, used):
     if pairs.size == 0:
         logg.hint("No marker pairs for category {}".format(cat))
         return [0.0 for _ in matrix.T]
-
 
     phase_scores = [get_sample_score(sample[used], iterations, min_iter, min_pairs, pairs) for sample in matrix]
 
