@@ -153,20 +153,12 @@ htmlhelp_basename = 'PyPairs-Documentation'
 latex_engine = 'pdflatex'
 
 latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
     'papersize': 'a4paper',
     'releasename':" ",
-    # Sonny, Lenny, Glenn, Conny, Rejne, Bjarne and Bjornstrup
-    # 'fncychap': '\\usepackage[Lenny]{fncychap}',
     'fncychap': '\\usepackage{fncychap}',
     'fontpkg': '\\usepackage{amsmath,amsfonts,amssymb,amsthm}',
     'figure_align':'htbp',
-    # The font size ('10pt', '11pt' or '12pt').
-    #
     'pointsize': '10pt',
-    # Additional stuff for the LaTeX preamble.
-    #
     'preamble': r'''
     %% %% %% %% %% %% %% %% %% %% Meher %% %% %% %% %% %% %% %% %%
     %% %add number to subsubsection 2=subsection, 3=subsubsection
@@ -227,7 +219,7 @@ latex_elements = {
     \usepackage{epigraph}
     \setlength{\epigraphwidth}{0.8\columnwidth}
     \newcommand{\chapterquote}[2]{\epigraphhead[60]{\epigraph{\textit{#1}}{\textbf {\textit{--#2}}}}}
-    %% %% %% %% %% % Quote for all places except Chapter
+    %% %% %% %% %% % Qutote for all places excep Chapter
     \newcommand{\sectionquote}[2]{{\quote{\textit{``#1''}}{\textbf {\textit{--#2}}}}}
     ''',
     'maketitle': r'''
@@ -237,10 +229,6 @@ latex_elements = {
     \vspace*{40mm} %% % * is used to give space from top
     \textbf{\Huge {Sphinx format for Latex and HTML}}
     \vspace{0mm}
-    \begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.3]{logo.jpg}
-    \end{figure}
     \vspace{0mm}
     \Large \textbf{{Meher Krishna Patel}}
     \small Created on : Octorber, 2017
@@ -248,8 +236,7 @@ latex_elements = {
     \small Last updated : \MonthYearFormat\today
     %% \vfill adds at the bottom
     \vfill
-    \small \textit{More documents are freely available at }{\href{http://pythondsp.readthedocs.
-    ˓→io/en/latest/pythondsp/toc.html}{PythonDSP}}
+    \small \textit{More documents are freely available at }{\href{http://pythondsp.readthedocs.io/en/latest/pythondsp/toc.html}{PythonDSP}}
     \end{titlepage}
     \clearpage
     \pagenumbering{roman}
