@@ -197,10 +197,8 @@ latex_elements = {
     %% % Alternating Header for two side
     %\fancyhead[RO]{\small \nouppercase{\rightmark}}
     %\fancyhead[LE]{\small \nouppercase{\leftmark}}
-    %% for oneside: change footer at right side. If you want to use Left and right then use same as␣
-    ˓→header defined above.
-    \fancyfoot[R]{\ifthenelse{\isodd{\value{page}}}{{\tiny Meher Krishna Patel} }{\href{http://
-    ˓→pythondsp.readthedocs.io/en/latest/pythondsp/toc.html}{\tiny PythonDSP}}}
+    %% for oneside: change footer at right side. If you want to use Left and right then use same as header defined above.
+    \fancyfoot[R]{\ifthenelse{\isodd{\value{page}}}{{\tiny Meher Krishna Patel} }{\href{http://pythondsp.readthedocs.io/en/latest/pythondsp/toc.html}{\tiny PythonDSP}}}
     %% % Alternating Footer for two side
     %\fancyfoot[RO, RE]{\scriptsize Meher Krishna Patel (mekrip@gmail.com)}
     %% % page number
