@@ -160,6 +160,29 @@ latex_documents = [
      author, 'manual'),
 ]
 
+latex_use_parts = False
+latex_elements = {
+    # The paper size ('letter' or 'a4').
+    'papersize': 'a4',
+
+    # The font size ('10pt', '11pt' or '12pt').
+    #'pointsize': '10pt',
+
+    # necessary for unicode charactacters in pdf output
+    'inputenc': '',
+    'utf8extra': '',
+
+    # remove blank pages (between the title page and the TOC, etc.)
+    'classoptions': ',openany,oneside',
+    'babel' : '\\usepackage[english]{babel}',
+
+    # Additional stuff for the LaTeX preamble.
+    'preamble': r'''
+      \usepackage{hyperref}
+      \setcounter{tocdepth}{3}
+    '''
+}
+
 
 # -- Options for manual page output ------------------------------------------
 
