@@ -1,8 +1,8 @@
 Getting Started
-----------------
+================
 
 Installation
-~~~~~~~~~~~~
+------------
 
 This package is hosted at `PyPi <https://pypi.org>`_ ( https://pypi.org/project/pypairs/ ) and can be installed on any system running
 Python3 via pip with::
@@ -14,7 +14,7 @@ Alternatively, pypairs can be installed using `Conda <https://conda.io/docs/>`_ 
     conda install -c bioconda pypairs
 
 Minimal Example
-~~~~~~~~~~~~~~~
+---------------
 
 :ref:`data` provide a example scRNA dataset and default marker pairs for cell cycle prediction::
 
