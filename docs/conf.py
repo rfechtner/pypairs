@@ -160,7 +160,7 @@ latex_documents = [
      author, 'manual'),
 ]
 
-latex_use_parts = False
+#latex_use_parts = False
 latex_elements = {
     # The paper size ('letter' or 'a4').
     'papersize': 'a4',
