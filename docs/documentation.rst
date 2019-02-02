@@ -1,5 +1,6 @@
 .. automodule:: pypairs
 
+=============
 Documentation
 =============
 

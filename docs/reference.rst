@@ -1,5 +1,6 @@
+==========
 References
-----------
+==========
 
 .. [Leng15] Leng *et al.* (2015)
    *Oscope identifies oscillatory genes in unsynchronized single-cell RNA-seq experiments.*,
