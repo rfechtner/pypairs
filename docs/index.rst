@@ -5,13 +5,11 @@
 PyPairs Documentation
 =========================
 
-.. include:: README.rst
-
-.. include:: release_notes.rst
-
 .. toctree::
+    :numbered:
     :maxdepth: 2
 
+    welcome
     gettingstarted
     documentation
     reference
