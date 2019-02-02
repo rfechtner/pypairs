@@ -5,7 +5,7 @@ Documentation
 
 To use PyPairs import the package as i.e. follows::
 
-   import pypairs as pp
+   from pypairs import pairs, datasets, settings, utils
 
 
 .. _Methods:
