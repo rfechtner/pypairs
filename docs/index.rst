@@ -10,8 +10,7 @@ PyPairs Documentation
 .. include:: release_notes.rst
 
 .. toctree::
-    :maxdepth: 1
-    :hidden:
+    :maxdepth: 2
 
     gettingstarted
     documentation
