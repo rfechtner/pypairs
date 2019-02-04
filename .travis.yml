@@ -20,7 +20,8 @@ before_install:
 
 install:
 - source $HOME/miniconda/bin/activate
-- conda install python=3.6 numpy numba pandas anndata scikit-learn colorama Sphinx sphinx-autodoc-typehints sphinx-rtd-theme docutils
+- conda install python=3.6 numpy numba pandas scikit-learn colorama Sphinx 
+- pip install sphinx-autodoc-typehints sphinx-rtd-theme docutils
 - pip install -e .[plotting]
 
 script:
