@@ -20,8 +20,8 @@ cd bioconda-recipes
 git checkout -b update-pypairs
 
 # Get latest version & sha256 from pypairs
-export STRICT_VERSION=`curl https://pypi.org/pypi/pypairs/json | python -c "import sys, json; print(str(json.load(sys.stdin)['info']['version']))"`
-export SHA256=`curl https://pypi.org/pypi/pypairs/json | python -c "import sys, json; print(str(json.load(sys.stdin)['urls'][0]['digests']['sha256']))"`
+export STRICT_VERSION=$(curl https://pypi.org/pypi/pypairs/json | python -c "import sys, json; print(str(json.load(sys.stdin)['info']['version']))") 
+export SHA256=$(curl https://pypi.org/pypi/pypairs/json | python -c "import sys, json; print(str(json.load(sys.stdin)['urls'][0]['digests']['sha256']))") 
 
 # Update meta.yaml
 cd recipes/pypairs
