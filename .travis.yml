@@ -1,15 +1,32 @@
-language: python
-python:
-- '3.6'
-- 3.7-dev
-cache: pip
+language: generic
+os:
+  - linux
+  - osx
+osx_image: xcode8.3
+dist: trusty
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/download # Sufficient to add miniconda.sh to TRAVIS cache.
+    - $HOME/miniconda # Add the installation to TRAVIS cache.
+
+before_cache:
+- rm -rf $HOME/miniconda/conda-bld $HOME/miniconda/locks $HOME/miniconda/pkgs $HOME/miniconda/var
+
+before_install:
+- ./bin/install_conda.sh
+
 install:
 - pip install docutils Sphinx sphinx-autodoc-typehints sphinx-rtd-theme
 - pip install -e .[plotting]
+
 script:
 - pytest
 - rst2html.py --halt=2 README.rst >/dev/null
 - export PRERELEASE=`echo $TRAVIS_TAG | grep -c "beta"`
+
 deploy:
   # test pypi
   - provider: pypi
@@ -32,5 +49,6 @@ deploy:
       branch: master
       tags: true
       condition: $TRAVIS_PYTHON_VERSION = "3.6" && $PRERELEASE = "0"
+      
 after_deploy:
-  - ./bin/update_bioconda.sh
+- ./bin/update_bioconda.sh
