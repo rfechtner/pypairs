@@ -16,6 +16,7 @@ before_cache:
 - rm -rf $HOME/miniconda/conda-bld $HOME/miniconda/locks $HOME/miniconda/pkgs $HOME/miniconda/var
 
 before_install:
+- chmod +x ./bin/install_conda.sh
 - ./bin/install_conda.sh
 
 install:
