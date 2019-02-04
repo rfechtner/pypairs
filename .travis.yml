@@ -2,7 +2,6 @@ language: generic
 os:
   - linux
   - osx
-osx_image: xcode8.3
 dist: trusty
 sudo: false
 
@@ -20,7 +19,8 @@ before_install:
 - ./bin/install_conda.sh
 
 install:
-- pip install docutils Sphinx sphinx-autodoc-typehints sphinx-rtd-theme
+- source $HOME/miniconda/bin/activate
+- conda install python=3.6 numpy numba pandas AnnData scikit-learn colorama Sphinx sphinx-autodoc-typehints sphinx-rtd-theme docutils
 - pip install -e .[plotting]
 
 script:
