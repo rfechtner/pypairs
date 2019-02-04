@@ -29,6 +29,9 @@ script:
 - rst2html.py --halt=2 README.rst >/dev/null
 - export PRERELEASE=`echo $TRAVIS_TAG | grep -c "beta"`
 
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+
 deploy:
   # test pypi
   - provider: pypi
