@@ -19,4 +19,5 @@ comment:
 
 ignore:
   - "versioneer.py"
+  - "pypairs/_version.py"
   - "setup.py"
