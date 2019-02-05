@@ -20,7 +20,8 @@ ref_markers = {
         ("KPNA2","H2AFZ"),("RPS6","H2AFZ")
     ]}
 
-def same_marker(a,b):
+
+def same_marker(a, b):
     if len(a) != len(b):
         return False
 
@@ -38,7 +39,9 @@ def same_marker(a,b):
 
 
 def test_sandbag():
-    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0,1000)))
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
     marker_pairs = pairs.sandbag(training_data)
 
-    assert same_marker(marker_pairs,ref_markers)
+    assert same_marker(marker_pairs, ref_markers)
+
+
