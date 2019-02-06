@@ -1,8 +1,5 @@
 from pypairs import datasets, settings, utils, pairs
 from pandas import DataFrame
-import numpy as np
-
-# TODO: Create filtered check. Btw check output if only one class present or class has only one member
 
 ref_markers = {
     "G1": [
@@ -23,9 +20,8 @@ ref_markers = {
         ("KPNA2","H2AFZ"),("RPS6","H2AFZ")
     ]}
 
-def test_sandbag():
-    settings.cachedir = "./"
-    settings.verbosity = 4
+
+def test_sandbag_1j():
     settings.n_jobs = 1
 
     training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
@@ -33,28 +29,67 @@ def test_sandbag():
 
     assert utils.same_marker(marker_pairs, ref_markers)
 
-    training_data_df = DataFrame(training_data.X)
-    sample_names = training_data.obs_names
-    gene_names = training_data.var_names
+
+def test_sandbag_2j_ann():
+    settings.n_jobs = 2
+
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
     annotation = {
         cat: [i for i, x in enumerate(training_data.obs['category']) if x == cat]
         for cat in ["G1", "S", "G2M"]
     }
 
+    marker_pairs = pairs.sandbag(training_data, annotation=annotation)
+
+
+    assert utils.same_marker(marker_pairs, ref_markers)
+
+
+def test_sandbag_df():
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+    training_data_df = DataFrame(training_data.X)
+    sample_names = list(training_data.obs_names)
+    gene_names = list(training_data.var_names)
+    annotation = {
+        cat: [i for i, x in enumerate(training_data.obs['category']) if x == cat]
+        for cat in ["G1", "S", "G2M"]
+    }
+
+    marker_pairs_df = pairs.sandbag(training_data_df, annotation)
+
+    assert utils.same_marker(marker_pairs_df, ref_markers)
+
     marker_pairs_df = pairs.sandbag(training_data_df, annotation, gene_names, sample_names)
 
     assert utils.same_marker(marker_pairs_df, ref_markers)
 
+
+def test_sandbag_np():
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+    training_data_df = DataFrame(training_data.X)
     training_data_np = training_data_df.values
+
+    sample_names = list(training_data.obs_names)
+    gene_names = list(training_data.var_names)
+    annotation = {
+        cat: [i for i, x in enumerate(training_data.obs['category']) if x == cat]
+        for cat in ["G1", "S", "G2M"]
+    }
 
     marker_pairs_np = pairs.sandbag(training_data_np, annotation, gene_names, sample_names)
 
     assert utils.same_marker(marker_pairs_np, ref_markers)
 
-    training_data_cached = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
 
-    assert np.array_equal(training_data_cached.X, training_data.X)
+def test_sandbag_filtered():
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+    sample_names = list(training_data.obs_names)
+    sample_names.pop(3)
 
     marker_pairs_filtered = pairs.sandbag(
-        training_data_cached, filter_genes=list(range(0, 999)), filter_samples=sample_names[-1]
+        training_data, filter_genes=list(range(0, 999)), filter_samples=sample_names
     )
+
+    ref_markers['G2M'].append(('CENPL', 'APOL4'))
+
+    assert utils.same_marker(marker_pairs_filtered, ref_markers)

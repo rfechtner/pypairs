@@ -8,9 +8,7 @@ from sklearn.metrics import (precision_score, recall_score, f1_score)
 import numpy as np
 from numba import njit
 import sys, json, os
-import numpy.lib
 import pandas as pd
-import pickle
 
 from pypairs import settings
 from pypairs import log as logg
@@ -359,21 +357,24 @@ def filter_matrix(data, gene_names, sample_names, categories, filter_genes, filt
     return np.copy(data), gene_names, sample_names, categories
 
 
-def save_pandas(fname, data, key, mode='w'):
+def save_pandas(fname, data):
     """Save DataFrame or Series"""
-    try:
-        data.to_hdf(fname, key=key, mode=mode)
-    except IOError as e:
-        logg.warn("Could not store cache to {}".format(fname))
-        logg.warn(str(e))
+    if isinstance(data, DataFrame):
+        try:
+            data.to_csv(fname, header=True)
+        except IOError as e:
+            logg.warn("could not store cache to {}".format(fname))
+            logg.warn(str(e))
+    else:
+        logg.error("could not save object, `data` must be DataFrame")
 
 
-def load_pandas(fname, key, mode='r'):
+def load_pandas(fname):
     """Load DataFrame or Series"""
     try:
-        return pd.read_hdf(fname, key=key, mode=mode)
+        return pd.read_csv(fname, index_col=0)
     except OSError as e:
-        logg.error("Could not load cached files {}".format(fname))
+        logg.error("could not load cached files {}".format(fname))
         logg.error(str(e))
 
 

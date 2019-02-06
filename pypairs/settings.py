@@ -55,14 +55,3 @@ _previous_time = _start
 
 _previous_memory_usage = -1
 """Stores the previous memory usage."""
-
-
-def _is_run_from_ipython():
-    """Determines whether run from Ipython.
-    Only affects progress bars.
-    """
-    try:
-        __IPYTHON__
-        return True
-    except NameError:
-        return False

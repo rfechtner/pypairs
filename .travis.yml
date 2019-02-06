@@ -17,6 +17,9 @@ before_cache:
 before_install:
 - chmod +x ./bin/install_conda.sh
 - ./bin/install_conda.sh
+- mkdir ./cache/
+- mkidr ./write/
+- mkdir ./figures/
 
 install:
 - source $HOME/miniconda/bin/activate
