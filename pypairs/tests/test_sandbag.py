@@ -27,7 +27,8 @@ def test_sandbag_1j():
     training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
     marker_pairs = pairs.sandbag(training_data)
 
-    assert utils.same_marker(marker_pairs, ref_markers)
+    if not utils.same_marker(marker_pairs, ref_markers):
+        raise AssertionError()
 
 
 def test_sandbag_2j_ann():
@@ -41,8 +42,8 @@ def test_sandbag_2j_ann():
 
     marker_pairs = pairs.sandbag(training_data, annotation=annotation)
 
-
-    assert utils.same_marker(marker_pairs, ref_markers)
+    if not utils.same_marker(marker_pairs, ref_markers):
+        raise AssertionError()
 
 
 def test_sandbag_df():
@@ -62,11 +63,13 @@ def test_sandbag_df():
 
     marker_pairs_df = pairs.sandbag(training_data_df, annotation)
 
-    assert utils.same_marker(marker_pairs_df, ref_markers)
+    if not utils.same_marker(marker_pairs_df, ref_markers):
+        raise AssertionError()
 
     marker_pairs_df = pairs.sandbag(training_data_df, annotation, gene_names, sample_names)
 
-    assert utils.same_marker(marker_pairs_df, ref_markers)
+    if not utils.same_marker(marker_pairs_df, ref_markers):
+        raise AssertionError()
 
 
 def test_sandbag_np():
@@ -83,7 +86,8 @@ def test_sandbag_np():
 
     marker_pairs_np = pairs.sandbag(training_data_np, annotation, gene_names, sample_names)
 
-    assert utils.same_marker(marker_pairs_np, ref_markers)
+    if not utils.same_marker(marker_pairs_np, ref_markers):
+        raise AssertionError()
 
 
 def test_sandbag_filtered():
@@ -97,4 +101,5 @@ def test_sandbag_filtered():
 
     ref_markers['G2M'].append(('CENPL', 'APOL4'))
 
-    assert utils.same_marker(marker_pairs_filtered, ref_markers)
+    if not utils.same_marker(marker_pairs_filtered, ref_markers):
+        raise AssertionError()

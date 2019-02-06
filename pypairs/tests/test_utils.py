@@ -8,7 +8,8 @@ def test_evaluate_prediction():
 
     e = utils.evaluate_prediction(prediction=pred, reference=ref)
 
-    assert np.array_equal(np.array(e.values, dtype=float), np.ones(shape=(5, 4)))
+    if not np.array_equal(np.array(e.values, dtype=float), np.ones(shape=(5, 4))):
+        raise AssertionError()
 
     ref = ['D', 'D', 'B', 'B', 'C', 'C', 'A', 'A']
 
@@ -22,7 +23,8 @@ def test_evaluate_prediction():
         [0.5, 0.5, 0.5, 0.5]], dtype=float
     )
 
-    assert np.array_equal(e.values, qual)
+    if not np.array_equal(e.values, qual):
+        raise AssertionError()
 
 
 def test_import_export_marker():
@@ -33,48 +35,60 @@ def test_import_export_marker():
     fname_false = "/not/existing/path/marker_exp.json"
 
     utils.export_marker(m, fname_false, defaultpath=False)
-    assert not os.path.isfile(fname_false)
+    if os.path.isfile(fname_false):
+        raise AssertionError()
 
     utils.export_marker(m, fname)
-    assert os.path.isfile(settings.writedir + fname)
+    if not os.path.isfile(settings.writedir + fname):
+        raise AssertionError()
 
     m2 = utils.load_marker(fname_false, defaultpath=False)
-    assert m2 is None
+    if m2 is not None:
+        raise AssertionError()
 
     settings.verbosity = 4
 
     m2 = utils.load_marker(fname)
-    assert utils.same_marker(m, m2)
+    if not utils.same_marker(m, m2):
+        raise AssertionError()
 
 
 def test_to_boolean_mask():
     arr = ['A','B','C','D','E']
 
     mask = utils.to_boolean_mask([1,2], arr)
-    assert np.array_equal([False, True, True, False, False], mask)
+    if not np.array_equal([False, True, True, False, False], mask):
+        raise AssertionError()
 
     mask = utils.to_boolean_mask(['A', 'B'], arr)
-    assert np.array_equal([True, True, False, False, False], mask)
+    if not np.array_equal([True, True, False, False, False], mask):
+        raise AssertionError()
 
     mask = utils.to_boolean_mask(None, arr)
-    assert np.array_equal([True, True, True, True, True], mask)
+    if not np.array_equal([True, True, True, True, True], mask):
+        raise AssertionError()
 
     mask = utils.to_boolean_mask([], arr)
-    assert np.array_equal([True, True, True, True, True], mask)
+    if not np.array_equal([True, True, True, True, True], mask):
+        raise AssertionError()
 
     mask = utils.to_boolean_mask([False, True, True, False, False], arr)
-    assert np.array_equal([False, True, True, False, False], mask)
+    if not np.array_equal([False, True, True, False, False], mask):
+        raise AssertionError()
 
     mask = utils.to_boolean_mask(1, arr)
-    assert np.array_equal([False, True, False, False, False], mask)
+    if not np.array_equal([False, True, False, False, False], mask):
+        raise AssertionError()
 
 
 def test_filter_unexpressed_genes():
     data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 10)), sample_sub=list(range(0, 10)))
     filtered, gene_names = utils.filter_unexpressed_genes(data.X, list(data.var_names))
 
-    assert filtered.shape == (10, 8)
-    assert len(gene_names) == 8
+    if not filtered.shape == (10, 8):
+        raise AssertionError()
+    if not len(gene_names) == 8:
+        raise AssertionError()
 
 def test_same_marker():
     a = {
@@ -87,25 +101,29 @@ def test_same_marker():
         'b': [(7,8),(9,10)]
     }
 
-    assert utils.same_marker(a, b)
+    if not utils.same_marker(a, b):
+        raise AssertionError()
 
     c = {
         'a': [(1,2),(3,4)],
         'b': [(7,8),(9,10)]
     }
 
-    assert not utils.same_marker(a, c)
+    if not utils.same_marker(a, c):
+        raise AssertionError()
 
     d = {
         'a': [(1,2),(0,0),(5,6)],
         'b': [(7,8),(9,10)]
     }
 
-    assert not utils.same_marker(a, d)
+    if not utils.same_marker(a, d):
+        raise AssertionError()
 
     e = {
         'a': [(1, 2), (0, 0), (5, 6)],
         'c': [(7, 8), (9, 10)]
     }
 
-    assert not utils.same_marker(a, e)
+    if not utils.same_marker(a, e):
+        raise AssertionError()
