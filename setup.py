@@ -3,7 +3,6 @@ if sys.version_info < (3,):
     sys.exit('scanpy requires Python >= 3.5')
 
 from setuptools import setup, find_packages
-from io import open
 import versioneer
 
 with open('requirements.txt', encoding='utf-8') as requirements:

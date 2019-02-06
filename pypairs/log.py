@@ -39,26 +39,26 @@ def get_time_formatted():
 
 
 def info(*args, **kwargs):
-    str = "{} [{}{}{}]".format(get_time_formatted(), Fore.GREEN, 'INFO', Style.RESET_ALL)
-    args = (str, ) + args
+    s = "{} [{}{}{}]".format(get_time_formatted(), Fore.GREEN, 'INFO', Style.RESET_ALL)
+    args = (s, ) + args
     return msg(*args, v='info', **kwargs)
 
 
 def error(*args, **kwargs):
-    str = "{} [{}{}{}]".format(get_time_formatted(), Fore.RED, 'ERR ', Style.RESET_ALL)
-    args = (str,) + args
+    s = "{} [{}{}{}]".format(get_time_formatted(), Fore.RED, 'ERR ', Style.RESET_ALL)
+    args = (s,) + args
     return msg(*args, v='error', **kwargs)
 
 
 def warn(*args, **kwargs):
-    str = "{} [{}{}{}]".format(get_time_formatted(), Fore.YELLOW, 'WARN', Style.RESET_ALL)
-    args = (str,) + args
+    s = "{} [{}{}{}]".format(get_time_formatted(), Fore.YELLOW, 'WARN', Style.RESET_ALL)
+    args = (s,) + args
     return msg(*args, v='warn', **kwargs)
 
 
 def hint(*args, **kwargs):
-    str = "{} [{}{}{}]".format(get_time_formatted(), Fore.BLUE, 'HINT', Style.RESET_ALL)
-    args = (str,) + args
+    s = "{} [{}{}{}]".format(get_time_formatted(), Fore.BLUE, 'HINT', Style.RESET_ALL)
+    args = (s,) + args
     return msg(*args, v='hint', **kwargs)
 
 
@@ -71,7 +71,7 @@ def _settings_verbosity_greater_or_equal_than(v):
 
 
 def msg(*msg, v=4, time=False, memory=False, reset=False, end='\n',
-        no_indent=False, t=None, m=None, r=None):
+        t=None, m=None, r=None):
     """Write message to logging output.
     Log output defaults to standard output but can be set to a file
     by setting `sc.settings.log_file = 'mylogfile.txt'`.

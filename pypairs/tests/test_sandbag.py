@@ -48,8 +48,13 @@ def test_sandbag_2j_ann():
 def test_sandbag_df():
     training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
     training_data_df = DataFrame(training_data.X)
+
     sample_names = list(training_data.obs_names)
     gene_names = list(training_data.var_names)
+
+    training_data_df.Index = sample_names
+    training_data_df.columns = gene_names
+
     annotation = {
         cat: [i for i, x in enumerate(training_data.obs['category']) if x == cat]
         for cat in ["G1", "S", "G2M"]

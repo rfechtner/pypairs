@@ -116,8 +116,9 @@ def export_marker(
         write_dict_to_json(marker, fpath)
         logg.hint("marker pairs written to: " + str(fpath))
     except IOError as e:
-        logg.error("could not write to {}.\n Please verify that the path exists and is writable. Or change `writedir` "
-                   "via `pypairs.settings.writedir`".format(fpath))
+        msg = "could not write to {}.".format(fpath) + \
+              "Please verify that the path exists and is writable. Or change `writedir` via `pypairs.settings.writedir`"
+        logg.error(msg)
         logg.error(str(e))
 
 
@@ -170,7 +171,7 @@ def parallel_njit(
     Adds parallel=True if settings.n_jobs > 1
     """
     if jitted is False:
-        logg.warn('staring uncompiled processing. Should only be used for debug and testing!'.format(settings.n_jobs))
+        logg.warn('staring uncompiled processing. Should only be used for debug and testing!')
         return func
 
     if settings.n_jobs > 1:

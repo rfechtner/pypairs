@@ -101,13 +101,12 @@ def sandbag(
     )
 
     # Check that categories dont overlapp. TBD if needed
-    """
-    for i in range(len(categories)):
-        for j in range(i+1, len(categories)):
-            overlapp = np.logical_and(categories[i], categories[j])
-            if overlapp.sum() > 0:
-                raise ValueError("A observation can not be in multiple categories")
-    """
+
+    #for i in range(len(categories)):
+    #    for j in range(i+1, len(categories)):
+    #        overlapp = np.logical_and(categories[i], categories[j])
+    #        if overlapp.sum() > 0:
+    #            raise ValueError("A observation can not be in multiple categories")
 
     raw_data, gene_names, sample_names, categories = utils.filter_matrix(
         raw_data, gene_names, sample_names, categories, filter_genes, filter_samples
@@ -267,8 +266,6 @@ def count_down(diff, min_diff=0):
     return len(np.where(diff < min_diff)[0])
 
 # New approach, less code, imo better readable but unfortunately slower
-
-
 """
 possible_combinations = itertools.combinations(range(0, len(gene_names)), 2)
 
