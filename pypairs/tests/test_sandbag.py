@@ -1,6 +1,8 @@
 from pypairs import datasets, settings, utils, pairs
 from pandas import DataFrame
 
+settings.verbosity = 4
+
 ref_markers = {
     "G1": [
         ("OGFOD1","ZMYND8"),("TAT","HIST1H3B"), ("APOL4","ANKRD36B"), ("PRR5","HIST1H3B"), ("MFSD4","HIST1H3B"),
@@ -99,7 +101,15 @@ def test_sandbag_filtered():
         training_data, filter_genes=list(range(0, 999)), filter_samples=sample_names
     )
 
-    ref_markers['G2M'].append(('CENPL', 'APOL4'))
+    ref2 = ref_markers.copy()
+    ref2.append(('CENPL', 'APOL4'))
 
-    if not utils.same_marker(marker_pairs_filtered, ref_markers):
+    if not utils.same_marker(marker_pairs_filtered, ref2):
+        raise AssertionError()
+
+
+def test_sandbag_unjitted():
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+
+    if not utils.same_marker(training_data, ref_markers):
         raise AssertionError()

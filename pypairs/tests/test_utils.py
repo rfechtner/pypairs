@@ -2,6 +2,8 @@ from pypairs import settings, utils, datasets
 import numpy as np
 import os
 
+settings.verbosity = 4
+
 def test_evaluate_prediction():
     pred = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D']
     ref = ['A', 'A', 'B', 'B',  'C', 'C', 'D', 'D']

@@ -1,6 +1,7 @@
-from pypairs import pairs, datasets, utils
+from pypairs import pairs, datasets, utils, settings
 import numpy as np
 
+settings.verbosity = 4
 
 ref_prediction = list(np.repeat("G2M", 76)) + list(np.repeat("S", 80)) + list(np.repeat("G1", 91))
 
