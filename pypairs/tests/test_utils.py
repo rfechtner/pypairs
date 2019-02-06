@@ -109,7 +109,7 @@ def test_same_marker():
         'b': [(7,8),(9,10)]
     }
 
-    if not utils.same_marker(a, c):
+    if utils.same_marker(a, c):
         raise AssertionError()
 
     d = {
@@ -117,7 +117,7 @@ def test_same_marker():
         'b': [(7,8),(9,10)]
     }
 
-    if not utils.same_marker(a, d):
+    if utils.same_marker(a, d):
         raise AssertionError()
 
     e = {
@@ -125,5 +125,5 @@ def test_same_marker():
         'c': [(7, 8), (9, 10)]
     }
 
-    if not utils.same_marker(a, e):
+    if utils.same_marker(a, e):
         raise AssertionError()
