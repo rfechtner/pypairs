@@ -17,8 +17,11 @@ before_cache:
 before_install:
 - chmod +x ./bin/install_conda.sh
 - ./bin/install_conda.sh
+- rm -rf ./cache/ || true
 - mkdir ./cache/
+- rm -rf ./write/ || true
 - mkdir ./write/
+- rm -rf ./figures/ || true
 - mkdir ./figures/
 
 install:
