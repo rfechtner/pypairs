@@ -102,7 +102,7 @@ def test_sandbag_filtered():
     )
 
     ref2 = ref_markers.copy()
-    ref2.append(('CENPL', 'APOL4'))
+    ref2['G2M'].append(('CENPL', 'APOL4'))
 
     if not utils.same_marker(marker_pairs_filtered, ref2):
         raise AssertionError()
