@@ -48,6 +48,15 @@ def test_sandbag_2j_ann():
         raise AssertionError()
 
 
+def test_sandbag_unjitted():
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+
+    marker_pairs_unjitted = pairs.sandbag(training_data)
+
+    if not utils.same_marker(marker_pairs_unjitted, ref_markers):
+        raise AssertionError()
+
+
 def test_sandbag_df():
     training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
     training_data_df = DataFrame(training_data.X)
@@ -101,15 +110,8 @@ def test_sandbag_filtered():
         training_data, filter_genes=list(range(0, 999)), filter_samples=sample_names
     )
 
-    ref2 = ref_markers.copy()
+    ref2 = ref_markers
     ref2['G2M'].append(('CENPL', 'APOL4'))
 
     if not utils.same_marker(marker_pairs_filtered, ref2):
-        raise AssertionError()
-
-
-def test_sandbag_unjitted():
-    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
-
-    if not utils.same_marker(training_data, ref_markers):
         raise AssertionError()
