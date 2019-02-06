@@ -6,7 +6,6 @@ from pypairs import log
 from pypairs import pairs
 from pypairs import utils
 from pypairs import datasets
-from pypairs import preprocessing
 
 from ._version import get_versions
 __version__ = get_versions()['version']
