@@ -113,6 +113,15 @@ def sandbag(
         raw_data, gene_names, sample_names, categories, filter_genes, filter_samples
     )
 
+    valid_cat_names = []
+    valid_cats = []
+    for i, cat in enumerate(categories):
+        if sum(cat) > 0:
+            valid_cat_names.append(category_names[i])
+            valid_cats.append(cat)
+    category_names = np.array(valid_cat_names)
+    categories = np.array(valid_cats)
+
     logg.hint('sandbag running with fraction of {}'.format(fraction))
 
     # Define thresholds for each category based on fraction

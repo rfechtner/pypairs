@@ -40,10 +40,10 @@ def leng15(
         Annotated data matrix containing the normalized gene counts
     """
 
-    filename_cached = "GSE64016_H1andFUCCI_normalized_EC.pkl"
+    filename_cached = "GSE64016_H1andFUCCI_normalized_EC.h5"
 
     if os.path.isfile(settings.cachedir + filename_cached):
-        x = utils.load_pandas(filename_cached)
+        x = utils.load_pandas(filename_cached, key="GSE64016")
     else:
         filename = os.path.join(os.path.dirname(__file__), 'GSE64016_H1andFUCCI_normalized_EC.csv.gz')
 
@@ -53,10 +53,11 @@ def leng15(
         x.set_index("Unnamed: 0", inplace=True)
 
         try:
-            utils.save_pandas(settings.cachedir + filename_cached, x)
+            utils.save_pandas(settings.cachedir + filename_cached, x, key="GSE64016")
         except IOError as e:
-            logg.warn("could not write to {}.\n Please verify that the path exists and is writable." +
+            logg.warn("could not write to {}.\n Please verify that the path exists and is writable."
                       "Or change `cachedir` via `pypairs.settings.cachedir`".format(settings.cachedir))
+            logg.warn(str(e))
 
     if mode == 'sorted':
         x.drop(list(x.filter(regex='H1_')), axis=1, inplace=True)

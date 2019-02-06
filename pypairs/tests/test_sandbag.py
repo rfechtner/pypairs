@@ -1,5 +1,8 @@
-from pypairs import pairs
-from pypairs import datasets
+from pypairs import datasets, settings, utils, pairs
+from pandas import DataFrame
+import numpy as np
+
+# TODO: Create filtered check. Btw check output if only one class present or class has only one member
 
 ref_markers = {
     "G1": [
@@ -20,28 +23,38 @@ ref_markers = {
         ("KPNA2","H2AFZ"),("RPS6","H2AFZ")
     ]}
 
-
-def same_marker(a, b):
-    if len(a) != len(b):
-        return False
-
-    if sorted(a.keys()) != sorted(b.keys()):
-        return False
-
-    for cat, values in a.items():
-        set_a = set(values)
-        set_b = set(b[cat])
-
-        if set_a - set_b or set_b - set_a:
-            return False
-
-    return True
-
-
 def test_sandbag():
+    settings.cachedir = "./"
+    settings.verbosity = 4
+    settings.n_jobs = 1
+
     training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
     marker_pairs = pairs.sandbag(training_data)
 
-    assert same_marker(marker_pairs, ref_markers)
+    assert utils.same_marker(marker_pairs, ref_markers)
 
+    training_data_df = DataFrame(training_data.X)
+    sample_names = training_data.obs_names
+    gene_names = training_data.var_names
+    annotation = {
+        cat: [i for i, x in enumerate(training_data.obs['category']) if x == cat]
+        for cat in ["G1", "S", "G2M"]
+    }
 
+    marker_pairs_df = pairs.sandbag(training_data_df, annotation, gene_names, sample_names)
+
+    assert utils.same_marker(marker_pairs_df, ref_markers)
+
+    training_data_np = training_data_df.values
+
+    marker_pairs_np = pairs.sandbag(training_data_np, annotation, gene_names, sample_names)
+
+    assert utils.same_marker(marker_pairs_np, ref_markers)
+
+    training_data_cached = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+
+    assert np.array_equal(training_data_cached.X, training_data.X)
+
+    marker_pairs_filtered = pairs.sandbag(
+        training_data_cached, filter_genes=list(range(0, 999)), filter_samples=sample_names[-1]
+    )

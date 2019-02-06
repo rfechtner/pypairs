@@ -87,6 +87,8 @@ def evaluate_prediction(
 
     df.loc["average"] = average
 
+    df = df.apply(pd.to_numeric, errors='coerce')
+
     return df.T
 
 
@@ -115,9 +117,10 @@ def export_marker(
     try:
         write_dict_to_json(marker, fpath)
         logg.hint("marker pairs written to: " + str(fpath))
-    except IOError:
-        logg.error("could not write to {}.\n Please verify that the path exists and is writable. " +
-                   "Or change `writedir` via `pypairs.settings.writedir`".format(fpath))
+    except IOError as e:
+        logg.error("could not write to {}.\n Please verify that the path exists and is writable. Or change `writedir` "
+                   "via `pypairs.settings.writedir`".format(fpath))
+        logg.error(str(e))
 
 
 def load_marker(
@@ -143,6 +146,7 @@ def load_marker(
         marker = read_dict_from_json(fpath)
     except IOError:
         logg.error("could not read from {}.\n Please verify that the path exists and is writable.".format(fpath))
+        return None
 
     if settings.verbosity > 2:
         count_total = 0
@@ -355,32 +359,36 @@ def filter_matrix(data, gene_names, sample_names, categories, filter_genes, filt
     return np.copy(data), gene_names, sample_names, categories
 
 
-def save_pandas(fname, data):
+def save_pandas(fname, data, key, mode='w'):
     """Save DataFrame or Series"""
-    np.save(open(fname, 'w'), data)
-    if len(data.shape) == 2:
-        meta = data.index,data.columns
-    elif len(data.shape) == 1:
-        meta = (data.index,)
-    else:
-        raise ValueError('save_pandas: Cannot save this type')
-    s = pickle.dumps(meta)
-    s = s.encode('string_escape')
-    with open(fname, 'a') as f:
-        f.seek(0, 2)
-        f.write(s)
+    try:
+        data.to_hdf(fname, key=key, mode=mode)
+    except IOError as e:
+        logg.warn("Could not store cache to {}".format(fname))
+        logg.warn(str(e))
 
 
-def load_pandas(fname, mmap_mode='r'):
+def load_pandas(fname, key, mode='r'):
     """Load DataFrame or Series"""
-    values = np.load(fname, mmap_mode=mmap_mode)
-    with open(fname) as f:
-        numpy.lib.format.read_magic(f)
-        numpy.lib.format.read_array_header_1_0(f)
-        f.seek(values.dtype.alignment*values.size, 1)
-        meta = pickle.loads(f.readline().decode('string_escape'))
-    if len(meta) == 2:
-        return pd.DataFrame(values, index=meta[0], columns=meta[1])
-    elif len(meta) == 1:
-        return pd.Series(values, index=meta[0])
+    try:
+        return pd.read_hdf(fname, key=key, mode=mode)
+    except OSError as e:
+        logg.error("Could not load cached files {}".format(fname))
+        logg.error(str(e))
 
+
+def same_marker(a, b):
+    if len(a) != len(b):
+        return False
+
+    if sorted(a.keys()) != sorted(b.keys()):
+        return False
+
+    for cat, values in a.items():
+        set_a = set([tuple(v) for v in values])
+        set_b = set([tuple(v) for v in b[cat]])
+
+        if set_a - set_b or set_b - set_a:
+            return False
+
+    return True
