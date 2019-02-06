@@ -6,3 +6,4 @@ psutil
 colorama
 h5py>=2.8.0
 scikit-learn
+tables
