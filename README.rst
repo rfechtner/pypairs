@@ -10,7 +10,8 @@
    :target: http://bioconda.github.io/recipes/pypairs/README.html
 .. |coverage| image:: https://codecov.io/gh/rfechtner/pypairs/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/rfechtner/pypairs
-.. |codacy| image:: https://api.codacy.com/project/badge/Grade/5af00781e82d46e5a3f55a36f55728d7    :target: https://www.codacy.com/app/rfechtner/pypairs?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rfechtner/pypairs&amp;utm_campaign=Badge_Grade
+.. |codacy| image:: https://api.codacy.com/project/badge/Grade/5af00781e82d46e5a3f55a36f55728d7
+  :target: https://www.codacy.com/app/rfechtner/pypairs
 
 PyPairs - A python scRNA-Seq classifier
 =======================================
