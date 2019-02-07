@@ -1,5 +1,5 @@
-|PyPI| |Docs| |Build Status| |bioconda| 
-|coverage| |codacy|
+| |PyPI| |bioconda| |Build Status| |Docs|  
+| |coverage| |codacy|
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/pypairs.svg
     :target: https://pypi.org/project/pypairs
