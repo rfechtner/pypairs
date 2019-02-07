@@ -1,4 +1,4 @@
-|PyPI| |Docs| |Build Status| |bioconda|
+|PyPI| |Docs| |Build Status| |bioconda| |coverage|
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/pypairs.svg
     :target: https://pypi.org/project/pypairs
@@ -8,6 +8,8 @@
    :target: https://travis-ci.org/rfechtner/pypairs
 .. |bioconda| image:: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square
    :target: http://bioconda.github.io/recipes/pypairs/README.html
+.. |coverage| image:: https://codecov.io/gh/rfechtner/pypairs/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/rfechtner/pypairs
 
 PyPairs - A python scRNA-Seq classifier
 =======================================
