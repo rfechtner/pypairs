@@ -62,4 +62,7 @@ deploy:
       condition: $TRAVIS_OS_NAME = "linux" && $PRERELEASE = "0"
       
 after_deploy:
+- chmod +x ./bin/install_conda.sh
 - ./bin/update_bioconda.sh
+
+
