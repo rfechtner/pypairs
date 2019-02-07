@@ -16,6 +16,7 @@ before_cache:
 
 before_install:
 - chmod +x ./bin/install_conda.sh
+- chmod +x ./bin/update_bioconda.sh
 - ./bin/install_conda.sh
 - rm -rf ./cache/ || true
 - mkdir ./cache/
@@ -62,7 +63,4 @@ deploy:
       condition: $TRAVIS_OS_NAME = "linux" && $PRERELEASE = "0"
       
 after_deploy:
-- chmod +x ./bin/install_conda.sh
-- ./bin/update_bioconda.sh
-
-
+- test $TRAVIS_OS_NAME = "linux" && test $PRERELEASE = "0" && ./bin/update_bioconda.sh
