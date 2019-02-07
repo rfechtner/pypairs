@@ -49,7 +49,7 @@ deploy:
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $PRERELEASE = "1"
+      condition: $TRAVIS_OS_NAME = "linux" && $PRERELEASE = "1"
   # production pypi
   - provider: pypi
     twine_version: 1.12.1
@@ -59,7 +59,7 @@ deploy:
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $PRERELEASE = "0"
+      condition: $TRAVIS_OS_NAME = "linux" && $PRERELEASE = "0"
       
 after_deploy:
 - ./bin/update_bioconda.sh
