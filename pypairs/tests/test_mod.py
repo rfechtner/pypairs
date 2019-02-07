@@ -1,12 +1,15 @@
-import pytest
-
-
 def test_version():
     import pypairs
     print(pypairs.__version__)
 
-    with pytest.raises(NotImplementedError):
+    try:
         from pypairs import preprocessing
+        raise AssertionError()
+    except NotImplementedError:
+        pass
 
-    with pytest.raises(NotImplementedError):
+    try:
         from pypairs import plotting
+        raise AssertionError()
+    except NotImplementedError:
+        pass
