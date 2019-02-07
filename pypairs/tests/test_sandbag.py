@@ -1,5 +1,7 @@
-from pypairs import pairs
-from pypairs import datasets
+from pypairs import datasets, settings, utils, pairs
+from pandas import DataFrame
+
+settings.verbosity = 4
 
 ref_markers = {
     "G1": [
@@ -20,25 +22,96 @@ ref_markers = {
         ("KPNA2","H2AFZ"),("RPS6","H2AFZ")
     ]}
 
-def same_marker(a,b):
-    if len(a) != len(b):
-        return False
 
-    if sorted(a.keys()) != sorted(b.keys()):
-        return False
+def test_sandbag_1j():
+    settings.n_jobs = 1
 
-    for cat, values in a.items():
-        set_a = set(values)
-        set_b = set(b[cat])
-
-        if set_a - set_b or set_b - set_a:
-            return False
-
-    return True
-
-
-def test_sandbag():
-    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0,1000)))
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
     marker_pairs = pairs.sandbag(training_data)
 
-    assert same_marker(marker_pairs,ref_markers)
+    if not utils.same_marker(marker_pairs, ref_markers):
+        raise AssertionError()
+
+
+def test_sandbag_2j_ann():
+    settings.n_jobs = 2
+
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+    annotation = {
+        cat: [i for i, x in enumerate(training_data.obs['category']) if x == cat]
+        for cat in ["G1", "S", "G2M"]
+    }
+
+    marker_pairs = pairs.sandbag(training_data, annotation=annotation)
+
+    if not utils.same_marker(marker_pairs, ref_markers):
+        raise AssertionError()
+
+
+def test_sandbag_unjitted():
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+
+    marker_pairs_unjitted = pairs.sandbag(training_data)
+
+    if not utils.same_marker(marker_pairs_unjitted, ref_markers):
+        raise AssertionError()
+
+
+def test_sandbag_df():
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+    training_data_df = DataFrame(training_data.X)
+
+    sample_names = list(training_data.obs_names)
+    gene_names = list(training_data.var_names)
+
+    training_data_df.Index = sample_names
+    training_data_df.columns = gene_names
+
+    annotation = {
+        cat: [i for i, x in enumerate(training_data.obs['category']) if x == cat]
+        for cat in ["G1", "S", "G2M"]
+    }
+
+    marker_pairs_df = pairs.sandbag(training_data_df, annotation)
+
+    if not utils.same_marker(marker_pairs_df, ref_markers):
+        raise AssertionError()
+
+    marker_pairs_df = pairs.sandbag(training_data_df, annotation, gene_names, sample_names)
+
+    if not utils.same_marker(marker_pairs_df, ref_markers):
+        raise AssertionError()
+
+
+def test_sandbag_np():
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+    training_data_df = DataFrame(training_data.X)
+    training_data_np = training_data_df.values
+
+    sample_names = list(training_data.obs_names)
+    gene_names = list(training_data.var_names)
+    annotation = {
+        cat: [i for i, x in enumerate(training_data.obs['category']) if x == cat]
+        for cat in ["G1", "S", "G2M"]
+    }
+
+    marker_pairs_np = pairs.sandbag(training_data_np, annotation, gene_names, sample_names)
+
+    if not utils.same_marker(marker_pairs_np, ref_markers):
+        raise AssertionError()
+
+
+def test_sandbag_filtered():
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+    sample_names = list(training_data.obs_names)
+    sample_names.pop(3)
+
+    marker_pairs_filtered = pairs.sandbag(
+        training_data, filter_genes=list(range(0, 999)), filter_samples=sample_names
+    )
+
+    ref2 = ref_markers
+    ref2['G2M'].append(('CENPL', 'APOL4'))
+
+    if not utils.same_marker(marker_pairs_filtered, ref2):
+        raise AssertionError()

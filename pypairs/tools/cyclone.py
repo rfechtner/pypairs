@@ -145,12 +145,12 @@ def get_proportion(sample, min_pairs, pairs):
             if a > b:
                 hits += 1
             total += 1
-        """
-        if a > b:
-            hits += 1
-        if a != b:
-            total += 1
-        """
+
+        #if a > b:
+        #    hits += 1
+        #if a != b:
+        #    total += 1
+
     if hits < min_pairs:
         return None
 
@@ -169,7 +169,7 @@ def get_sample_score(sample, iterations, min_iter, min_pairs, pairs):
     below = 0
     total = 0
     idx = sample
-    for i in range(0, iterations):
+    for _ in range(0, iterations):
         np.random.shuffle(idx)
         new_score = get_proportion(idx, min_pairs, pairs)
         if new_score is not None:

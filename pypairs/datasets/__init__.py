@@ -10,7 +10,7 @@ from pypairs import log as logg
 def leng15(
     mode: Optional[str] = 'all',
     gene_sub: Optional[Iterable[int]] = None,
-    sample_sub: Optional[Iterable[int]] = None,
+    sample_sub: Optional[Iterable[int]] = None
 ) -> Iterable[Iterable[float]]:
     """Single cell RNA-seq data of human hESCs to evaluate Oscope [Leng15]_
 
@@ -33,6 +33,8 @@ def leng15(
             - 'unsorted' for all samples with unknown cell cycle (H1)
     gene_sub
         Index based array of subsetted genes
+    sample_sub
+        Index based array of subsetted samples
 
     Returns
     -------
@@ -40,10 +42,10 @@ def leng15(
         Annotated data matrix containing the normalized gene counts
     """
 
-    filename_cached = "GSE64016_H1andFUCCI_normalized_EC.pkl"
+    filename_cached = "GSE64016_H1andFUCCI_normalized_EC_cached.csv"
 
     if os.path.isfile(settings.cachedir + filename_cached):
-        x = utils.load_pandas(filename_cached)
+        x = utils.load_pandas(settings.cachedir + filename_cached)
     else:
         filename = os.path.join(os.path.dirname(__file__), 'GSE64016_H1andFUCCI_normalized_EC.csv.gz')
 
@@ -55,8 +57,9 @@ def leng15(
         try:
             utils.save_pandas(settings.cachedir + filename_cached, x)
         except IOError as e:
-            logg.warn("could not write to {}.\n Please verify that the path exists and is writable." +
+            logg.warn("could not write to {}.\n Please verify that the path exists and is writable."
                       "Or change `cachedir` via `pypairs.settings.cachedir`".format(settings.cachedir))
+            logg.warn(str(e))
 
     if mode == 'sorted':
         x.drop(list(x.filter(regex='H1_')), axis=1, inplace=True)

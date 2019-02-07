@@ -8,9 +8,7 @@ from sklearn.metrics import (precision_score, recall_score, f1_score)
 import numpy as np
 from numba import njit
 import sys, json, os
-import numpy.lib
 import pandas as pd
-import pickle
 
 from pypairs import settings
 from pypairs import log as logg
@@ -87,6 +85,8 @@ def evaluate_prediction(
 
     df.loc["average"] = average
 
+    df = df.apply(pd.to_numeric, errors='coerce')
+
     return df.T
 
 
@@ -115,9 +115,11 @@ def export_marker(
     try:
         write_dict_to_json(marker, fpath)
         logg.hint("marker pairs written to: " + str(fpath))
-    except IOError:
-        logg.error("could not write to {}.\n Please verify that the path exists and is writable. " +
-                   "Or change `writedir` via `pypairs.settings.writedir`".format(fpath))
+    except IOError as e:
+        msg = "could not write to {}.".format(fpath) + \
+              "Please verify that the path exists and is writable. Or change `writedir` via `pypairs.settings.writedir`"
+        logg.error(msg)
+        logg.error(str(e))
 
 
 def load_marker(
@@ -143,6 +145,7 @@ def load_marker(
         marker = read_dict_from_json(fpath)
     except IOError:
         logg.error("could not read from {}.\n Please verify that the path exists and is writable.".format(fpath))
+        return None
 
     if settings.verbosity > 2:
         count_total = 0
@@ -168,7 +171,7 @@ def parallel_njit(
     Adds parallel=True if settings.n_jobs > 1
     """
     if jitted is False:
-        logg.warn('staring uncompiled processing. Should only be used for debug and testing!'.format(settings.n_jobs))
+        logg.warn('staring uncompiled processing. Should only be used for debug and testing!')
         return func
 
     if settings.n_jobs > 1:
@@ -357,30 +360,37 @@ def filter_matrix(data, gene_names, sample_names, categories, filter_genes, filt
 
 def save_pandas(fname, data):
     """Save DataFrame or Series"""
-    np.save(open(fname, 'w'), data)
-    if len(data.shape) == 2:
-        meta = data.index,data.columns
-    elif len(data.shape) == 1:
-        meta = (data.index,)
+    if isinstance(data, DataFrame):
+        try:
+            data.to_csv(fname, header=True)
+        except IOError as e:
+            logg.warn("could not store cache to {}".format(fname))
+            logg.warn(str(e))
     else:
-        raise ValueError('save_pandas: Cannot save this type')
-    s = pickle.dumps(meta)
-    s = s.encode('string_escape')
-    with open(fname, 'a') as f:
-        f.seek(0, 2)
-        f.write(s)
+        logg.error("could not save object, `data` must be DataFrame")
 
 
-def load_pandas(fname, mmap_mode='r'):
+def load_pandas(fname):
     """Load DataFrame or Series"""
-    values = np.load(fname, mmap_mode=mmap_mode)
-    with open(fname) as f:
-        numpy.lib.format.read_magic(f)
-        numpy.lib.format.read_array_header_1_0(f)
-        f.seek(values.dtype.alignment*values.size, 1)
-        meta = pickle.loads(f.readline().decode('string_escape'))
-    if len(meta) == 2:
-        return pd.DataFrame(values, index=meta[0], columns=meta[1])
-    elif len(meta) == 1:
-        return pd.Series(values, index=meta[0])
+    try:
+        return pd.read_csv(fname, index_col=0)
+    except OSError as e:
+        logg.error("could not load cached files {}".format(fname))
+        logg.error(str(e))
 
+
+def same_marker(a, b):
+    if len(a) != len(b):
+        return False
+
+    if sorted(a.keys()) != sorted(b.keys()):
+        return False
+
+    for cat, values in a.items():
+        set_a = set([tuple(v) for v in values])
+        set_b = set([tuple(v) for v in b[cat]])
+
+        if set_a - set_b or set_b - set_a:
+            return False
+
+    return True
