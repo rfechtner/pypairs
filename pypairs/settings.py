@@ -20,7 +20,7 @@ writedir = './write/'
 """
 
 cachedir = './cache/'
-"""Default cache directory.
+"""Default cache directory. Set to None to disable caching
 """
 
 figdir = './figures/'
