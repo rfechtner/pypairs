@@ -6,7 +6,7 @@ if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
   ./bin/install_conda.sh
   # Create testing enviroment
   $HOME/miniconda/bin/conda create -y -n pypairs_test_env python=3.6
-  source activate pypairs_test_env
+  source $HOME/miniconda/bin/activate pypairs_test_env
   pip install pytest pytest-cov
 elif [ "${SYSTEM}" = "scientific" ]; then
   # Setting up scientifix linux docker container
