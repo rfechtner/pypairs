@@ -12,7 +12,7 @@ elif [ "${SYSTEM}" = "scientific" ]; then
   docker exec -it sl_test cat /etc/os-release
   docker exec -it sl_test yum -y update
   docker exec -it sl_test mkdir -p $HOME/download/
-  docker exec -it sl_test wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
+  docker cp $HOME/download/miniconda.sh sl_test:$HOME/download/miniconda.sh
   docker exec -it sl_test bash $HOME/download/miniconda.sh -b -p $HOME/miniconda
   docker exec -it sl_test python -V
   docker exec -it sl_test git clone --depth=50 --branch=$TRAVIS_BRANCH https://github.com/rfechtner/pypairs.git rfechtner/pypairs
