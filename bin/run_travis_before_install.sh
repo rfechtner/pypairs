@@ -20,6 +20,7 @@ elif [ "${SYSTEM}" = "scientific" ]; then
   docker exec -it sl_test bash -c '/root/download/miniconda.sh -b -p /root/miniconda'
   docker exec -it sl_test bash -c '/root/miniconda/bin/conda create -y -n pypairs_test_env python=3.6'
   docker exec -it sl_test bash -c 'source /root/miniconda/bin/activate pypairs_test_env && python -V'
+  docker exec -it sl_test bash -c 'source /root/miniconda/bin/activate pypairs_test_env && pip install pytest pytest-cov'
   # Copy repo
   docker cp ./. sl_test:/root/pypairs/
   docker exec -it sl_test cd /root/pypairs/
