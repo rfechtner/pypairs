@@ -19,6 +19,7 @@ elif [ "${SYSTEM}" = "scientific" ]; then
   docker exec -it sl_test bash -c 'alias python="$HOME"/miniconda/bin/python3'
   docker exec -it sl_test bash -c 'which python'
   docker exec -it sl_test python -V
-  docker cp rfechtner/pypairs/. sl_test:~/pypairs/
+  ls -la
+  docker cp ./. sl_test:~/pypairs/
   docker exec -it sl_test cd ~/pypairs/
 fi
