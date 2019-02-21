@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -ev
-echo "Running before install"
+echo "Runsning before install"
 if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
   echo "Installing Conda"
   ./install_conda.sh
