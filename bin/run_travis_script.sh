@@ -12,4 +12,6 @@ if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
     export PRERELEASE=`echo $TRAVIS_TAG | grep -c "b"`
     
   fi
+elif [ "${SYSTEM}" = "scientific" ]; then
+  docker exec sl_test python -m pytest
 fi
