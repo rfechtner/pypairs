@@ -17,7 +17,8 @@ elif [ "${SYSTEM}" = "scientific" ]; then
   docker run -it -d --name sl_test scientificlinux/sl:7
   docker ps -a
   docker exec -it sl_test cat /etc/os-release
-  docker exec -it sl_test sudo yum -y update
-  docker exec -it sl_test sudo yum install -y python36 python36-setuptools
-  docker exec -it sl_test sudo easy_install-3.6 pip
+  docker exec -it sl_test yum -y update
+  docker exec -it sl_test yum install -y python36 python36-setuptools
+  docker exec -it sl_test easy_install-3.6 pip
+  docker exec -it sl_test git clone --depth=50 --branch=$TRAVIS_BRANCH https://github.com/rfechtner/pypairs.git rfechtner/pypairs
 fi
