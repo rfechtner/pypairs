@@ -3,11 +3,8 @@
 set -ev
 
 if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
-  ./bin/install_conda.sh
-  rm -rf ./cache/ || true
-  mkdir ./cache/
-  rm -rf ./write/ || true
-  mkdir ./write/
-  rm -rf ./figures/ || true
-  mkdir ./figures/
+  source $HOME/miniconda/bin/activate
+  conda install python=3.6 numpy numba pandas scikit-learn colorama Sphinx pytest pytest-cov docutils pytables -y
+  pip install sphinx-autodoc-typehints sphinx-rtd-theme codecov
+  pip install -e .[plotting]
 fi
