@@ -20,7 +20,9 @@ cache:
     - $HOME/miniconda # Add the installation to TRAVIS cache.
 
 before_install:
-- ./bin/run_travis_before_install.sh
+- ls .
+- ls ./bin/
+- bash bin/run_travis_before_install.sh
 
 install:
 - ./bin/run_travis_install.sh
