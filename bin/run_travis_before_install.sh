@@ -3,7 +3,7 @@ set -ev
 echo "Running before install"
 if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
   echo "Installing Conda"
-  ./install_conda.sh
+  ./bin/install_conda.sh
   echo "Cleaning Cache"
   rm -rf ./cache/ || true
   mkdir ./cache/
