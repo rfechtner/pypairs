@@ -3,8 +3,7 @@
 set -ev
 
 if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
-  source $HOME/miniconda/bin/activate pypairs_test_env pypairs_test_env
-  pip install -y Sphinx pytest pytest-cov docutils sphinx-autodoc-typehints sphinx-rtd-theme codecov
+  source $HOME/miniconda/bin/activate pypairs_test_env
   pip install -r requirements
   pip install -e .[plotting]
 elif [ "${SYSTEM}" = "scientific" ]; then
