@@ -14,8 +14,8 @@ if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
 elif [ "${SYSTEM}" = "scientific" ]; then
   echo "Setting up scientifix linux docker container"
   docker pull scientificlinux/sl
-  docker run -it --name sl_test scientificlinux/sl:7
-  docker exec sl_test sudo yum -y update
-  docker exec sl_test sudo yum install -y python36 python36-setuptools
-  docker exec sl_test sudo easy_install-3.6 pip
+  docker run -d -p 127.0.0.1:80:80 --name sl_test scientificlinux/sl:7
+  sudo yum -y update
+  sudo yum install -y python36 python36-setuptools
+  sudo easy_install-3.6 pip
 fi
