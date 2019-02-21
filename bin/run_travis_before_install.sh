@@ -18,8 +18,7 @@ elif [ "${SYSTEM}" = "scientific" ]; then
   docker exec -it sl_test bash -c 'wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /root/download/miniconda.sh'
   docker exec -it sl_test bash -c 'chmod +x /root/download/miniconda.sh'
   docker exec -it sl_test bash -c '/root/download/miniconda.sh -b -p /root/miniconda'
-  docker exec -it sl_test alias python='/root/miniconda/bin/python3'
-  docker exec -it sl_test python -V
+  docker exec -it sl_test /root/miniconda/bin/python3 -V
   # Copy repo
   docker cp ./. sl_test:/root/pypairs/
   docker exec -it sl_test cd /root/pypairs/
