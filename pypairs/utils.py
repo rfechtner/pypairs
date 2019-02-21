@@ -109,18 +109,26 @@ def export_marker(
     """
 
     if defaultpath:
-        fpath = settings.writedir + fname
+        fpath = os.path.join(settings.writedir, fname)
     else:
         fpath = fname
 
-    try:
-        write_dict_to_json(marker, fpath)
-        logg.hint("marker pairs written to: " + str(fpath))
-    except IOError as e:
-        msg = "could not write to {}.".format(fpath) + \
-              "Please verify that the path exists and is writable. Or change `writedir` via `pypairs.settings.writedir`"
-        logg.error(msg)
-        logg.error(str(e))
+    if not os.path.isdir(settings.writedir):
+        dir_abs = Path(settings.cachedir).absolute()
+
+        try:
+            os.mkdir(settings.writedir)
+            logg.info("created specified cache dir: {}".format(dir_abs))
+        except IOError:
+            logg.error("could not create write dir: {}".format(dir_abs))
+    else:
+        try:
+            write_dict_to_json(marker, fpath)
+            logg.hint("marker pairs written to: " + str(fpath))
+        except IOError:
+            msg = "could not write to {}.".format(fpath) + \
+                  "Please verify that the path exists and is writable. Or change `writedir` via `pypairs.settings.writedir`"
+            logg.error(msg)
 
 
 def load_marker(

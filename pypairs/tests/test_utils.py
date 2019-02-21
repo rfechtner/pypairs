@@ -92,6 +92,7 @@ def test_filter_unexpressed_genes():
     if not len(gene_names) == 8:
         raise AssertionError()
 
+
 def test_same_marker():
     a = {
         'a': [(1,2),(3,4),(5,6)],
