@@ -29,7 +29,7 @@ script:
 - ./bin/run_travis_script.sh
 
 after_success:
-- codecov
+- test $SYSTEM = "linux" && codecov
 
 deploy:
   # test pypi
@@ -43,7 +43,7 @@ deploy:
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_OS_NAME = "linux" && $PRERELEASE = "1"
+      condition: $SYSTEM = "linux" && $PRERELEASE = "1"
   # production pypi
   - provider: pypi
     skip_cleanup: true
@@ -54,7 +54,7 @@ deploy:
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_OS_NAME = "linux" && $PRERELEASE = "0"
+      condition: $SYSTEM = "linux" && $PRERELEASE = "0"
       
 after_deploy:
-- test $TRAVIS_OS_NAME = "linux" && test $PRERELEASE = "0" && ./bin/update_bioconda.sh
+- test $SYSTEM = "linux" && test $PRERELEASE = "0" && ./bin/update_bioconda.sh
