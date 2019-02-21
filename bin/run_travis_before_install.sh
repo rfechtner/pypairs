@@ -7,7 +7,7 @@ if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
 elif [ "${SYSTEM}" = "scientific" ]; then
   echo "Setting up scientifix linux docker container"
   docker pull scientificlinux/sl
-  docker run -it -d --name sl_test scientificlinux/sl:7
+  docker run -it -d --name sl_test --privileged=true scientificlinux/sl:7
   docker ps -a
   docker exec -it sl_test cat /etc/os-release
   docker exec -it sl_test yum -y update
