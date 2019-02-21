@@ -1,4 +1,6 @@
-language: generic
+language: python
+python:
+  - "3.6"
 
 matrix:
   include:
@@ -10,25 +12,17 @@ matrix:
   - os: osx
     env: SYSTEM=osx
 
-before_cache:
-- rm -rf $HOME/miniconda/conda-bld $HOME/miniconda/locks $HOME/miniconda/pkgs $HOME/miniconda/var
-
-cache:
-  directories:
-    - $HOME/.cache/pip
-    - $HOME/download # Sufficient to add miniconda.sh to TRAVIS cache.
-    - $HOME/miniconda # Add the installation to TRAVIS cache.
+cache: pip
 
 before_install:
-- ls .
-- ls ./bin/
 - bash bin/run_travis_before_install.sh
 
 install:
-- ./bin/run_travis_install.sh
+- bash bin/run_travis_install.sh
 
 script:
-- ./bin/run_travis_script.sh
+- pip freeze
+- bash bin/run_travis_script.sh
 
 after_success:
 - codecov
