@@ -10,4 +10,7 @@ if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
   mkdir ./write/
   rm -rf ./figures/ || true
   mkdir ./figures/
+elif [ "${SYSTEM}" = "scientific" ]; then
+  docker pull scientificlinux/sl
+  docker run -d --name sl_test scientificlinux/sl:7
 fi
