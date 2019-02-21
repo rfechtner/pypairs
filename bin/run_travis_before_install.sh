@@ -7,7 +7,7 @@ if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
   # Create testing enviroment
   $HOME/miniconda/bin/conda create -y -n pypairs_test_env python=3.6
   source $HOME/miniconda/bin/activate pypairs_test_env
-  pip install pytest pytest-cov
+  pip install -y pytest pytest-cov Sphinx docutils sphinx-autodoc-typehints sphinx-rtd-theme codecov
 elif [ "${SYSTEM}" = "scientific" ]; then
   # Setting up scientifix linux docker container
   docker pull scientificlinux/sl
