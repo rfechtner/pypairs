@@ -2,8 +2,13 @@
 
 set -ev
 
+echo "Running before install"
+
 if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
+  echo "Installing Conda"
   ./install_conda.sh
+  
+  echo "Cleaning Cache"
   rm -rf ./cache/ || true
   mkdir ./cache/
   rm -rf ./write/ || true
@@ -11,6 +16,7 @@ if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
   rm -rf ./figures/ || true
   mkdir ./figures/
 elif [ "${SYSTEM}" = "scientific" ]; then
+  echo "Setting up scientifix linux docker container"
   docker pull scientificlinux/sl
   docker run -d --name sl_test scientificlinux/sl:7
   docker exec sl_test sudo yum -y update
