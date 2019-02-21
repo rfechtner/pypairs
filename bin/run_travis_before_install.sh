@@ -1,20 +1,16 @@
 #!/usr/bin/env bash
-
 set -ev
-
 echo "Running before install"
-
 if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
   echo "Installing Conda"
   ./install_conda.sh
-  
   echo "Cleaning Cache"
   rm -rf ./cache/ || true
   mkdir ./cache/
   rm -rf ./write/ || true
   mkdir ./write/
   rm -rf ./figures/ || true
-  mkdir ./figures/
+  mkdir ./figures
 elif [ "${SYSTEM}" = "scientific" ]; then
   echo "Setting up scientifix linux docker container"
   docker pull scientificlinux/sl
