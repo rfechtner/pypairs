@@ -4,7 +4,8 @@ echo "Running before install"
 if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
   # Install Conda if not present
   ./bin/install_conda.sh
-  conda create -y -n pypairs_test_env python=3.6
+  # Create testing enviroment
+  $HOME/miniconda/bin/conda create -y -n pypairs_test_env python=3.6
   source activate pypairs_test_env
   pip install pytest pytest-cov
 elif [ "${SYSTEM}" = "scientific" ]; then
