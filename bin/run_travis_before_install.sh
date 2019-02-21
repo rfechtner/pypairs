@@ -2,8 +2,11 @@
 set -ev
 echo "Running before install"
 if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
-  echo "Installing Conda"
+  # Install Conda if not present
   ./bin/install_conda.sh
+  conda create -y -n pypairs_test_env python=3.6
+  source activate pypairs_test_env
+  pip install pytest pytest-cov
 elif [ "${SYSTEM}" = "scientific" ]; then
   # Setting up scientifix linux docker container
   docker pull scientificlinux/sl
@@ -19,6 +22,7 @@ elif [ "${SYSTEM}" = "scientific" ]; then
   docker exec -it sl_test bash -c 'wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /root/download/miniconda.sh'
   docker exec -it sl_test bash -c 'chmod +x /root/download/miniconda.sh'
   docker exec -it sl_test bash -c '/root/download/miniconda.sh -b -p /root/miniconda'
+  # Create testing enviroment
   docker exec -it sl_test bash -c '/root/miniconda/bin/conda create -y -n pypairs_test_env python=3.6'
   docker exec -it sl_test bash -c 'source /root/miniconda/bin/activate pypairs_test_env && python -V'
   docker exec -it sl_test bash -c 'source /root/miniconda/bin/activate pypairs_test_env && pip install pytest pytest-cov'
