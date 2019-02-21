@@ -14,6 +14,7 @@ elif [ "${SYSTEM}" = "scientific" ]; then
   # Install miniconda
   docker exec -it sl_test yum -y update
   docker exec -it sl_test yum -y install wget
+  docker exec -it sl_test yum -y install gcc
   docker exec -it sl_test bash -c 'mkdir -p /root/download/'
   docker exec -it sl_test bash -c 'wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /root/download/miniconda.sh'
   docker exec -it sl_test bash -c 'chmod +x /root/download/miniconda.sh'
