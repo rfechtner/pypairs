@@ -3,6 +3,7 @@
 set -ev
 
 if [ "${SYSTEM}" = "linux" ] || [ "${SYSTEM}" = "osx" ]; then
+  source $HOME/miniconda/bin/activate pypairs_test_env
   pytest --cov=./
   if [ "${SYSTEM}" = "linux" ]; then
     rst2html.py --halt=2 README.rst >/dev/null
