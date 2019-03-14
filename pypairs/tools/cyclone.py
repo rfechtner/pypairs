@@ -109,8 +109,9 @@ def cyclone(
     scores_df['max_class'] = scores_df.idxmax(axis=1)
 
     if len(marker_pairs.items()) == 3 and all(elem in marker_pairs.keys() for elem in ["G1", "S", "G2M"]):
+        scores_cc = scores_df.loc[:, ["G1", "G2M"]].idxmax(axis=1)
         scores_df['cc_prediction'] = [
-            "S" if x < 0.5 else scores_df['max_class'][i] for i, x in
+            "S" if x < 0.5 else scores_cc[i] for i, x in
             enumerate(scores_df.loc[:, ["G1", "G2M"]].max(axis=1).values)
         ]
 
