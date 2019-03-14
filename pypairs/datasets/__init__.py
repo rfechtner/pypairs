@@ -69,7 +69,7 @@ def leng15(
     if mode == 'sorted':
         x.drop(list(x.filter(regex='H1_')), axis=1, inplace=True)
     elif mode == 'unsorted':
-        x.drop(list(x.filter(regex='^(H1_)')), axis=1, inplace=True)
+        x.drop(list(x.filter(regex='^(?!H1_).*')), axis=1, inplace=True)
     elif mode == 'all' or mode is None:
         pass
     else:
