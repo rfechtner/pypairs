@@ -16,12 +16,13 @@ def test_cyclone_train_on_train():
     if not np.allclose(np.array(test_quality.values, dtype=float), np.ones(shape=(4, 4)), atol=0.1):
         raise AssertionError()
 
-
+"""
 def test_cyclone_train_on_test():
     testing_data = datasets.leng15(mode='unsorted')
 
     scores = pairs.cyclone(testing_data, datasets.default_cc_marker(), iterations=500, min_iter=10, min_pairs=1)
     test_quality = utils.evaluate_prediction(prediction=scores['max_class'], reference=ref_prediction)
 
-    #if not np.allclose(np.array(test_quality.values, dtype=float), np.ones(shape=(4, 4)), atol=0.2):
-    #    raise AssertionError()
+    if not np.allclose(np.array(test_quality.values, dtype=float), np.ones(shape=(4, 4)), atol=0.2):
+        raise AssertionError()
+"""
