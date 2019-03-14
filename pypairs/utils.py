@@ -8,6 +8,7 @@ from sklearn.metrics import (precision_score, recall_score, f1_score)
 import numpy as np
 from numba import njit
 import sys, json, os
+from pathlib import Path
 import pandas as pd
 
 from pypairs import settings
@@ -394,3 +395,26 @@ def same_marker(a, b):
             return False
 
     return True
+
+
+def is_cached(fname):
+    if settings.cachedir is None:
+        return False
+
+    cached_fname = os.path.join(settings.cachedir, fname)
+
+    if os.path.isdir(settings.cachedir):
+        if os.path.isfile(cached_fname):
+            return True
+        else:
+            return False
+    else:
+        try:
+            os.mkdir(settings.cachedir)
+            dir_abs = Path(settings.cachedir).absolute()
+            logg.info("created specified cache dir: {}".format(dir_abs))
+        except OSError:
+            logg.warn("could not create specified cache directory: {}.\n No caching will be used for this session."
+                      " You can change `cachedir` via `pypairs.settings.cachedir`".format(settings.cachedir))
+            settings.cachedir = None
+            return False

@@ -2,6 +2,7 @@ import os, gzip, io
 import anndata
 import pandas as pd
 from typing import Optional, Iterable, Tuple, Mapping
+from pathlib import Path
 
 from pypairs import utils, settings
 from pypairs import log as logg
@@ -43,9 +44,10 @@ def leng15(
     """
 
     filename_cached = "GSE64016_H1andFUCCI_normalized_EC_cached.csv"
+    path_cached = os.path.join(settings.cachedir, filename_cached)
 
-    if os.path.isfile(settings.cachedir + filename_cached):
-        x = utils.load_pandas(settings.cachedir + filename_cached)
+    if utils.is_cached(filename_cached):
+        x = utils.load_pandas(path_cached)
     else:
         filename = os.path.join(os.path.dirname(__file__), 'GSE64016_H1andFUCCI_normalized_EC.csv.gz')
 
@@ -54,12 +56,15 @@ def leng15(
 
         x.set_index("Unnamed: 0", inplace=True)
 
-        try:
-            utils.save_pandas(settings.cachedir + filename_cached, x)
-        except IOError as e:
-            logg.warn("could not write to {}.\n Please verify that the path exists and is writable."
-                      "Or change `cachedir` via `pypairs.settings.cachedir`".format(settings.cachedir))
-            logg.warn(str(e))
+        if settings.cachedir is not None:
+            try:
+                utils.save_pandas(path_cached, x)
+                abs_path = Path(path_cached).absolute()
+                logg.info("cached unzipped leng15 dataset to {}.".format(abs_path))
+            except IOError as e:
+                logg.warn("could not write to {}.\n Please verify that the path exists and is writable."
+                          "Or change `cachedir` via `pypairs.settings.cachedir`".format(settings.cachedir))
+                logg.warn(str(e))
 
     if mode == 'sorted':
         x.drop(list(x.filter(regex='H1_')), axis=1, inplace=True)
