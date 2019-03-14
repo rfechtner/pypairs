@@ -1,6 +1,7 @@
 import os, gzip, io
 import anndata
 import pandas as pd
+import numpy as np
 from typing import Optional, Iterable, Tuple, Mapping
 from pathlib import Path
 
@@ -66,10 +67,12 @@ def leng15(
                           "Or change `cachedir` via `pypairs.settings.cachedir`".format(settings.cachedir))
                 logg.warn(str(e))
 
+    x = x.astype(np.float32, copy=False)
+
     if mode == 'sorted':
-        x.drop(list(x.filter(regex='H1_')), axis=1, inplace=True)
+        x = x.iloc[:, :212]
     elif mode == 'unsorted':
-        x.drop(list(x.filter(regex='^(H1_)')), axis=1, inplace=True)
+        x = x.iloc[:, 213:]
     elif mode == 'all' or mode is None:
         pass
     else:
