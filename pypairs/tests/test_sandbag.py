@@ -151,19 +151,3 @@ def test_sandbag_np():
 
     if not utils.same_marker(marker_pairs_np, ref_markers):
         raise AssertionError()
-
-
-def test_sandbag_filtered():
-    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
-    sample_names = list(training_data.obs_names)
-    sample_names.pop(3)
-
-    marker_pairs_filtered = pairs.sandbag(
-        training_data, filter_genes=list(range(0, 999)), filter_samples=sample_names
-    )
-
-    ref2 = ref_markers
-    ref2['G2M'].append(('CENPL', 'APOL4'))
-
-    if not utils.same_marker(marker_pairs_filtered, ref2):
-        raise AssertionError()

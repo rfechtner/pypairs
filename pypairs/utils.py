@@ -330,7 +330,7 @@ def filter_unexpressed_genes(data, gene_names):
     gene_names = np.array(gene_names)[mask]
 
     if sum(mask) != len(mask):
-        logg.hint("filtered out unexpressed {} genes".format(
+        logg.hint("filtered out {} unexpressed genes".format(
             len(mask) - sum(mask)
         ))
 
