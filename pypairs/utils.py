@@ -329,12 +329,19 @@ def filter_unexpressed_genes(data, gene_names):
     x = data[:, mask]
     gene_names = np.array(gene_names)[mask]
 
+    if sum(mask) != len(mask):
+        logg.hint("filtered out {} unexpressed genes".format(
+            len(mask) - sum(mask)
+        ))
+
     return x, list(gene_names)
 
 
 def filter_matrix(data, gene_names, sample_names, categories, filter_genes, filter_samples):
     dim_befor_filter = data.shape
     filtered = False
+
+    data, gene_names = filter_unexpressed_genes(data, gene_names)
 
     if filter_genes is not None:
         gene_mask = to_boolean_mask(filter_genes, gene_names)
@@ -356,7 +363,7 @@ def filter_matrix(data, gene_names, sample_names, categories, filter_genes, filt
         ))
         logg.hint("new data is of shape {} x {}".format(*data.shape))
 
-    return np.copy(data), gene_names, sample_names, categories
+    return data, gene_names, sample_names, categories
 
 
 def save_pandas(fname, data):
