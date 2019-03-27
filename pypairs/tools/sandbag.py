@@ -186,7 +186,7 @@ def check_pairs(
             # Subtract all gene counts of gene 2 from gene counts of gene 1
             diff = np.subtract(x1, x2)
 
-            no_up, last_idx_up = valid_phases_up(diff, thresholds, categories, count_up)
+            no_up, last_idx_up = valid_phases_up(diff, thresholds, categories)
             no_down, last_idx_down = valid_phases_down(diff, thresholds, categories)
 
             if no_up == 1:
