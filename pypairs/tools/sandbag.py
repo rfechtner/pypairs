@@ -1,4 +1,4 @@
-from typing import Union, Optional, Tuple, Mapping, Iterable
+from typing import Union, Optional, Tuple, Mapping, Collection
 
 from anndata import AnnData
 from pandas import DataFrame
@@ -6,7 +6,7 @@ import numpy as np
 
 from math import ceil
 from collections import defaultdict
-from numba import njit, prange
+from numba import njit
 
 from pypairs import utils
 from pypairs import settings
@@ -14,14 +14,14 @@ from pypairs import log as logg
 
 
 def sandbag(
-        data: Union[AnnData, DataFrame, np.ndarray, Iterable[Iterable[float]]],
-        annotation: Optional[Mapping[str, Iterable[Union[str, int, bool]]]] = None,
-        gene_names: Optional[Iterable[str]] = None,
-        sample_names: Optional[Iterable[str]] = None,
+        data: Union[AnnData, DataFrame, np.ndarray, Collection[Collection[float]]],
+        annotation: Optional[Mapping[str, Collection[Union[str, int, bool]]]] = None,
+        gene_names: Optional[Collection[str]] = None,
+        sample_names: Optional[Collection[str]] = None,
         fraction: float = 0.65,
-        filter_genes: Optional[Iterable[Union[str, int, bool]]] = None,
-        filter_samples: Optional[Iterable[Union[str, int, bool]]] = None
-) -> Mapping[str, Iterable[Tuple[str, str]]]:
+        filter_genes: Optional[Collection[Union[str, int, bool]]] = None,
+        filter_samples: Optional[Collection[Union[str, int, bool]]] = None
+) -> Mapping[str, Collection[Tuple[str, str]]]:
     """
     Calculate 'marker pairs' from a genecount matrix. Cells x Genes.
 
@@ -96,53 +96,38 @@ def sandbag(
     """
     logg.info('identifying marker pairs with sandbag', r=True)
 
-    raw_data, gene_names, sample_names, category_names, categories = utils.parse_data_and_annotation(
+    data, gene_names, sample_names, category_names, categories = utils.parse_data_and_annotation(
         data, annotation, gene_names, sample_names
     )
 
-    # Check that categories dont overlapp. TBD if needed
-
-    #for i in range(len(categories)):
-    #    for j in range(i+1, len(categories)):
-    #        overlapp = np.logical_and(categories[i], categories[j])
-    #        if overlapp.sum() > 0:
-    #            raise ValueError("A observation can not be in multiple categories")
-
-    raw_data, gene_names, sample_names, categories = utils.filter_matrix(
-        raw_data, gene_names, sample_names, categories, filter_genes, filter_samples
+    data, gene_names, sample_names, categories = utils.filter_matrix(
+        data, gene_names, sample_names, categories, filter_genes, filter_samples
     )
 
-    valid_cat_names = []
-    valid_cats = []
-    for i, cat in enumerate(categories):
-        if sum(cat) > 0:
-            valid_cat_names.append(category_names[i])
-            valid_cats.append(cat)
-    category_names = np.array(valid_cat_names)
-    categories = np.array(valid_cats)
+    categories, category_names = remove_empty_categories(categories, category_names)
 
     logg.hint('sandbag running with fraction of {}'.format(fraction))
 
-    # Define thresholds for each category based on fraction
-    thresholds = np.apply_along_axis(sum, 1, categories)
-    for i, t in enumerate(thresholds):
-        thresholds[i] = ceil(t * fraction)
+    thresholds = calc_thresholds(categories, fraction)
 
     # Dynamic jitting of function check_pairs based on platform compatibility for multiprocessing via numba
     check_pairs_decorated = utils.parallel_njit(check_pairs)
 
     # BUG(?): I have to pass a copy to get rid of all references to the pre_filtered raw_data object, otherwise numba
     # will fail with a lowering error
-    raw_data = raw_data.copy()
-    pairs = check_pairs_decorated(raw_data, categories, thresholds, len(gene_names))
+    data = data.copy()
+    pairs = check_pairs_decorated(data, categories, thresholds, len(gene_names))
 
     # Convert to easier to read dict and return
+    marker_pos = np.where(pairs != -1)
+
     marker_pairs_dict = defaultdict(list)
 
-    for i in range(0, len(pairs) - 2, 3):
-        cat = pairs[i]
-        g1 = pairs[i+1]
-        g2 = pairs[i+2]
+    for i in range(0, len(marker_pos[0])):
+        g1 = marker_pos[0][i]
+        g2 = marker_pos[1][i]
+        cat = pairs[g1, g2]
+
         marker_pairs_dict[
             category_names[cat]
         ].append((gene_names[g1], gene_names[g2]))
@@ -165,11 +150,11 @@ def sandbag(
 
 
 def check_pairs(
-        raw_data: Iterable[Iterable[int]],
-        categories: Iterable[Iterable[bool]],
-        thresholds: Iterable[int],
+        raw_data: np.ndarray,
+        categories: np.ndarray,
+        thresholds: np.array,
         n_genes: int
-) -> Iterable[int]:
+) -> Collection[int]:
     """Loops over all 2-tuple combinations of genes and checks if they fullfil the 'marker pair' criteria
 
     We return marker pairs as dict mapping category to list of 2-tuple: {'C': [(A,B), ...], ...}
@@ -180,80 +165,71 @@ def check_pairs(
     n_cats = len(categories)
 
     # Will hold the tuples with the pairs
-    pairs = []
+    pairs = np.full((n_genes, n_genes), -1)
 
     # Iterate over all possible gene combinations
     for g1 in range(0, n_genes):
-        # Parallized
-        for g2 in prange(g1+1, n_genes):
-            # Gene counts
-            x1 = raw_data[:, g1]
-            x2 = raw_data[:, g2]
-
+        # Parallelized if jitted
+        for g2 in range(g1+1, n_genes):
             # Subtract all gene counts of gene 2 from gene counts of gene 1
+            diff = np.subtract(raw_data[:, g1], raw_data[:, g2])
 
-            diff = np.subtract(x1, x2)
+            no_up, last_idx_up = valid_phases_up(diff, thresholds, categories)
+            no_down, last_idx_down = valid_phases_down(diff, thresholds, categories)
 
-            # Counter for phases in which gene 1 > gene 2
-            up = 0
-
-            # Stores last phase in which gene 1 < gene 2
-            down = -1
-
-            # Check each category
-            for i in range(n_cats):
-
-                # Check if g1 − g2 > 0 in at least a fraction f of G1 cells
-                frac = count_up(diff[categories[i]])
-                if frac >= thresholds[i]:
-
-                    # If up > 1 (g1,g2) can't be a marker pair
-                    # but if up == (number cats - 1) (g2,g1) might be
-                    up += 1
-                    passed_other = True
-
-                    # Check other phases
-                    for j in range(n_cats):
-                        if i != j:
-
-                            # g1 − g2 < 0 in at least a fraction f of all other categories
-                            sub_frac = count_down(diff[categories[j]])
-                            if not sub_frac >= thresholds[j]:
-                                # (g1,g2) is not a marker pair
-                                passed_other = False
-
-                                # But this (g2, g1) might be pair for current category
-                                sub_frac = count_up(diff[categories[j]])
-                                if sub_frac >= thresholds[j]:
-                                    up += 1
-
-                                # Stop checking other categories
-                                break
-                            else:
-                                # Store last passed
-                                down = j
-
-                    # If up in cat[i] and down in all other cat
-                    if passed_other:
-                        # Store marker pair for cat[i] = pair
-                        pairs.extend([i, g1, g2])
-                    else:
-                        break
-
-            # If all but one are up (g2,g1) might be marker pair
-            if up == n_cats - 1:
-                # If any down was found, (g2,g1) is marker pair for down
-                if down != -1:
-                    pairs.extend([down, g2, g1])
-                # None found, check remaining category
-                else:
-                    left_over = n_cats-1
-                    # If its down, (g2,g1) is marker pair for that
-                    sub_frac = count_down(diff[categories[left_over]])
-                    if sub_frac >= thresholds[left_over]:
-                        pairs.extend([left_over, g2, g1])
+            if no_up == 1:
+                if no_down == n_cats - 1:
+                    pairs[g1,g2] = last_idx_up
+            elif no_down == 1:
+                if no_up == n_cats - 1:
+                    pairs[g2, g1] = last_idx_down
 
     return pairs
+
+
+def remove_empty_categories(categories, category_names):
+    valid_cat_names = []
+    valid_cats = []
+    for i, cat in enumerate(categories):
+        if sum(cat) > 0:
+            valid_cat_names.append(category_names[i])
+            valid_cats.append(cat)
+    return np.array(valid_cats), np.array(valid_cat_names)
+
+
+def calc_thresholds(categories, fraction):
+    # Define thresholds for each category based on fraction
+    thresholds = np.apply_along_axis(sum, 1, categories)
+    for i, t in enumerate(thresholds):
+        thresholds[i] = ceil(t * fraction)
+
+    return thresholds
+
+
+@njit()
+def valid_phases_up(diff, thresholds, categories, min_diff=0):
+    last_idx = -1
+    count = 0
+
+    for i in range(0, len(categories)):
+        if count_up(diff[categories[i]], min_diff) >= thresholds[i]:
+            count += 1
+            last_idx = i
+
+    return count, last_idx
+
+
+@njit()
+def valid_phases_down(diff, thresholds, categories, min_diff=0):
+    last_idx = -1
+    count = 0
+
+    for i in range(0, len(categories)):
+        if count_down(diff[categories[i]], min_diff) >= thresholds[i]:
+            count += 1
+            last_idx = i
+
+    return count, last_idx
 
 
 @njit()
@@ -264,41 +240,3 @@ def count_up(diff, min_diff=0):
 @njit()
 def count_down(diff, min_diff=0):
     return len(np.where(diff < min_diff)[0])
-
-# New approach, less code, imo better readable but unfortunately slower
-"""
-possible_combinations = itertools.combinations(range(0, len(gene_names)), 2)
-
-marker_pairs = defaultdict(list)
-
-for pair in possible_combinations:
-    g1 = raw_data[:, pair[0]]
-    g2 = raw_data[:, pair[1]]
-
-    diff = np.subtract(g1, g2)
-
-    up = [
-        count_up(diff[categories[i]]) >= thresholds[i]
-        for i in range(len(categories))
-    ]
-    down = [
-        count_down(diff[categories[i]]) >= thresholds[i]
-        for i in range(len(categories))
-    ]
-
-    if sum(up) == 1:
-        group = np.argmax(up)
-
-        if sum(down) == (len(down) - 1):
-            marker_pairs[category_names[group]].append(
-                pair
-            )
-    elif sum(down) == 1:
-        group = np.argmax(down)
-
-        if sum(up) == (len(up) - 1):
-            marker_pairs[category_names[group]].append(
-                (gene_names[pair[1]],
-                 gene_names[pair[0]])
-            )
-"""
