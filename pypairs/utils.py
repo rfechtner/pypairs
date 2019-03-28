@@ -220,7 +220,11 @@ def parse_data_and_annotation(
                 logg.hint("passed {} categories: {}".format(len(category_names), str(category_names)))
                 for i, name in enumerate(category_names):
                     categories[i] = np.isin(data.obs['category'], name)
-                    logg.hint("\t{}: {}".format(name, len(categories[i])))
+                    if type(categories[i][0]) == bool or type(categories[i][0]) == np.bool_:
+                        logg.hint("\t{}: {}".format(name, sum(categories[i])))
+                    else:
+                        logg.hint("\t{}: {}".format(name, len(categories[i])))
+
             else:
                 raise ValueError("Provide categories as data.var['category'] or in ``annotation``")
     else:
@@ -243,7 +247,11 @@ def parse_annotation(
 
     logg.hint("passed {} categories: {}".format(len(category_names), str(category_names)))
     for i, k in enumerate(annotation.keys()):
-        logg.hint("\t{}: {}".format(k, len(annotation[k])))
+        if type(annotation[k][0]) == bool or type(annotation[k][0]) == np.bool_:
+            logg.hint("\t{}: {}".format(k, sum(annotation[k])))
+        else:
+            logg.hint("\t{}: {}".format(k, len(annotation[k])))
+
         categories[i] = to_boolean_mask(np.array(annotation[k]), sample_names)
 
     return category_names, categories

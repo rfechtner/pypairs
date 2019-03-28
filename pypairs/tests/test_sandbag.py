@@ -35,6 +35,7 @@ min_ref = {
         ('8', '10'), ('9', '10')]
 }
 
+
 def test_sandbag_min():
     import string
 
@@ -70,8 +71,6 @@ def test_sandbag_min():
         sample_names=sample_names
     )
 
-    print(marker_pairs)
-
     assert utils.same_marker(marker_pairs, min_ref)
 
 
@@ -87,6 +86,21 @@ def test_sandbag_1j():
 
 def test_sandbag_2j_ann():
     settings.n_jobs = 2
+
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+    annotation = {
+        cat: [i for i, x in enumerate(training_data.obs['category']) if x == cat]
+        for cat in ["G1", "S", "G2M"]
+    }
+
+    print(annotation)
+    marker_pairs = pairs.sandbag(training_data, annotation=annotation)
+
+    if not utils.same_marker(marker_pairs, ref_markers):
+        raise AssertionError()
+
+def test_sandbag_Allj_ann():
+    settings.n_jobs = 8
 
     training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
     annotation = {
