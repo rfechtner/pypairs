@@ -6,7 +6,7 @@ import numpy as np
 
 from math import ceil
 from collections import defaultdict
-from numba import njit, prange
+from numba import njit, prange, guvectorize, vectorize
 
 from pypairs import utils
 from pypairs import settings
@@ -110,12 +110,11 @@ def sandbag(
 
     thresholds = calc_thresholds(categories, fraction)
 
-    # Dynamic jitting of function check_pairs based on platform compatibility for multiprocessing via numba
-    check_pairs_decorated = utils.parallel_njit(check_pairs)
-
     # BUG(?): I have to pass a copy to get rid of all references to the pre_filtered raw_data object, otherwise numba
     # will fail with a lowering error
     data = data.copy()
+
+    check_pairs_decorated = utils.parallel_njit(check_pairs)
     pairs = check_pairs_decorated(data, categories, thresholds, len(gene_names))
 
     # Convert to easier to read dict and return
@@ -172,14 +171,13 @@ def check_pairs(
         # Parallelized if jitted
         for g2 in prange(g1+1, n_genes):
             # Subtract all gene counts of gene 2 from gene counts of gene 1
-            diff = np.subtract(raw_data[:, g1], raw_data[:, g2])
 
-            no_up, last_idx_up = valid_phases_up(diff, thresholds, categories)
-            no_down, last_idx_down = valid_phases_down(diff, thresholds, categories)
+            no_up, last_idx_up = valid_phases_up(raw_data[:, g1], raw_data[:, g2], thresholds, categories)
+            no_down, last_idx_down = valid_phases_down(raw_data[:, g1], raw_data[:, g2], thresholds, categories)
 
             if no_up == 1:
                 if no_down == n_cats - 1:
-                    pairs[g1,g2] = last_idx_up
+                    pairs[g1, g2] = last_idx_up
             elif no_down == 1:
                 if no_up == n_cats - 1:
                     pairs[g2, g1] = last_idx_down
@@ -207,12 +205,13 @@ def calc_thresholds(categories, fraction):
 
 
 @njit()
-def valid_phases_up(diff, thresholds, categories, min_diff=0):
+def valid_phases_up(a, b, thresholds, categories, min_diff=0):
     last_idx = -1
     count = 0
 
+    # TODO: Vectorize
     for i in range(0, len(categories)):
-        if count_up(diff[categories[i]], min_diff) >= thresholds[i]:
+        if count_up(a[categories[i]], b[categories[i]], min_diff) >= thresholds[i]:
             count += 1
             last_idx = i
 
@@ -220,12 +219,13 @@ def valid_phases_up(diff, thresholds, categories, min_diff=0):
 
 
 @njit()
-def valid_phases_down(diff, thresholds, categories, min_diff=0):
+def valid_phases_down(a, b, thresholds, categories, min_diff=0):
     last_idx = -1
     count = 0
 
+    # TODO: Vectorize
     for i in range(0, len(categories)):
-        if count_down(diff[categories[i]], min_diff) >= thresholds[i]:
+        if count_down(a[categories[i]], b[categories[i]], min_diff) >= thresholds[i]:
             count += 1
             last_idx = i
 
@@ -233,10 +233,35 @@ def valid_phases_down(diff, thresholds, categories, min_diff=0):
 
 
 @njit()
-def count_up(diff, min_diff=0):
-    return len(np.where(diff > min_diff)[0])
+def count_up(a, b, min_diff=0):
+    return np.sum(comp_pair_up_vec(a, b, min_diff))
 
 
 @njit()
-def count_down(diff, min_diff=0):
-    return len(np.where(diff < min_diff)[0])
+def count_down(a, b, min_diff=0):
+    return np.sum(comp_pair_down_vec(a, b, min_diff))
+
+
+@vectorize("boolean(float64, float64, int64)", target='cpu')
+def comp_pair_up_vec(a, b, min_diff):
+    if a-b > min_diff:
+        return True
+    return False
+
+
+@vectorize("boolean(float64, float64, int64)", target='cpu')
+def comp_pair_down_vec(a, b, min_diff):
+    if a-b < min_diff:
+        return True
+    return False
+
+
+@njit()
+def first_true(aa):
+    i = 0
+    for a in aa:
+        if a:
+            return i
+        i += 1
+
+    return -1

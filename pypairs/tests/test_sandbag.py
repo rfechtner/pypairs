@@ -84,6 +84,16 @@ def test_sandbag_1j():
         raise AssertionError()
 
 
+def test_sandbag_2j():
+    settings.n_jobs = 2
+
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+    marker_pairs = pairs.sandbag(training_data)
+
+    if not utils.same_marker(marker_pairs, ref_markers):
+        raise AssertionError()
+
+
 def test_sandbag_2j_ann():
     settings.n_jobs = 2
 
@@ -99,6 +109,7 @@ def test_sandbag_2j_ann():
     if not utils.same_marker(marker_pairs, ref_markers):
         raise AssertionError()
 
+
 def test_sandbag_Allj_ann():
     settings.n_jobs = 8
 
@@ -111,15 +122,6 @@ def test_sandbag_Allj_ann():
     marker_pairs = pairs.sandbag(training_data, annotation=annotation)
 
     if not utils.same_marker(marker_pairs, ref_markers):
-        raise AssertionError()
-
-
-def test_sandbag_unjitted():
-    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
-
-    marker_pairs_unjitted = pairs.sandbag(training_data)
-
-    if not utils.same_marker(marker_pairs_unjitted, ref_markers):
         raise AssertionError()
 
 
