@@ -6,7 +6,7 @@ import numpy as np
 
 from math import ceil
 from collections import defaultdict
-from numba import njit
+from numba import njit, prange
 
 from pypairs import utils
 from pypairs import settings
@@ -170,7 +170,7 @@ def check_pairs(
     # Iterate over all possible gene combinations
     for g1 in range(0, n_genes):
         # Parallelized if jitted
-        for g2 in range(g1+1, n_genes):
+        for g2 in prange(g1+1, n_genes):
             # Subtract all gene counts of gene 2 from gene counts of gene 1
             diff = np.subtract(raw_data[:, g1], raw_data[:, g2])
 
