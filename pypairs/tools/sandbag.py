@@ -20,7 +20,8 @@ def sandbag(
         sample_names: Optional[Collection[str]] = None,
         fraction: float = 0.65,
         filter_genes: Optional[Collection[Union[str, int, bool]]] = None,
-        filter_samples: Optional[Collection[Union[str, int, bool]]] = None
+        filter_samples: Optional[Collection[Union[str, int, bool]]] = None,
+        opt = False
 ) -> Mapping[str, Collection[Tuple[str, str]]]:
     """
     Calculate 'marker pairs' from a genecount matrix. Cells x Genes.
@@ -114,8 +115,11 @@ def sandbag(
     # will fail with a lowering error
     data = data.copy()
 
-    check_pairs_decorated = utils.parallel_njit(check_pairs)
-    pairs = check_pairs_decorated(data, categories, thresholds, len(gene_names))
+    if opt:
+        pairs = check_pairs_opt(data, categories, thresholds)
+    else:
+        #check_pairs_decorated = utils.parallel_njit(check_pairs)
+        pairs = check_pairs(data, categories, thresholds, len(gene_names))
 
     # Convert to easier to read dict and return
     marker_pos = np.where(pairs != -1)
@@ -183,6 +187,52 @@ def check_pairs(
                     pairs[g2, g1] = last_idx_down
 
     return pairs
+
+@njit(parallel=False, fastmath=False)
+def check_pairs_opt(
+        raw_data_in: np.ndarray,
+        categories: np.ndarray,
+        thresholds: np.array
+) -> Collection[int]:
+    raw_data = np.ascontiguousarray(raw_data_in.T)
+    cats = np.where(categories.T == True)[1]
+
+    result = np.full((raw_data.shape[0], raw_data.shape[1]), -1)
+
+    # Iterate over all possible gene combinations
+    for g1 in range(0, raw_data.shape[0]):
+        # Parallelized if jitted
+        for g2 in range(g1+1, raw_data.shape[0]):
+            valid_phase_up = 0
+            valid_phase_up_idx = -1
+            valid_phase_down = 0
+            valid_phase_down_idx = -1
+
+            num_pos = np.zeros(thresholds.shape[0])
+            num_neg = np.zeros(thresholds.shape[0])
+
+            for i in range(raw_data.shape[0]):
+                if raw_data[g1, i] > raw_data[g2, i]:
+                    num_pos[cats[i]] += 1
+                elif raw_data[g1, i] < raw_data[g2, i]:
+                    num_neg[cats[i]] += 1
+
+            for i in range(0, thresholds.shape[0]):
+                if num_pos[i] >= thresholds[i]:
+                    valid_phase_up += 1
+                    valid_phase_up_idx = i
+                if num_neg[i] >= thresholds[i]:
+                    valid_phase_down += 1
+                    valid_phase_down_idx = i
+
+            if valid_phase_up == 1:
+                if valid_phase_down == categories.shape[0] - 1:
+                    result[g1, g2] = valid_phase_up_idx
+            elif valid_phase_down == 1:
+                if valid_phase_up == categories.shape[0] - 1:
+                    result[g2, g1] = valid_phase_down_idx
+
+    return result
 
 
 def remove_empty_categories(categories, category_names):

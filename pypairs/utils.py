@@ -332,6 +332,7 @@ def read_dict_from_json(fin):
     return json.load(open(fin, 'r'))
 
 
+# TODO: Update categories
 def filter_unexpressed_genes(data, gene_names):
     mask = np.invert(np.all(data == 0, axis=0))
     x = data[:, mask]
@@ -349,7 +350,8 @@ def filter_matrix(data, gene_names, sample_names, categories, filter_genes, filt
     dim_befor_filter = data.shape
     filtered = False
 
-    data, gene_names = filter_unexpressed_genes(data, gene_names)
+    # TODO: Deactivated till updated
+    #data, gene_names = filter_unexpressed_genes(data, gene_names)
 
     if filter_genes is not None:
         gene_mask = to_boolean_mask(filter_genes, gene_names)
