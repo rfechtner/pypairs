@@ -116,6 +116,7 @@ def sandbag(
     data = data.copy()
 
     if opt:
+        data = np.ascontiguousarray(data.T)
         cats = np.where(categories.T == True)[1]
         pairs = check_pairs_opt(data, cats, thresholds)
     else:
@@ -189,16 +190,13 @@ def check_pairs(
 
     return pairs
 
-@njit(parallel=False, fastmath=True)
+@njit(parallel=True, fastmath=True)
 def check_pairs_opt(
-        raw_data_in: np.ndarray,
+        raw_data: np.ndarray,
         cats: np.ndarray,
         thresholds: np.array
 ) -> Collection[int]:
-    raw_data = np.ascontiguousarray(raw_data_in.T)
-
-
-    result = np.full((raw_data.shape[0], raw_data.shape[1]), -1)
+    result = np.full((raw_data.shape[0], raw_data.shape[0]), -1)
 
     # Iterate over all possible gene combinations
     for g1 in prange(0, raw_data.shape[0]):
@@ -212,7 +210,7 @@ def check_pairs_opt(
             num_pos = np.zeros(thresholds.shape[0])
             num_neg = np.zeros(thresholds.shape[0])
 
-            for i in range(raw_data.shape[0]):
+            for i in range(0, raw_data.shape[1]):
                 if raw_data[g1, i] > raw_data[g2, i]:
                     num_pos[cats[i]] += 1
                 elif raw_data[g1, i] < raw_data[g2, i]:
