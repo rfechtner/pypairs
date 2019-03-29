@@ -116,7 +116,8 @@ def sandbag(
     data = data.copy()
 
     if opt:
-        pairs = check_pairs_opt(data, categories, thresholds)
+        cats = np.where(categories.T == True)[1]
+        pairs = check_pairs_opt(data, cats, thresholds)
     else:
         #check_pairs_decorated = utils.parallel_njit(check_pairs)
         pairs = check_pairs(data, categories, thresholds, len(gene_names))
@@ -191,11 +192,11 @@ def check_pairs(
 @njit(parallel=False, fastmath=False)
 def check_pairs_opt(
         raw_data_in: np.ndarray,
-        categories: np.ndarray,
+        cats: np.ndarray,
         thresholds: np.array
 ) -> Collection[int]:
     raw_data = np.ascontiguousarray(raw_data_in.T)
-    cats = np.where(categories.T == True)[1]
+
 
     result = np.full((raw_data.shape[0], raw_data.shape[1]), -1)
 
