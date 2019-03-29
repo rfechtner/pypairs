@@ -32,7 +32,7 @@ install:
 - pip install -e .[plotting]
 
 script:
-- pytest --cov=./
+- pytest -s --cov=./
 - rst2html.py --halt=2 README.rst >/dev/null
 - export PRERELEASE=`echo $TRAVIS_TAG | grep -c "b"`
 

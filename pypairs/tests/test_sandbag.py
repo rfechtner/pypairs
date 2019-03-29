@@ -122,10 +122,21 @@ def test_sandbag_1j():
 
 
 def test_sandbag_2j():
-    settings.n_jobs = 2
+    settings.n_jobs = 8
+    print("reg")
 
     training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
     marker_pairs = pairs.sandbag(training_data)
+
+    if not utils.same_marker(marker_pairs, ref_markers):
+        raise AssertionError()
+
+def test_sandbag_2j_opt():
+    settings.n_jobs = 8
+    print("opt")
+
+    training_data = datasets.leng15(mode='sorted', gene_sub=list(range(0, 1000)))
+    marker_pairs = pairs.sandbag(training_data, opt=True)
 
     if not utils.same_marker(marker_pairs, ref_markers):
         raise AssertionError()

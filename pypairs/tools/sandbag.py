@@ -189,7 +189,7 @@ def check_pairs(
 
     return pairs
 
-@njit(parallel=False, fastmath=False)
+@njit(parallel=False, fastmath=True)
 def check_pairs_opt(
         raw_data_in: np.ndarray,
         cats: np.ndarray,
@@ -201,7 +201,7 @@ def check_pairs_opt(
     result = np.full((raw_data.shape[0], raw_data.shape[1]), -1)
 
     # Iterate over all possible gene combinations
-    for g1 in range(0, raw_data.shape[0]):
+    for g1 in prange(0, raw_data.shape[0]):
         # Parallelized if jitted
         for g2 in range(g1+1, raw_data.shape[0]):
             valid_phase_up = 0
