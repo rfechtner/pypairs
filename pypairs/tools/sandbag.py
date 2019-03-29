@@ -227,10 +227,10 @@ def check_pairs_opt(
                     valid_phase_down_idx = i
 
             if valid_phase_up == 1:
-                if valid_phase_down == categories.shape[0] - 1:
+                if valid_phase_down == thresholds.shape[0] - 1:
                     result[g1, g2] = valid_phase_up_idx
             elif valid_phase_down == 1:
-                if valid_phase_up == categories.shape[0] - 1:
+                if valid_phase_up == thresholds.shape[0] - 1:
                     result[g2, g1] = valid_phase_down_idx
 
     return result
