@@ -190,7 +190,7 @@ def check_pairs(
 
     return pairs
 
-@njit(parallel=True, fastmath=True)
+@njit(parallel=False, fastmath=True)
 def check_pairs_opt(
         raw_data_in: np.ndarray,
         cats: np.ndarray,
