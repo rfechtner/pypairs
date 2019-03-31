@@ -113,12 +113,13 @@ def sandbag(
 
     # BUG(?): I have to pass a copy to get rid of all references to the pre_filtered raw_data object, otherwise numba
     # will fail with a lowering error
-    data = data.copy()
+    #data = data.copy()
 
     if opt:
- 
+        print("running experimental version") 
+        raw_data = np.ascontiguousarray(data.T) 
         cats = np.where(categories.T == True)[1]
-        pairs = check_pairs_opt(data, cats, thresholds)
+        pairs = check_pairs_opt(raw_data, cats, thresholds)
     else:
         #check_pairs_decorated = utils.parallel_njit(check_pairs)
         pairs = check_pairs(data, categories, thresholds, len(gene_names))
@@ -192,11 +193,11 @@ def check_pairs(
 
 @njit(parallel=False, fastmath=False)
 def check_pairs_opt(
-        raw_data_in: np.ndarray,
+        raw_data: np.ndarray,
         cats: np.ndarray,
         thresholds: np.array
 ) -> Collection[int]:
-    raw_data = np.ascontiguousarray(raw_data_in.T)
+    
     result = np.full((raw_data.shape[0], raw_data.shape[0]), -1)
 
     # Iterate over all possible gene combinations
