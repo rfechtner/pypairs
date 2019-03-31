@@ -121,8 +121,9 @@ def sandbag(
         cats = np.where(categories.T == True)[1]
         pairs = check_pairs_opt(raw_data, cats, thresholds)
     else:
-        #check_pairs_decorated = utils.parallel_njit(check_pairs)
-        pairs = check_pairs(data, categories, thresholds, len(gene_names))
+        data = data.copy()
+        check_pairs_decorated = utils.parallel_njit(check_pairs)
+        pairs = check_pairs_decorated(data, categories, thresholds, len(gene_names))
 
     # Convert to easier to read dict and return
     marker_pos = np.where(pairs != -1)
@@ -191,7 +192,7 @@ def check_pairs(
 
     return pairs
 
-@njit(parallel=False, fastmath=False)
+@njit(parallel=True, fastmath=True)
 def check_pairs_opt(
         raw_data: np.ndarray,
         cats: np.ndarray,
