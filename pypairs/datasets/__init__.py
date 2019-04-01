@@ -1,7 +1,7 @@
 import os, gzip, io
 import anndata
 import pandas as pd
-from typing import Optional, Iterable, Tuple, Mapping
+from typing import Optional, Iterable, Tuple, Mapping, Collection
 from pathlib import Path
 
 from pypairs import utils, settings
@@ -12,7 +12,7 @@ def leng15(
     mode: Optional[str] = 'all',
     gene_sub: Optional[Iterable[int]] = None,
     sample_sub: Optional[Iterable[int]] = None
-) -> Iterable[Iterable[float]]:
+) -> anndata.AnnData:
     """Single cell RNA-seq data of human hESCs to evaluate Oscope [Leng15]_
 
     Total 213 H1 single cells and 247 H1-Fucci single cells were sequenced.

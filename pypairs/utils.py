@@ -10,6 +10,8 @@ from numba import njit
 import sys, json, os
 from pathlib import Path
 import pandas as pd
+import timeit
+from functools import partial
 
 from pypairs import settings
 from pypairs import log as logg
@@ -164,6 +166,7 @@ def load_marker(
 
 # ===== UNDOCUMENTED =====
 
+
 def parallel_njit(
     func: Callable[[], Any],
     jitted: Optional[bool] = True
@@ -171,22 +174,22 @@ def parallel_njit(
     """Dynamic decorator for jit-compiled functions.
     Adds parallel=True if settings.n_jobs > 1
     """
-    if jitted is False:
+    if jitted is False or settings.enable_jit is False:
         logg.warn('staring uncompiled processing. Should only be used for debug and testing!')
         return func
 
     if settings.n_jobs > 1:
         if is_win32() is False:
             logg.hint('staring parallel processing with {} threads'.format(settings.n_jobs))
-            return njit(func, parallel=True)
+            return njit(func, parallel=True, fastmath=settings.enable_fastmath)
         else:
             logg.error(
                 'n_jobs is set to {} but multiprocessing is not supported for your platform! '
                 'falling back to single core... '.format(settings.n_jobs))
-            return njit(func)
+            return njit(func, fastmath=settings.enable_fastmath)
     else:
         logg.hint('staring processing with 1 thread')
-        return njit(func)
+        return njit(func, fastmath=settings.enable_fastmath)
 
 
 def is_win32():
@@ -332,6 +335,7 @@ def read_dict_from_json(fin):
     return json.load(open(fin, 'r'))
 
 
+# TODO: Update categories
 def filter_unexpressed_genes(data, gene_names):
     mask = np.invert(np.all(data == 0, axis=0))
     x = data[:, mask]
@@ -345,11 +349,36 @@ def filter_unexpressed_genes(data, gene_names):
     return x, list(gene_names)
 
 
+def get_filter_masks(data, gene_names, sample_names, categories, filter_genes, filter_samples):
+    dim_befor_filter = data.shape
+    filtered = False
+
+    unexpressed_genes = np.invert(np.all(data == 0, axis=0))
+    filtered_genes = to_boolean_mask(filter_genes, gene_names)
+    gene_mask = np.logical_and(unexpressed_genes, filtered_genes)
+
+    filtered_samples = to_boolean_mask(filter_samples, sample_names)
+    not_categorized = categories[0]
+    for i in range(1, categories.shape[0]):
+        not_categorized = np.logical_or(not_categorized, categories[i])
+    sample_mask = np.logical_and(not_categorized, filtered_samples)
+
+    if filtered:
+        logg.hint("filtered out {} samples and {} genes based on passed subsets".format(
+            dim_befor_filter[0] - np.sum(sample_mask),
+            dim_befor_filter[1] - np.sum(gene_mask)
+        ))
+        logg.hint("new data is of shape {} x {}".format(*data.shape))
+
+    return gene_mask, sample_mask
+
+
 def filter_matrix(data, gene_names, sample_names, categories, filter_genes, filter_samples):
     dim_befor_filter = data.shape
     filtered = False
 
-    data, gene_names = filter_unexpressed_genes(data, gene_names)
+    # TODO: Deactivated till updated
+    #data, gene_names = filter_unexpressed_genes(data, gene_names)
 
     if filter_genes is not None:
         gene_mask = to_boolean_mask(filter_genes, gene_names)
@@ -433,3 +462,53 @@ def is_cached(fname):
                       " You can change `cachedir` via `pypairs.settings.cachedir`".format(settings.cachedir))
             settings.cachedir = None
             return False
+
+
+def nice_seconds(secs):
+    if secs < 0.001:
+        return "{0:.0f} \u03BC".format(round(secs * 1000000, 0))
+    elif 0.001 <= secs < 1:
+        return "{0:.0f} ms".format(round(secs * 1000, 0))
+    elif 1 <= secs < 60:
+        return "{0:.2f} s".format(round(secs, 2))
+    elif 60 <= secs:
+        return "{0:.2f} min".format(round(secs / 60, 2))
+
+
+def benchmark_test(func, params, runs=3, repeats=3):
+    logg.info("Benchmarking ({} runs, {} repeats):".format(runs, repeats))
+
+    settings.verbosity = 0
+
+    times = timeit.Timer(partial(func, **params)).repeat(runs, repeats)
+    time_taken = np.array(times) / repeats
+
+    settings.verbosity = 4
+    logg.info(
+        "\tTotal {total}, mean: {mean}, min {min}".format(
+            total=nice_seconds(sum(time_taken)),
+            mean=nice_seconds(time_taken.mean()),
+            min=nice_seconds(min(time_taken))
+        )
+    )
+
+def generate_random_testdata(n_samples, n_genes):
+    data = np.random.uniform(low=0.0, high=60.0, size=(n_samples, n_genes))
+    gene_names = list(["g_{}".format(i) for i in range(0, n_genes)])
+    sample_names = list(["s_{}".format(i) for i in range(0, n_samples)])
+    cats = ["G1", "S", "G2M"]
+    random_cats = np.random.choice(cats, n_samples)
+    annotation = {
+        "G1": np.where(random_cats == "G1")[0].tolist(),
+        "S": np.where(random_cats == "S")[0].tolist(),
+        "G2M": np.where(random_cats == "G2M")[0].tolist()
+    }
+
+    params = {
+        'data': data,
+        'annotation': annotation,
+        'gene_names': gene_names,
+        'sample_names': sample_names
+    }
+
+    return params

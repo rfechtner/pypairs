@@ -6,7 +6,7 @@ import numpy as np
 
 from math import ceil
 from collections import defaultdict
-from numba import njit, prange
+from numba import prange
 
 from pypairs import utils
 from pypairs import settings
@@ -100,9 +100,11 @@ def sandbag(
         data, annotation, gene_names, sample_names
     )
 
-    data, gene_names, sample_names, categories = utils.filter_matrix(
+    gene_mask, sample_mask = utils.get_filter_masks(
         data, gene_names, sample_names, categories, filter_genes, filter_samples
     )
+
+    gene_names = np.array(gene_names)[gene_mask]
 
     categories, category_names = remove_empty_categories(categories, category_names)
 
@@ -110,13 +112,9 @@ def sandbag(
 
     thresholds = calc_thresholds(categories, fraction)
 
-    # Dynamic jitting of function check_pairs based on platform compatibility for multiprocessing via numba
+    cats = np.where(categories.T == True)[1]
     check_pairs_decorated = utils.parallel_njit(check_pairs)
-
-    # BUG(?): I have to pass a copy to get rid of all references to the pre_filtered raw_data object, otherwise numba
-    # will fail with a lowering error
-    data = data.copy()
-    pairs = check_pairs_decorated(data, categories, thresholds, len(gene_names))
+    pairs = check_pairs_decorated(data[sample_mask][:, gene_mask], cats, thresholds)
 
     # Convert to easier to read dict and return
     marker_pos = np.where(pairs != -1)
@@ -150,41 +148,45 @@ def sandbag(
 
 
 def check_pairs(
-        raw_data: np.ndarray,
-        categories: np.ndarray,
-        thresholds: np.array,
-        n_genes: int
+        raw_data_in: np.ndarray,
+        cats: np.ndarray,
+        thresholds: np.array
 ) -> Collection[int]:
-    """Loops over all 2-tuple combinations of genes and checks if they fullfil the 'marker pair' criteria
+    raw_data = np.ascontiguousarray(raw_data_in.T)
+    result = np.full((raw_data.shape[0], raw_data.shape[0]), - 1)
 
-    We return marker pairs as dict mapping category to list of 2-tuple: {'C': [(A,B), ...], ...}
+    for g1 in prange(0, raw_data.shape[0]):
+        for g2 in range(g1+1, raw_data.shape[0]):
+            valid_phase_up = 0
+            valid_phase_up_idx = -1
+            valid_phase_down = 0
+            valid_phase_down_idx = -1
 
-    This function will be compiled via numba's jit decorator.
-    """
-    # Number of categories
-    n_cats = len(categories)
+            num_pos = np.zeros(thresholds.shape[0])
+            num_neg = np.zeros(thresholds.shape[0])
 
-    # Will hold the tuples with the pairs
-    pairs = np.full((n_genes, n_genes), -1)
+            for i in range(0, raw_data.shape[1]):
+                if raw_data[g1, i] > raw_data[g2, i]:
+                    num_pos[cats[i]] += 1
+                elif raw_data[g1, i] < raw_data[g2, i]:
+                    num_neg[cats[i]] += 1
 
-    # Iterate over all possible gene combinations
-    for g1 in range(0, n_genes):
-        # Parallelized if jitted
-        for g2 in prange(g1+1, n_genes):
-            # Subtract all gene counts of gene 2 from gene counts of gene 1
-            diff = np.subtract(raw_data[:, g1], raw_data[:, g2])
+            for i in range(0, thresholds.shape[0]):
+                if num_pos[i] >= thresholds[i]:
+                    valid_phase_up += 1
+                    valid_phase_up_idx = i
+                if num_neg[i] >= thresholds[i]:
+                    valid_phase_down += 1
+                    valid_phase_down_idx = i
 
-            no_up, last_idx_up = valid_phases_up(diff, thresholds, categories)
-            no_down, last_idx_down = valid_phases_down(diff, thresholds, categories)
+            if valid_phase_up == 1:
+                if valid_phase_down == thresholds.shape[0] - 1:
+                    result[g1, g2] = valid_phase_up_idx
+            elif valid_phase_down == 1:
+                if valid_phase_up == thresholds.shape[0] - 1:
+                    result[g2, g1] = valid_phase_down_idx
 
-            if no_up == 1:
-                if no_down == n_cats - 1:
-                    pairs[g1,g2] = last_idx_up
-            elif no_down == 1:
-                if no_up == n_cats - 1:
-                    pairs[g2, g1] = last_idx_down
-
-    return pairs
+    return result
 
 
 def remove_empty_categories(categories, category_names):
@@ -198,45 +200,8 @@ def remove_empty_categories(categories, category_names):
 
 
 def calc_thresholds(categories, fraction):
-    # Define thresholds for each category based on fraction
     thresholds = np.apply_along_axis(sum, 1, categories)
     for i, t in enumerate(thresholds):
         thresholds[i] = ceil(t * fraction)
 
     return thresholds
-
-
-@njit()
-def valid_phases_up(diff, thresholds, categories, min_diff=0):
-    last_idx = -1
-    count = 0
-
-    for i in range(0, len(categories)):
-        if count_up(diff[categories[i]], min_diff) >= thresholds[i]:
-            count += 1
-            last_idx = i
-
-    return count, last_idx
-
-
-@njit()
-def valid_phases_down(diff, thresholds, categories, min_diff=0):
-    last_idx = -1
-    count = 0
-
-    for i in range(0, len(categories)):
-        if count_down(diff[categories[i]], min_diff) >= thresholds[i]:
-            count += 1
-            last_idx = i
-
-    return count, last_idx
-
-
-@njit()
-def count_up(diff, min_diff=0):
-    return len(np.where(diff > min_diff)[0])
-
-
-@njit()
-def count_down(diff, min_diff=0):
-    return len(np.where(diff < min_diff)[0])
