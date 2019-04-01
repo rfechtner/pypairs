@@ -1,7 +1,6 @@
 from pypairs import datasets, settings, utils, pairs
 from pandas import DataFrame
 import numpy as np
-from collections import Counter
 
 settings.verbosity = 4
 
