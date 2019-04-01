@@ -36,6 +36,14 @@ n_jobs = os.cpu_count()
 """Default number of jobs/ CPUs to use for parallel computing.
 """
 
+enable_jit = True
+"""If set to False, Disable all JIT-Compiling. WARNING: Might be very slow!
+"""
+
+enable_fastmath = True
+"""Mostly for debugging. Disables numbas fastmath mode if set to false
+"""
+
 logfile = ''
 """Name of logfile. By default is set to '' and writes to standard output."""
 

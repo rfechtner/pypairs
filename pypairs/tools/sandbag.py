@@ -6,7 +6,7 @@ import numpy as np
 
 from math import ceil
 from collections import defaultdict
-from numba import njit, prange, guvectorize, vectorize
+from numba import njit, prange, vectorize
 
 from pypairs import utils
 from pypairs import settings
@@ -20,8 +20,7 @@ def sandbag(
         sample_names: Optional[Collection[str]] = None,
         fraction: float = 0.65,
         filter_genes: Optional[Collection[Union[str, int, bool]]] = None,
-        filter_samples: Optional[Collection[Union[str, int, bool]]] = None,
-        opt = False
+        filter_samples: Optional[Collection[Union[str, int, bool]]] = None
 ) -> Mapping[str, Collection[Tuple[str, str]]]:
     """
     Calculate 'marker pairs' from a genecount matrix. Cells x Genes.
@@ -101,9 +100,15 @@ def sandbag(
         data, annotation, gene_names, sample_names
     )
 
-    data, gene_names, sample_names, categories = utils.filter_matrix(
+    gene_mask, sample_mask = utils.get_filter_masks(
         data, gene_names, sample_names, categories, filter_genes, filter_samples
     )
+
+    gene_names = np.array(gene_names)[gene_mask]
+
+    #data, gene_names, sample_names, categories = utils.filter_matrix(
+    #    data, gene_names, sample_names, categories, filter_genes, filter_samples
+    #)
 
     categories, category_names = remove_empty_categories(categories, category_names)
 
@@ -111,17 +116,13 @@ def sandbag(
 
     thresholds = calc_thresholds(categories, fraction)
 
-    # BUG(?): I have to pass a copy to get rid of all references to the pre_filtered raw_data object, otherwise numba
-    # will fail with a lowering error
-    data = data.copy()
+    cats = np.where(categories.T == True)[1]
+    check_pairs_decorated = utils.parallel_njit(check_pairs_opt)
+    pairs = check_pairs_decorated(data[sample_mask][:, gene_mask], cats, thresholds)
 
-    if opt:
-        data = np.ascontiguousarray(data.T)
-        cats = np.where(categories.T == True)[1]
-        pairs = check_pairs_opt(data, cats, thresholds)
-    else:
-        #check_pairs_decorated = utils.parallel_njit(check_pairs)
-        pairs = check_pairs(data, categories, thresholds, len(gene_names))
+    #data = data.copy()
+    #check_pairs_decorated = utils.parallel_njit(check_pairs)
+    #pairs = check_pairs_decorated(data[sample_mask][:, gene_mask], categories, thresholds, len(gene_names))
 
     # Convert to easier to read dict and return
     marker_pos = np.where(pairs != -1)
@@ -190,13 +191,14 @@ def check_pairs(
 
     return pairs
 
-@njit(parallel=True, fastmath=True)
+#@njit(parallel=True, fastmath=True)
 def check_pairs_opt(
-        raw_data: np.ndarray,
+        raw_data_in: np.ndarray,
         cats: np.ndarray,
         thresholds: np.array
 ) -> Collection[int]:
-    result = np.full((raw_data.shape[0], raw_data.shape[0]), -1)
+    raw_data = np.ascontiguousarray(raw_data_in.T)
+    result = np.full((raw_data.shape[0], raw_data.shape[0]), - 1)
 
     # Iterate over all possible gene combinations
     for g1 in prange(0, raw_data.shape[0]):
