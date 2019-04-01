@@ -6,7 +6,7 @@ import numpy as np
 
 from math import ceil
 from collections import defaultdict
-from numba import njit, prange, vectorize
+from numba import prange
 
 from pypairs import utils
 from pypairs import settings
@@ -106,10 +106,6 @@ def sandbag(
 
     gene_names = np.array(gene_names)[gene_mask]
 
-    #data, gene_names, sample_names, categories = utils.filter_matrix(
-    #    data, gene_names, sample_names, categories, filter_genes, filter_samples
-    #)
-
     categories, category_names = remove_empty_categories(categories, category_names)
 
     logg.hint('sandbag running with fraction of {}'.format(fraction))
@@ -117,12 +113,8 @@ def sandbag(
     thresholds = calc_thresholds(categories, fraction)
 
     cats = np.where(categories.T == True)[1]
-    check_pairs_decorated = utils.parallel_njit(check_pairs_opt)
+    check_pairs_decorated = utils.parallel_njit(check_pairs)
     pairs = check_pairs_decorated(data[sample_mask][:, gene_mask], cats, thresholds)
-
-    #data = data.copy()
-    #check_pairs_decorated = utils.parallel_njit(check_pairs)
-    #pairs = check_pairs_decorated(data[sample_mask][:, gene_mask], categories, thresholds, len(gene_names))
 
     # Convert to easier to read dict and return
     marker_pos = np.where(pairs != -1)
@@ -156,43 +148,6 @@ def sandbag(
 
 
 def check_pairs(
-        raw_data: np.ndarray,
-        categories: np.ndarray,
-        thresholds: np.array,
-        n_genes: int
-) -> Collection[int]:
-    """Loops over all 2-tuple combinations of genes and checks if they fullfil the 'marker pair' criteria
-
-    We return marker pairs as dict mapping category to list of 2-tuple: {'C': [(A,B), ...], ...}
-
-    This function will be compiled via numba's jit decorator.
-    """
-    # Number of categories
-    n_cats = len(categories)
-
-    # Will hold the tuples with the pairs
-    pairs = np.full((n_genes, n_genes), -1)
-
-    # Iterate over all possible gene combinations
-    for g1 in range(0, n_genes):
-        # Parallelized if jitted
-        for g2 in prange(g1+1, n_genes):
-            # Subtract all gene counts of gene 2 from gene counts of gene 1
-
-            no_up, last_idx_up = valid_phases_up(raw_data[:, g1], raw_data[:, g2], thresholds, categories)
-            no_down, last_idx_down = valid_phases_down(raw_data[:, g1], raw_data[:, g2], thresholds, categories)
-
-            if no_up == 1:
-                if no_down == n_cats - 1:
-                    pairs[g1, g2] = last_idx_up
-            elif no_down == 1:
-                if no_up == n_cats - 1:
-                    pairs[g2, g1] = last_idx_down
-
-    return pairs
-
-#@njit(parallel=True, fastmath=True)
-def check_pairs_opt(
         raw_data_in: np.ndarray,
         cats: np.ndarray,
         thresholds: np.array
@@ -200,9 +155,7 @@ def check_pairs_opt(
     raw_data = np.ascontiguousarray(raw_data_in.T)
     result = np.full((raw_data.shape[0], raw_data.shape[0]), - 1)
 
-    # Iterate over all possible gene combinations
     for g1 in prange(0, raw_data.shape[0]):
-        # Parallelized if jitted
         for g2 in range(g1+1, raw_data.shape[0]):
             valid_phase_up = 0
             valid_phase_up_idx = -1
@@ -247,72 +200,8 @@ def remove_empty_categories(categories, category_names):
 
 
 def calc_thresholds(categories, fraction):
-    # Define thresholds for each category based on fraction
     thresholds = np.apply_along_axis(sum, 1, categories)
     for i, t in enumerate(thresholds):
         thresholds[i] = ceil(t * fraction)
 
     return thresholds
-
-
-@njit()
-def valid_phases_up(a, b, thresholds, categories, min_diff=0):
-    last_idx = -1
-    count = 0
-
-    # TODO: Vectorize
-    for i in range(0, len(categories)):
-        if count_up(a[categories[i]], b[categories[i]], min_diff) >= thresholds[i]:
-            count += 1
-            last_idx = i
-
-    return count, last_idx
-
-
-@njit()
-def valid_phases_down(a, b, thresholds, categories, min_diff=0):
-    last_idx = -1
-    count = 0
-
-    # TODO: Vectorize
-    for i in range(0, len(categories)):
-        if count_down(a[categories[i]], b[categories[i]], min_diff) >= thresholds[i]:
-            count += 1
-            last_idx = i
-
-    return count, last_idx
-
-
-@njit()
-def count_up(a, b, min_diff=0):
-    return np.sum(comp_pair_up_vec(a, b, min_diff))
-
-
-@njit()
-def count_down(a, b, min_diff=0):
-    return np.sum(comp_pair_down_vec(a, b, min_diff))
-
-
-@vectorize("boolean(float64, float64, int64)", target='cpu')
-def comp_pair_up_vec(a, b, min_diff):
-    if a-b > min_diff:
-        return True
-    return False
-
-
-@vectorize("boolean(float64, float64, int64)", target='cpu')
-def comp_pair_down_vec(a, b, min_diff):
-    if a-b < min_diff:
-        return True
-    return False
-
-
-@njit()
-def first_true(aa):
-    i = 0
-    for a in aa:
-        if a:
-            return i
-        i += 1
-
-    return -1
