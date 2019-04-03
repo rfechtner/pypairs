@@ -99,7 +99,7 @@ def leng15(
 
 def default_cc_marker(
     dataset: Optional[str] = 'leng15'
-) -> Mapping[str, Iterable[Tuple[str,str]]]:
+) -> Mapping[str, Collection[Tuple[str,str]]]:
     """Cell cycle marker pairs derived from [Leng15]_ with the default :func:`~pypairs.pairs.sandbag` settings.
 
     For description of the dataset see :func:`~pypairs.datasets.leng15`.
