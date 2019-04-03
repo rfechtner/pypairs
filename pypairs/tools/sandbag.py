@@ -1,16 +1,15 @@
+from collections import defaultdict
+from math import ceil
 from typing import Union, Optional, Tuple, Mapping, Collection
 
-from anndata import AnnData
-from pandas import DataFrame
 import numpy as np
-
-from math import ceil
-from collections import defaultdict
+from anndata import AnnData
 from numba import prange
+from pandas import DataFrame
 
-from pypairs import utils
-from pypairs import settings
 from pypairs import log as logg
+from pypairs import settings
+from pypairs import utils
 
 
 def sandbag(
@@ -95,24 +94,32 @@ def sandbag(
 
     """
     logg.info('identifying marker pairs with sandbag', r=True)
+    logg.hint('sandbag running with fraction of {}'.format(fraction))
 
+    # AnnData or DataFrame or ndarray -> ndarray + meta information
     data, gene_names, sample_names, category_names, categories = utils.parse_data_and_annotation(
         data, annotation, gene_names, sample_names
     )
 
+    # Get filter mask based on filter selection, and filter out unexpressed genes
     gene_mask, sample_mask = utils.get_filter_masks(
         data, gene_names, sample_names, categories, filter_genes, filter_samples
     )
 
+    # Apply mask to gene names and categories, samples are not needed
     gene_names = np.array(gene_names)[gene_mask]
+    categories = categories[:, sample_mask]
 
+    # Remove empty categories
     categories, category_names = remove_empty_categories(categories, category_names)
 
-    logg.hint('sandbag running with fraction of {}'.format(fraction))
-
+    # Cells in category * fraction
     thresholds = calc_thresholds(categories, fraction)
 
+    # Turn array of boolean into array of index
     cats = np.where(categories.T == True)[1]
+
+    # Decorate check_pairs according to settings and platform
     check_pairs_decorated = utils.parallel_njit(check_pairs)
     pairs = check_pairs_decorated(data[sample_mask][:, gene_mask], cats, thresholds)
 
@@ -132,6 +139,7 @@ def sandbag(
 
     logg.info('finished', time=True)
 
+    # Print count of marker pairs per category
     if settings.verbosity > 2:
         count_total = 0
         count_str = []
@@ -156,7 +164,7 @@ def check_pairs(
     result = np.full((raw_data.shape[0], raw_data.shape[0]), - 1)
 
     for g1 in prange(0, raw_data.shape[0]):
-        for g2 in range(g1+1, raw_data.shape[0]):
+        for g2 in range(g1 + 1, raw_data.shape[0]):
             valid_phase_up = 0
             valid_phase_up_idx = -1
             valid_phase_down = 0
