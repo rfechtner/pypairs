@@ -1,9 +1,9 @@
-from typing import Union, Optional, Tuple, Mapping, Iterable
+from typing import Union, Optional, Tuple, Mapping, Collection
 
 from anndata import AnnData
 from pandas import DataFrame
 import numpy as np
-from numba import njit
+from numba import njit, guvectorize, prange
 
 from pypairs import utils
 from pypairs import datasets
@@ -12,10 +12,10 @@ from pypairs import log as logg
 
 
 def cyclone(
-    data: Union[AnnData, DataFrame, np.ndarray, Iterable[Iterable[float]]],
-    marker_pairs: Mapping[str, Iterable[Tuple[str, str]]],
-    gene_names: Optional[Iterable[str]] = None,
-    sample_names: Optional[Iterable[str]] = None,
+    data: Union[AnnData, DataFrame, np.ndarray, Collection[Collection[float]]],
+    marker_pairs: Optional[Mapping[str, Collection[Tuple[str, str]]]] = None,
+    gene_names: Optional[Collection[str]] = None,
+    sample_names: Optional[Collection[str]] = None,
     iterations: Optional[int] = 1000,
     min_iter: Optional[int] = 100,
     min_pairs: Optional[int] = 50
@@ -88,21 +88,24 @@ def cyclone(
 
     """
     logg.info('predicting category scores with cyclone', r=True)
+
     if marker_pairs is None:
         logg.hint('no marker pairs passed, using default cell cycle prediction marker')
         marker_pairs = datasets.default_cc_marker()
 
     raw_data, gene_names, sample_names = utils.parse_data(data, gene_names, sample_names)
 
+    # Filter marker pairs to those where both genes are present in `data`
     marker_pairs, used = filter_marker_pairs(marker_pairs, gene_names)
 
-    if settings.n_jobs > 1:
-        logg.hint('multiprocessing not yet available for cyclone')
-    else:
-        logg.hint('staring processing with 1 thread')
+    logg.hint('staring processing with {} thread'.format(settings.n_jobs))
 
-    scores = {cat: get_phase_scores(raw_data, cat, iterations, min_iter, min_pairs, pairs, used[cat]) for
-              cat, pairs in marker_pairs.items()}
+    get_phase_scores_decorated = utils.parallel_njit(get_phase_scores)
+
+    scores = {
+        cat: get_phase_scores_decorated(raw_data, iterations, min_iter, min_pairs, pairs, used[cat]) for
+        cat, pairs in marker_pairs.items()
+    }
 
     scores_df = DataFrame(scores, columns=marker_pairs.keys())
     scores_df.index = sample_names
@@ -131,6 +134,19 @@ def cyclone(
     return scores_df
 
 
+def marker_pairs_to_nd(pairs):
+    lis = list([p.tolist() for p in pairs.values()])
+
+    n = len(lis)
+    lengths = np.array([len(x) for x in lis])
+    max_len = max(lengths)
+    arr = np.zeros((n, max_len, 2), dtype='int32')
+
+    for i in range(n):
+        arr[i, :lengths[i]] = lis[i]
+    return arr, lengths
+
+
 @njit()
 def get_proportion(sample, min_pairs, pairs):
     hits = 0
@@ -146,11 +162,6 @@ def get_proportion(sample, min_pairs, pairs):
             if a > b:
                 hits += 1
             total += 1
-
-        #if a > b:
-        #    hits += 1
-        #if a != b:
-        #    total += 1
 
     if hits < min_pairs:
         return None
@@ -182,16 +193,6 @@ def get_sample_score(sample, iterations, min_iter, min_pairs, pairs):
         return 0
     if total >= min_iter:
         return below / total
-
-
-def get_phase_scores(matrix, cat, iterations, min_iter, min_pairs, pairs, used):
-    if pairs.size == 0:
-        logg.hint("No marker pairs for category {}".format(cat))
-        return [0.0 for _ in matrix.T]
-
-    phase_scores = [get_sample_score(sample[used], iterations, min_iter, min_pairs, pairs) for sample in matrix]
-
-    return phase_scores
 
 
 def filter_marker_pairs(marker_pairs, gene_names):
@@ -231,3 +232,14 @@ def filter_marker_pairs(marker_pairs, gene_names):
 
     logg.hint("translated marker pairs, {} removed".format(removed))
     return marker_pairs_idx, used_masks
+
+
+def get_phase_scores(matrix, iterations, min_iter, min_pairs, pairs, used):
+
+    phase_scores = np.zeros(len(matrix))
+    for s in prange(0, matrix.shape[0]):
+        phase_scores[s] = get_sample_score(
+            matrix[s][used], iterations, min_iter, min_pairs, pairs
+        )
+
+    return phase_scores
