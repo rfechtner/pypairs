@@ -164,7 +164,7 @@ def get_proportion(sample, min_pairs, pairs):
             total += 1
 
     if hits < min_pairs:
-        return None
+        return 0
 
     if total == 0:
         return 0
@@ -175,7 +175,7 @@ def get_proportion(sample, min_pairs, pairs):
 def get_sample_score(sample, iterations, min_iter, min_pairs, pairs):
     cur_score = get_proportion(sample, min_pairs, pairs)
 
-    if cur_score is None:
+    if cur_score is 0:
         return 0
 
     below = 0
