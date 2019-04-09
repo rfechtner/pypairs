@@ -119,6 +119,8 @@ def sandbag(
     # Turn array of boolean into array of index
     cats = np.where(categories.T == True)[1]
 
+    data = data.astype(float)
+
     # Decorate check_pairs according to settings and platform
     check_pairs_decorated = utils.parallel_njit(check_pairs)
     pairs = check_pairs_decorated(data[sample_mask][:, gene_mask], cats, thresholds)

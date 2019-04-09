@@ -100,6 +100,8 @@ def cyclone(
 
     logg.hint('staring processing with {} thread'.format(settings.n_jobs))
 
+    raw_data = raw_data.astype(float)
+
     get_phase_scores_decorated = utils.parallel_njit(get_phase_scores)
 
     scores = {
