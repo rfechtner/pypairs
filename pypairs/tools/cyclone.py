@@ -120,8 +120,6 @@ def cyclone(
             enumerate(scores_df.loc[:, ["G1", "G2M"]].max(axis=1).values)
         ]
 
-    logg.info("finished", time=True)
-
     if isinstance(data, AnnData):
         logg.hint('adding scores with key "pypairs_{category}" to `data.obs`"')
         logg.hint('adding max_class with key "pypairs_max_class" to `data.obs`"')
@@ -228,7 +226,9 @@ def filter_marker_pairs(marker_pairs, gene_names):
 
                 new_pairs_idx.append([new_idx[g1_idx], new_idx[g2_idx]])
             except KeyError:
-                logg.hint("genepair ({}, {}) not present in dataset".format(pair[0], pair[1]))
+                #logg.hint("genepair ({}, {}) not present in dataset".format(pair[0], pair[1]))
+                # producing to much output.. 
+                pass
 
         marker_pairs_idx[cat] = np.array(new_pairs_idx)
 
