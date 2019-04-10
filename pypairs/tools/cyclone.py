@@ -227,7 +227,7 @@ def filter_marker_pairs(marker_pairs, gene_names):
                 new_pairs_idx.append([new_idx[g1_idx], new_idx[g2_idx]])
             except KeyError:
                 #logg.hint("genepair ({}, {}) not present in dataset".format(pair[0], pair[1]))
-                # producing to much output.. 
+                # producing to much output..
                 pass
 
         marker_pairs_idx[cat] = np.array(new_pairs_idx)
