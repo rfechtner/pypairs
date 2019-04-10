@@ -1,7 +1,12 @@
-import matplotlib.pyplot as plt
+from pypairs import log as logg
+try:
+    import matplotlib.pyplot as plt
+    from matplotlib.ticker import NullFormatter
+    from matplotlib import transforms
+except ImportError:
+    logg.error("matplotlib required, install with pip install pypairs[plotting]")
+
 from scipy.stats import gaussian_kde
-from matplotlib.ticker import NullFormatter
-from matplotlib import transforms
 import numpy as np
 
 def cc_scatter(
