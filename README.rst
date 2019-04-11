@@ -20,7 +20,7 @@ PyPairs - A python scRNA-Seq classifier
 This is a python-reimplementation of the Pairs algorithm as described by A. Scialdone et. al. (2015).
 Original Paper available under: https://doi.org/10.1016/j.ymeth.2015.06.021
 
-A supervided maschine learning algorithm aiming to classify single cells based on their transcriptomic signal.
+A supervised maschine learning algorithm aiming to classify single cells based on their transcriptomic signal.
 Initially created to predict cell cycle phase from scRNA-Seq data, this algorithm can be used for various applications.
 
 Build to be fully compatible with `Scanpy <https://scanpy.readthedocs.io/en/stable/>`_. For more details see the
