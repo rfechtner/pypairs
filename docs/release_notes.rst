@@ -11,16 +11,27 @@ Announcement
 """"""""""""
 .. note::
 
-    Please only use :mod:`pypairs` >= 3.0.9.
+    Please only use :mod:`pypairs` >= 3.1.0
 
 
 Versions
 """"""""
+Version 3.1.0, :small:`Apr 4, 2019`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- New feature:
+    - Multithreading now available for `pais.cyclone()`
+- Minor changes and fixes:
+    - `pais.sandbag()` now significally faster
+    - `pais.sandbag()` more stable in terms of memory access
 
-Version 3.0.1 - 3.0.9, :small:`Feb 1, 2019`
+Version 3.0.1 - 3.0.13, :small:`Mar 13, 2019`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Various bug fixes
+- Various bug fixes, including:
+    - Bioconda compability
+    - Dataset loading
+    - Cache file required
+    - Cell Cycle specific scoring
 
 Version 3.0.0, :small:`Jan 18, 2019 - Jan 31, 2019`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
