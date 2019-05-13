@@ -49,27 +49,48 @@ Alternatively, pypairs can be installed using `Conda <https://conda.io/docs/>`_ 
 Minimal Example
 ~~~~~~~~~~~~~~~
 
-Assuming you have two scRNA count files (csv, columns = samples, rows = genes) and one annotation file (csv, no header,
-two rows: "gene, class") a minimal example would look like this
+Provided a scRNA count file (csv, columns = samples, rows = genes) one can use `pairs.cyclone()` in order to predict the i.e. cell cycle phase based on a pre-trained marker set, described here: `Default Cell Cycle Marker <https://pypairs.readthedocs.io/en/latest/pypairs.datasets.default_cc_marker.html#pypairs.datasets.default_cc_marker>`_  
 
 .. code:: python
 
-    from pypairs import pairs, datasets
+    from pypairs import pairs
+    import pandas as pd
+    
+    # Load the CSV, i.e. using pandas's read_csv() function.
+    scRNA_data = pd.read_csv('scRNA_data.csv', sep=',', index_col=0)
+    
+    # Run cyclone(), that uses datasets.default_cc_marker() as default if no `marker_pairs` are passed 
+    prediction = pairs.cyclone(scRNA_data)
+    
+    # Shows table with scores for each category for each sample. 
+    # Per default cc_prediction is only available when using cell cycle classes
+    print(prediction)
+    
+Alternatively one can use any other set of categories and marker_pairs by running `pairs.sandbag()` in order to generate a custom set of marker pairs. All thats needed is a scRNA training dataset along with an annotation to learn from. 
 
-    # Load samples from the oscope scRNA-Seq dataset with known cell cycle
-    training_data = datasets.leng15(mode='sorted')
+Assuming you have two scRNA count files (training and testing, csv, columns = samples, rows = genes) and one annotation file (for training, csv, no header, two rows: "gene, class") a minimal example would look like this:
+
+.. code:: python
+
+    from pypairs import pairs
+    import pandas as pd
+
+    # Load training data and annotation
+    training_data = pd.read_csv('training_scRNA_data.csv', sep=',', index_col=0)
+    annotation = pd.read_csv('annotation.csv', sep=',', index_col=0)
 
     # Run sandbag() to identify marker pairs
-    marker_pairs = pairs.sandbag(training_data, fraction=0.6)
+    marker_pairs = pairs.sandbag(training_data, annotation)
 
     # Load samples from the oscope scRNA-Seq dataset without known cell cycle
-    testing_data = datasets.leng15(mode='unsorted')
+    testing_data = pd.read_csv('scRNA_data.csv', sep=',', index_col=0)
 
     # Run cyclone() score and predict cell cycle classes
     result = pairs.cyclone(testing_data, marker_pairs)
 
     # Further downstream analysis
     print(result)
+
 
 Core Dependencies
 -----------------
