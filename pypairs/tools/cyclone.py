@@ -98,6 +98,18 @@ def cyclone(
     # Filter marker pairs to those where both genes are present in `data`
     marker_pairs, used = filter_marker_pairs(marker_pairs, gene_names)
 
+    if settings.verbosity > 2:
+        count_total = 0
+        count_str = []
+        for m, p in marker_pairs.items():
+            c = len(p)
+            count_total += c
+            count_str.append("\t{}: {}".format(m, c))
+
+        logg.hint("found {} marker pairs".format(count_total))
+        for s in count_str:
+            logg.hint(s)
+
     logg.hint('staring processing with {} thread'.format(settings.n_jobs))
 
     raw_data = raw_data.astype(float)
@@ -163,11 +175,9 @@ def get_proportion(sample, min_pairs, pairs):
                 hits += 1
             total += 1
 
-    if hits < min_pairs:
-        return 0
+    if hits < min_pairs or total == 0:
+        return -1
 
-    if total == 0:
-        return 0
     return hits / total
 
 
@@ -184,13 +194,13 @@ def get_sample_score(sample, iterations, min_iter, min_pairs, pairs):
     for _ in range(0, iterations):
         np.random.shuffle(idx)
         new_score = get_proportion(idx, min_pairs, pairs)
-        if new_score is not None:
+        if new_score != -1:
             if new_score < cur_score:
                 below += 1
             total += 1
 
     if total == 0:
-        return 0
+        return -1
     if total >= min_iter:
         return below / total
 
