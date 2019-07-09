@@ -166,7 +166,7 @@ def get_proportion(sample, min_pairs, pairs):
     return hits / total
 
 
-@guvectorize(["void(float64[:], boolean[:], int32, int32, int32, int32[:,:], float64[:])"],
+@guvectorize(["void(float64[:], boolean[:], int64, int64, int64, int64[:,:], float64[:])"],
              "(s),(b),(),(),(),(p,x)->()", nopython=True, target="parallel")
 def get_sample_score_guv(sample, used, iterations, min_iter, min_pairs, pairs, score):
     sample_used = sample[used]
