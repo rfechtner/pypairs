@@ -3,7 +3,7 @@ from typing import Union, Optional, Tuple, Mapping, Collection
 from anndata import AnnData
 from pandas import DataFrame
 import numpy as np
-from numba import njit, guvectorize, prange
+from numba import njit, guvectorize
 
 from pypairs import utils
 from pypairs import datasets
@@ -114,10 +114,8 @@ def cyclone(
 
     raw_data = raw_data.astype(float)
 
-    get_phase_scores_decorated = utils.parallel_njit(get_phase_scores)
-
     scores = {
-        cat: get_phase_scores_decorated(raw_data, iterations, min_iter, min_pairs, pairs, used[cat]) for
+        cat: get_phase_scores(raw_data, iterations, min_iter, min_pairs, pairs, used[cat]) for
         cat, pairs in marker_pairs.items()
     }
 
@@ -146,19 +144,6 @@ def cyclone(
     return scores_df
 
 
-def marker_pairs_to_nd(pairs):
-    lis = list([p.tolist() for p in pairs.values()])
-
-    n = len(lis)
-    lengths = np.array([len(x) for x in lis])
-    max_len = max(lengths)
-    arr = np.zeros((n, max_len, 2), dtype='int32')
-
-    for i in range(n):
-        arr[i, :lengths[i]] = lis[i]
-    return arr, lengths
-
-
 @njit()
 def get_proportion(sample, min_pairs, pairs):
     hits = 0
@@ -176,33 +161,59 @@ def get_proportion(sample, min_pairs, pairs):
             total += 1
 
     if hits < min_pairs or total == 0:
-        return -1
+        return np.nan
 
     return hits / total
 
 
-@njit()
-def get_sample_score(sample, iterations, min_iter, min_pairs, pairs):
-    cur_score = get_proportion(sample, min_pairs, pairs)
+@guvectorize(["void(float64[:], boolean[:], int32, int32, int32, int32[:,:], float64[:])"],
+             "(s),(b),(),(),(),(p,x)->()", nopython=True, target="parallel")
+def get_sample_score_guv(sample, used, iterations, min_iter, min_pairs, pairs, score):
+    sample_used = sample[used]
+    cur_score = get_proportion(sample_used, min_pairs, pairs)
 
-    if cur_score is 0:
-        return 0
+    if cur_score != cur_score:
+        score[0] = np.nan
 
     below = 0
     total = 0
-    idx = sample
     for _ in range(0, iterations):
-        np.random.shuffle(idx)
-        new_score = get_proportion(idx, min_pairs, pairs)
+        np.random.shuffle(sample_used)
+        new_score = get_proportion(sample_used, min_pairs, pairs)
         if new_score != -1:
             if new_score < cur_score:
                 below += 1
             total += 1
 
     if total == 0:
-        return -1
+        score[0] = np.nan
+
     if total >= min_iter:
-        return below / total
+        score[0] = below / total
+    else:
+        score[0] = np.nan
+
+
+
+def get_phase_scores(matrix, iterations, min_iter, min_pairs, pairs, used):
+
+    phase_scores = np.zeros(matrix.shape[0])
+    get_sample_score_guv(matrix, used, iterations, min_iter, min_pairs, pairs, phase_scores)
+
+    return phase_scores
+
+
+def marker_pairs_to_nd(pairs):
+    lis = list([p.tolist() for p in pairs.values()])
+
+    n = len(lis)
+    lengths = np.array([len(x) for x in lis])
+    max_len = max(lengths)
+    arr = np.zeros((n, max_len, 2), dtype='int32')
+
+    for i in range(n):
+        arr[i, :lengths[i]] = lis[i]
+    return arr, lengths
 
 
 def filter_marker_pairs(marker_pairs, gene_names):
@@ -237,21 +248,10 @@ def filter_marker_pairs(marker_pairs, gene_names):
                 new_pairs_idx.append([new_idx[g1_idx], new_idx[g2_idx]])
             except KeyError:
                 #logg.hint("genepair ({}, {}) not present in dataset".format(pair[0], pair[1]))
-                # producing to much output.. 
+                # producing to much output..
                 pass
 
         marker_pairs_idx[cat] = np.array(new_pairs_idx)
 
     logg.hint("translated marker pairs, {} removed".format(removed))
     return marker_pairs_idx, used_masks
-
-
-def get_phase_scores(matrix, iterations, min_iter, min_pairs, pairs, used):
-
-    phase_scores = np.zeros(len(matrix))
-    for s in prange(0, matrix.shape[0]):
-        phase_scores[s] = get_sample_score(
-            matrix[s][used], iterations, min_iter, min_pairs, pairs
-        )
-
-    return phase_scores
