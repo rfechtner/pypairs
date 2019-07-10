@@ -10,6 +10,7 @@ from pypairs import datasets
 from pypairs import settings
 from pypairs import log as logg
 
+from tqdm import tqdm
 
 def cyclone(
     data: Union[AnnData, DataFrame, np.ndarray, Collection[Collection[float]]],
@@ -112,12 +113,17 @@ def cyclone(
 
     logg.hint('staring processing with {} thread'.format(settings.n_jobs))
 
-    raw_data = raw_data.astype(float)
+    raw_data = raw_data.astype('float64')
 
-    scores = {
-        cat: get_phase_scores(raw_data, iterations, min_iter, min_pairs, pairs, used[cat]) for
-        cat, pairs in marker_pairs.items()
-    }
+    scores = {} 
+
+    for cat, pairs in tqdm(marker_pairs.items()):
+        scores[cat] = get_phase_scores(raw_data, iterations, min_iter, min_pairs, pairs, used[cat])
+
+    #scores = {
+    #    cat: get_phase_scores(raw_data, iterations, min_iter, min_pairs, pairs, used[cat]) for
+    #    cat, pairs in marker_pairs.items()
+    #}
 
     scores_df = DataFrame(scores, columns=marker_pairs.keys())
     scores_df.index = sample_names
