@@ -117,8 +117,16 @@ def cyclone(
 
     scores = {} 
 
-    for cat, pairs in tqdm(marker_pairs.items()):
+    if settings.verbosity >=3:
+        pbar = tqdm(total=len(marker_pairs))
+    else:
+        pbar = tqdm(total=len(marker_pairs), disable=True)
+
+    for cat, pairs in pbar:
         scores[cat] = get_phase_scores(raw_data, iterations, min_iter, min_pairs, pairs, used[cat])
+        pbar.update()
+
+    pbar.close()
 
     #scores = {
     #    cat: get_phase_scores(raw_data, iterations, min_iter, min_pairs, pairs, used[cat]) for
