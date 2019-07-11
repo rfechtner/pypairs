@@ -217,7 +217,7 @@ def get_sample_score_guv(sample, used, iterations, min_iter, min_pairs, pairs, s
 
 def get_phase_scores(matrix, iterations, min_iter, min_pairs, pairs, used):
 
-    phase_scores = np.zeros(matrix.shape[0])
+    phase_scores = np.full(matrix.shape[0], np.nan)
     get_sample_score_guv(matrix, used, iterations, min_iter, min_pairs, pairs, phase_scores)
 
     return phase_scores
