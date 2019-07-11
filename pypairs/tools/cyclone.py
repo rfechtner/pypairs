@@ -107,7 +107,7 @@ def cyclone(
             count_total += c
             count_str.append("\t{}: {}".format(m, c))
 
-        logg.hint("found {} marker pairs".format(count_total))
+        logg.hint("received {} marker pairs".format(count_total))
         for s in count_str:
             logg.hint(s)
 
