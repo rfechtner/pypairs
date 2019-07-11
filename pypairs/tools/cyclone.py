@@ -141,7 +141,10 @@ def cyclone(
 
     scores_df = DataFrame(scores, columns=marker_pairs.keys())
     scores_df.index = sample_names
-    scores_df['max_class'] = scores_df.idxmax(axis=1)
+    max_class = scores_df.idxmax(axis=1)
+    sum_row = scores_df.sum(axis=1)
+    m = [x if sum_row[i] > 0 else 'N/A' for i,x in enumerate(max_class)]
+    scores_df['max_class'] = m
 
     if len(marker_pairs.items()) == 3 and all(elem in marker_pairs.keys() for elem in ["G1", "S", "G2M"]):
         scores_cc = scores_df.loc[:, ["G1", "G2M"]].idxmax(axis=1)
