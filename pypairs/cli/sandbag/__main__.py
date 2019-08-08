@@ -1,4 +1,4 @@
-import click, json, string, csv
+import click, json, csv
 from pypairs.tools.sandbag import sandbag, settings, logg
 import pandas as pd
 
