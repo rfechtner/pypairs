@@ -10,7 +10,12 @@ from pypairs import datasets
 from pypairs import settings
 from pypairs import log as logg
 
-from tqdm import tqdm
+if utils.isnotebook():
+    from tqdm import tqdm_notebook as tqdm
+else:
+    from tqdm import tqdm
+
+from sklearn.preprocessing import QuantileTransformer
 
 def cyclone(
     data: Union[AnnData, DataFrame, np.ndarray, Collection[Collection[float]]],
@@ -19,7 +24,8 @@ def cyclone(
     sample_names: Optional[Collection[str]] = None,
     iterations: Optional[int] = 1000,
     min_iter: Optional[int] = 100,
-    min_pairs: Optional[int] = 50
+    min_pairs: Optional[int] = 50,
+    quantile_transform = False
 ) -> DataFrame:
     """Score samples for each category based on marker pairs.
 
@@ -114,6 +120,9 @@ def cyclone(
     logg.hint('staring processing with {} thread'.format(settings.n_jobs))
 
     raw_data = raw_data.astype('float64')
+
+    if quantile_transform:
+            raw_data = QuantileTransformer().fit_transform(raw_data)
 
     scores = {} 
 
