@@ -31,6 +31,12 @@ setup(
         plotting=['matplotlib', 'plotly'],
         scanpy=['scanpy']
     ),
+    entry_points={
+          'console_scripts': [
+              'cyclone = pypairs.cli.cyclone.__main__:main',
+              'sandbag = pypairs.cli.sandbag.__main__:main'
+          ]
+    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
