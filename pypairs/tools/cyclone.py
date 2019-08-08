@@ -10,10 +10,7 @@ from pypairs import datasets
 from pypairs import settings
 from pypairs import log as logg
 
-if utils.isnotebook():
-    from tqdm import tqdm_notebook as tqdm
-else:
-    from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from sklearn.preprocessing import QuantileTransformer
 
