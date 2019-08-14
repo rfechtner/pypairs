@@ -1,4 +1,4 @@
-import click
+import click, json
 from pypairs.tools.cyclone import cyclone, settings, logg
 import pandas as pd
 
@@ -23,14 +23,22 @@ import pandas as pd
 @click.option('-v', '--verbosity', default=3, show_default=True,
               help="Set level of verbosity from 1 to 4. Where 1 is minimal and 4 most")
 def main(data, marker_pairs, iterations, min_iter, min_pairs, quantile_transform, out, sep, transpose, verbosity):
+
+    logg.hint("Loading matrix")
     data_mat = pd.read_csv(data, index_col=0, sep=sep)
     if transpose:
         data_mat = data_mat.T
 
     settings.verbosity = verbosity
 
+    if marker_pairs is not None:
+        with open(marker_pairs) as json_file:
+            marker_pairs_json = json.load(json_file)
+    else:
+        marker_pairs_json = None
+
     scores = cyclone(
-        data=data_mat, marker_pairs=marker_pairs, iterations = iterations,
+        data=data_mat, marker_pairs=marker_pairs_json, iterations = iterations,
         min_iter=min_iter, min_pairs=min_pairs, quantile_transform=quantile_transform
     )
 
