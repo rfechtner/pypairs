@@ -102,17 +102,18 @@ def cyclone(
     # Filter marker pairs to those where both genes are present in `data`
     marker_pairs, used = filter_marker_pairs(marker_pairs, gene_names)
 
-    if settings.verbosity > 2:
-        count_total = 0
-        count_str = []
-        for m, p in marker_pairs.items():
-            c = len(p)
-            count_total += c
-            count_str.append("\t{}: {}".format(m, c))
+    count_total = 0
+    count_str = []
+    for m, p in marker_pairs.items():
+        c = len(p)
+        if c == 0:
+            logg.error("No marker pairs for class: {}".format(m))
+        count_total += c
+        count_str.append("\t{}: {}".format(m, c))
 
-        logg.hint("received {} marker pairs".format(count_total))
-        for s in count_str:
-            logg.hint(s)
+    logg.hint("received {} marker pairs".format(count_total))
+    for s in count_str:
+        logg.hint(s)
 
     logg.hint('staring processing with {} thread'.format(settings.n_jobs))
 
