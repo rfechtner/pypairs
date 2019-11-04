@@ -93,41 +93,57 @@ def cyclone(
     """
     logg.info('predicting category scores with cyclone', r=True)
 
+    # Load default marker pairs if none where passed
     if marker_pairs is None:
         logg.hint('no marker pairs passed, using default cell cycle prediction marker')
         marker_pairs = datasets.default_cc_marker()
 
+    # Extract values and names as separate values if data provided as AnnData or DataFrame
     raw_data, gene_names, sample_names = utils.parse_data(data, gene_names, sample_names)
 
     # Filter marker pairs to those where both genes are present in `data`
     marker_pairs, used = filter_marker_pairs(marker_pairs, gene_names)
 
-    if settings.verbosity > 2:
-        count_total = 0
-        count_str = []
-        for m, p in marker_pairs.items():
-            c = len(p)
-            count_total += c
-            count_str.append("\t{}: {}".format(m, c))
+    # Report missing categories
+    count_total = 0
+    count_str = []
+    for m, p in marker_pairs.items():
+        c = len(p)
+        count_total += c
+        if c == 0:
+            logg.error("no genes present for marker pairs for category {}".format(m))
+        count_str.append("\t{}: {}".format(m, c))
 
-        logg.hint("received {} marker pairs".format(count_total))
-        for s in count_str:
-            logg.hint(s)
+    # Halt code if no genes match marker pairs
+    if count_total == 0:
+        logg.error("no genes present in marker pairs. aborting.")
+        exit(1)
 
+    # Report total number of valid marker pairs, and for each category
+    logg.hint("received {} marker pairs".format(count_total))
+    for s in count_str:
+        logg.hint(s)
+
+    # Report number of threads to be used
     logg.hint('staring processing with {} thread'.format(settings.n_jobs))
 
+    # Ensure float64 dtpye
     raw_data = raw_data.astype('float64')
 
+    # Perform quantile normalization if requested
     if quantile_transform:
             raw_data = QuantileTransformer().fit_transform(raw_data)
 
+    # Container for final scores
     scores = {} 
 
+    # Prepare progress bar if verbosity is set
     if settings.verbosity >= 3:
         pbar = tqdm(marker_pairs.items(), desc="Calculating scores")
     else:
         pbar = tqdm(marker_pairs.items(), disable=True)
 
+    # Run cyclone score assignment for all cells of each category
     for cat, pairs in pbar:
         if settings.verbosity >= 3:
             pbar.set_postfix(phase=cat, no_marker=len(pairs), no_samples=raw_data.shape[0])
@@ -137,6 +153,7 @@ def cyclone(
         if settings.verbosity >= 3:
             pbar.update()
 
+    # Close progress bar
     if settings.verbosity >= 3:
         pbar.close()
 
