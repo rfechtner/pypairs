@@ -47,6 +47,12 @@ enable_fastmath = True
 logfile = ''
 """Name of logfile. By default is set to '' and writes to standard output."""
 
+fix_seed = True
+"""Should the  output be reproducible?"""
+
+seed = 2803
+"""Seed used for numpy.random.seed()"""
+
 # ------------------------------------------------------------------------------
 # Private global variables & functions
 # ------------------------------------------------------------------------------
