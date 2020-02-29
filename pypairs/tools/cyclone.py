@@ -93,6 +93,10 @@ def cyclone(
     """
     logg.info('predicting category scores with cyclone', r=True)
 
+    # Set seed random shuffling
+    if settings.fix_seed:
+        logg.info("setting seed to {}".format(settings.seed))
+
     # Load default marker pairs if none where passed
     if marker_pairs is None:
         logg.hint('no marker pairs passed, using default cell cycle prediction marker')
@@ -189,6 +193,10 @@ def cyclone(
     logg.info('finished', time=True)
     return scores_df
 
+@njit()
+def __setseed():
+    if settings.fix_seed:
+        np.random.seed(settings.seed)
 
 @njit()
 def get_proportion(sample, min_pairs, pairs):
@@ -215,6 +223,7 @@ def get_proportion(sample, min_pairs, pairs):
 @guvectorize(["void(float64[:], boolean[:], int64, int64, int64, int64[:,:], float64[:])"],
              "(s),(b),(),(),(),(p,x)->()", nopython=True, target="parallel")
 def get_sample_score_guv(sample, used, iterations, min_iter, min_pairs, pairs, score):
+    __setseed()
     sample_used = sample[used]
     cur_score = get_proportion(sample_used, min_pairs, pairs)
 
@@ -242,7 +251,6 @@ def get_sample_score_guv(sample, used, iterations, min_iter, min_pairs, pairs, s
 
 
 def get_phase_scores(matrix, iterations, min_iter, min_pairs, pairs, used):
-
     phase_scores = np.full(matrix.shape[0], np.nan)
     get_sample_score_guv(matrix, used, iterations, min_iter, min_pairs, pairs, phase_scores)
 

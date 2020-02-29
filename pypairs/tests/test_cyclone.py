@@ -68,3 +68,28 @@ def test_cyclone_speed():
     settings.n_jobs = 4
 
     utils.benchmark_test(pairs.cyclone, {'data': datasets.leng15(mode='sorted'), 'marker_pairs': marker})
+
+def test_seed():
+    print("")
+    print("")
+
+    print("## Testing seed of cyclone()")
+
+    print("")
+    print("# Testing algorithm on training data")
+    print("")
+
+    settings.enable_fastmath = True
+    settings.verbosity = 4
+
+    training_data = datasets.leng15(mode='sorted')
+
+    scores = pairs.cyclone(training_data, datasets.default_cc_marker(), iterations=1000, min_iter=10, min_pairs=1)
+
+    print(scores)
+
+    scores_2 = pairs.cyclone(training_data, datasets.default_cc_marker(), iterations=1000, min_iter=10, min_pairs=1)
+
+    print(scores_2)
+
+    assert np.allclose(scores[['G1', 'S', 'G2M']], scores_2[['G1', 'S', 'G2M']], equal_nan=True)
