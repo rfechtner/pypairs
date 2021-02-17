@@ -12,6 +12,7 @@ from pathlib import Path
 import pandas as pd
 import timeit
 from functools import partial
+from scipy.sparse import issparse
 
 from pypairs import settings
 from pypairs import log as logg
@@ -274,7 +275,11 @@ def parse_data(
         if gene_names is None:
             gene_names = list(data.var_names)
 
-        raw_data = data.X
+        if issparse(data.X):
+            logg.hint("data was passed as sparse array, converting to dense")
+            raw_data = data.X.toarray()
+        else:
+            raw_data = data.X
     else:
         if isinstance(data, DataFrame):
             if gene_names is None:
@@ -282,12 +287,20 @@ def parse_data(
             if sample_names is None:
                 sample_names = list(data.index)
 
-            raw_data = data.values
-        elif isinstance(data, np.ndarray):
+            if issparse(data.values):
+                logg.hint("data was passed as sparse array, converting to dense")
+                raw_data = data.values.toarray()
+            else:
+                raw_data = data.values
+        elif isinstance(data, np.ndarray) or issparse(data):
             if gene_names is None or sample_names is None:
                 raise ValueError("Provide gene names and sample names in ``gene_names`` and ``sample_names``")
-
-            raw_data = data
+            
+            if issparse(data):
+                logg.hint("data was passed as sparse array, converting to dense")
+                raw_data = data.toarray()
+            else:
+                raw_data = data
         else:
             raise ValueError("data can only be of type AnnData, DataFrame or ndarray")
 
